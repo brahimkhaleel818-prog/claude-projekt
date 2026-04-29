@@ -1,0 +1,177 @@
+<section class="rigorous-testing">
+  <div class="rigorous-testing__inner">
+    <div class="rigorous-testing__left">
+      <h2 class="rigorous-testing__title">Rigorous testing that sets a higher standard.</h2>
+      <p class="rigorous-testing__desc">AM-02&trade; is screened as a full formula for allergens, contaminants, and pesticides&mdash;because what&rsquo;s not in your supplement matters, too.</p>
+    </div>
+
+    <div class="rigorous-testing__cards">
+      <div class="rigorous-testing__card">
+        <div class="rigorous-testing__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="#2c4a2c" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="22" y="8" width="14" height="10" rx="2" transform="rotate(20 29 13)"/>
+            <line x1="33" y1="20" x2="22" y2="34"/>
+            <line x1="39" y1="24" x2="28" y2="38"/>
+            <path d="M22 34 L28 38 L24 44 L18 40 Z"/>
+            <line x1="22" y1="46" x2="14" y2="54"/>
+            <path d="M10 56 L20 56"/>
+            <path d="M30 56 L52 56"/>
+            <path d="M40 50 v6"/>
+            <path d="M48 50 v6"/>
+            <path d="M40 50 h8"/>
+          </svg>
+        </div>
+        <p class="rigorous-testing__card-text">Formulated without gluten, soy, dairy, and corn</p>
+      </div>
+
+      <div class="rigorous-testing__card">
+        <div class="rigorous-testing__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="#2c4a2c" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M26 8 h12"/>
+            <path d="M28 8 v18 L14 50 a4 4 0 0 0 3.5 6 h29 a4 4 0 0 0 3.5 -6 L36 26 V8"/>
+            <line x1="20" y1="40" x2="44" y2="40"/>
+          </svg>
+        </div>
+        <p class="rigorous-testing__card-text">Tested for heavy metals and free of glyphosate and AMPA</p>
+      </div>
+
+      <div class="rigorous-testing__card">
+        <div class="rigorous-testing__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="#2c4a2c" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="20" y="8" width="24" height="48" rx="12"/>
+            <line x1="20" y1="32" x2="44" y2="32"/>
+            <polyline points="26,22 30,26 38,16"/>
+          </svg>
+        </div>
+        <p class="rigorous-testing__card-text">Formulated to comply  with Prop. 65</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .rigorous-testing {
+    background-color: #ecebd9;
+    padding: 80px 40px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: #2c4a2c;
+  }
+
+  .rigorous-testing__inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 60px;
+  }
+
+  .rigorous-testing__left {
+    flex: 1 1 50%;
+    max-width: 600px;
+  }
+
+  .rigorous-testing__title {
+    font-size: 44px;
+    line-height: 1.15;
+    font-weight: 500;
+    color: #1f3a1f;
+    margin: 0 0 24px 0;
+    letter-spacing: -0.5px;
+  }
+
+  .rigorous-testing__desc {
+    font-size: 16px;
+    line-height: 1.55;
+    color: #2c4a2c;
+    margin: 0;
+    max-width: 520px;
+  }
+
+  .rigorous-testing__cards {
+    flex: 1 1 50%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .rigorous-testing__card {
+    background-color: #f4f3e3;
+    border-radius: 14px;
+    padding: 28px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
+    min-height: 200px;
+  }
+
+  .rigorous-testing__icon {
+    width: 44px;
+    height: 44px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .rigorous-testing__icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .rigorous-testing__card-text {
+    font-size: 15px;
+    line-height: 1.45;
+    color: #2c4a2c;
+    margin: 0;
+    font-weight: 500;
+  }
+
+  @media (max-width: 990px) {
+    .rigorous-testing {
+      padding: 60px 24px;
+    }
+    .rigorous-testing__inner {
+      flex-direction: column;
+      gap: 40px;
+    }
+    .rigorous-testing__left {
+      max-width: 100%;
+    }
+    .rigorous-testing__title {
+      font-size: 34px;
+    }
+    .rigorous-testing__cards {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .rigorous-testing__cards {
+      grid-template-columns: 1fr;
+    }
+    .rigorous-testing__card {
+      min-height: auto;
+      padding: 24px;
+    }
+    .rigorous-testing__title {
+      font-size: 28px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Rigorous Testing",
+  "tag": "section",
+  "class": "section-rigorous-testing",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Rigorous Testing"
+    }
+  ]
+}
+{% endschema %}
