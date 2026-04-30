@@ -1,0 +1,91 @@
+<section class="low-stock-banner">
+  <div class="low-stock-banner__inner">
+    <div class="low-stock-banner__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#8b1e1e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="11" x2="12" y2="17"/>
+        <circle cx="12" cy="7.5" r="0.6" fill="#8b1e1e" stroke="none"/>
+      </svg>
+    </div>
+    <div class="low-stock-banner__text">
+      <p class="low-stock-banner__title">LOW STOCK</p>
+      <p class="low-stock-banner__subtitle">High demand due to limited time offer!</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .low-stock-banner {
+    padding: 16px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+
+  .low-stock-banner__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #fbe9e9;
+    border: 2px dashed #8b1e1e;
+    border-radius: 14px;
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .low-stock-banner__icon {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .low-stock-banner__icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .low-stock-banner__text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .low-stock-banner__title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #1a1a1a;
+    margin: 0;
+    letter-spacing: 0.3px;
+  }
+
+  .low-stock-banner__subtitle {
+    font-size: 15px;
+    font-weight: 400;
+    color: #1a1a1a;
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 640px) {
+    .low-stock-banner {
+      padding: 12px;
+    }
+    .low-stock-banner__inner {
+      padding: 14px 16px;
+      gap: 12px;
+      border-radius: 12px;
+    }
+    .low-stock-banner__icon {
+      width: 24px;
+      height: 24px;
+    }
+    .low-stock-banner__title {
+      font-size: 15px;
+    }
+    .low-stock-banner__subtitle {
+      font-size: 14px;
+    }
+  }
+</style>
