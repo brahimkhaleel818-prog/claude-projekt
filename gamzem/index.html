@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gamzem Coiffeur – Premium Friseursalon für Frauen | Mönchengladbach</title>
+  <meta name="description" content="Gamzem Coiffeur in Mönchengladbach – Premium Friseursalon für Frauen. Balayage, Highlights, Blondierung & mehr. 4,9 Sterne bei Google. Jetzt Termin buchen!">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ── Cookie Banner ───────────────────────────── -->
+  <div id="cookieBanner" class="cookie-banner">
+    <div class="cookie-inner">
+      <div class="cookie-text">
+        <p><strong>Privatsphäre &amp; Cookies</strong></p>
+        <p>Diese Website verwendet Cookies für das beste Erlebnis. Details in der <a href="#">Datenschutzerklärung</a>.</p>
+      </div>
+      <div class="cookie-btns">
+        <button id="cookieAccept"  class="cookie-btn cookie-btn-accept">Akzeptieren</button>
+        <button id="cookieDecline" class="cookie-btn cookie-btn-decline">Ablehnen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Navbar ──────────────────────────────────── -->
+  <nav id="navbar">
+    <a class="nav-brand" href="#hero">
+      <svg class="nav-logo-svg" width="170" height="46" viewBox="0 0 340 92" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="navRG" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%"   stop-color="#f0d5c0"/>
+            <stop offset="50%"  stop-color="#c9936a"/>
+            <stop offset="100%" stop-color="#9a6040"/>
+          </linearGradient>
+        </defs>
+        <!-- Left ornament -->
+        <path d="M8,46 Q20,36 32,46 Q20,56 8,46Z" fill="url(#navRG)" opacity="0.65"/>
+        <line x1="36" y1="46" x2="72" y2="46" stroke="url(#navRG)" stroke-width="0.8" opacity="0.5"/>
+        <!-- Name -->
+        <text x="170" y="40" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="21" font-weight="600" font-style="italic" letter-spacing="5" fill="url(#navRG)">Gamzem</text>
+        <text x="170" y="58" text-anchor="middle" font-family="Raleway, sans-serif" font-size="8.5" font-weight="500" letter-spacing="7" fill="url(#navRG)" opacity="0.8">COIFFEUR</text>
+        <!-- Right ornament -->
+        <line x1="268" y1="46" x2="304" y2="46" stroke="url(#navRG)" stroke-width="0.8" opacity="0.5"/>
+        <path d="M332,46 Q320,36 308,46 Q320,56 332,46Z" fill="url(#navRG)" opacity="0.65"/>
+      </svg>
+    </a>
+    <button id="hamburger" aria-label="Menü">☰</button>
+    <ul id="navLinks" class="nav-links">
+      <li><a href="#services">Leistungen</a></li>
+      <li><a href="#about">Über uns</a></li>
+      <li><a href="#booking">Termin</a></li>
+      <li><a href="#reviews">Bewertungen</a></li>
+      <li><a href="#contact">Kontakt</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── Hero ────────────────────────────────────── -->
+  <section id="hero">
+    <div class="hero-bg-overlay"></div>
+    <div id="petals"></div>
+    <div class="hero-content">
+
+      <!-- Logo Mark -->
+      <div class="hero-logomark">
+        <svg width="90" height="90" viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="markRG" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%"   stop-color="#f0d5c0"/>
+              <stop offset="50%"  stop-color="#c9936a"/>
+              <stop offset="100%" stop-color="#9a6040"/>
+            </linearGradient>
+          </defs>
+          <!-- Outer circle -->
+          <circle cx="45" cy="45" r="42" stroke="url(#markRG)" stroke-width="0.8" opacity="0.5" fill="none"/>
+          <!-- Inner circle -->
+          <circle cx="45" cy="45" r="36" stroke="url(#markRG)" stroke-width="0.4" opacity="0.3" fill="none"/>
+          <!-- Petal top -->
+          <ellipse cx="45" cy="24" rx="5" ry="9" fill="url(#markRG)" opacity="0.75"/>
+          <!-- Petal right -->
+          <ellipse cx="66" cy="45" rx="5" ry="9" fill="url(#markRG)" opacity="0.75" transform="rotate(90 66 45)"/>
+          <!-- Petal bottom -->
+          <ellipse cx="45" cy="66" rx="5" ry="9" fill="url(#markRG)" opacity="0.75" transform="rotate(180 45 66)"/>
+          <!-- Petal left -->
+          <ellipse cx="24" cy="45" rx="5" ry="9" fill="url(#markRG)" opacity="0.75" transform="rotate(270 24 45)"/>
+          <!-- Diagonal petals -->
+          <ellipse cx="59" cy="31" rx="4" ry="8" fill="url(#markRG)" opacity="0.5" transform="rotate(45 59 31)"/>
+          <ellipse cx="59" cy="59" rx="4" ry="8" fill="url(#markRG)" opacity="0.5" transform="rotate(135 59 59)"/>
+          <ellipse cx="31" cy="59" rx="4" ry="8" fill="url(#markRG)" opacity="0.5" transform="rotate(225 31 59)"/>
+          <ellipse cx="31" cy="31" rx="4" ry="8" fill="url(#markRG)" opacity="0.5" transform="rotate(315 31 31)"/>
+          <!-- Center -->
+          <circle cx="45" cy="45" r="7" fill="url(#markRG)"/>
+          <circle cx="45" cy="45" r="3" fill="#0a0507"/>
+        </svg>
+      </div>
+
+      <!-- Hero Logo Text -->
+      <div class="hero-logo-text">
+        <svg width="480" height="100" viewBox="0 0 480 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="heroRG" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%"   stop-color="#f0d5c0"/>
+              <stop offset="35%"  stop-color="#e8c4a0"/>
+              <stop offset="65%"  stop-color="#c9936a"/>
+              <stop offset="100%" stop-color="#9a6040"/>
+            </linearGradient>
+          </defs>
+          <text x="240" y="62" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="62" font-weight="600" font-style="italic" letter-spacing="8" fill="url(#heroRG)">Gamzem</text>
+        </svg>
+        <div class="hero-logo-rule">
+          <span class="hlr-line"></span>
+          <span class="hlr-diamond">◆</span>
+          <span class="hlr-line"></span>
+        </div>
+        <p class="hero-logo-sub">C O I F F E U R</p>
+      </div>
+
+      <p class="hero-tagline">Premium Friseursalon für Frauen · Mönchengladbach</p>
+      <p id="typewriter" class="hero-typewriter"></p>
+      <div class="hero-cta-row">
+        <a href="#booking" class="btn-primary"><i class="fa-regular fa-calendar-check"></i> Termin buchen</a>
+        <a href="tel:+4921616784842" class="btn-outline"><i class="fa-solid fa-phone"></i> 02161 6784842</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hs-item">
+          <span class="hs-val">4,9</span>
+          <span class="hs-stars">★★★★★</span>
+          <span class="hs-label">Google-Sterne</span>
+        </div>
+        <div class="hs-div"></div>
+        <div class="hs-item">
+          <span class="hs-val">432+</span>
+          <span class="hs-label">Bewertungen</span>
+        </div>
+        <div class="hs-div"></div>
+        <div class="hs-item">
+          <span class="hs-val">10+</span>
+          <span class="hs-label">Jahre Erfahrung</span>
+        </div>
+        <div class="hs-div"></div>
+        <div class="hs-item">
+          <span class="hs-val">100%</span>
+          <span class="hs-label">Zufriedenheit</span>
+        </div>
+      </div>
+    </div>
+    <a href="#services" class="hero-scroll" aria-label="Scrollen">
+      <span class="hs-icon"><i class="fa-solid fa-chevron-down"></i></span>
+    </a>
+  </section>
+
+  <!-- ── Info Strip ───────────────────────────────── -->
+  <div class="info-strip">
+    <span><i class="fa-solid fa-location-dot"></i> Erzbergerstraße 162, 41061 Mönchengladbach</span>
+    <span class="is-sep">◆</span>
+    <span><i class="fa-solid fa-phone"></i> 02161 6784842</span>
+    <span class="is-sep">◆</span>
+    <span><i class="fa-regular fa-clock"></i> Mo: 11:30–16:00 &nbsp;|&nbsp; Di–Fr: 10:00–18:00 &nbsp;|&nbsp; Sa: 09:00–14:00</span>
+  </div>
+
+  <!-- ── Services ─────────────────────────────────── -->
+  <section id="services" class="section">
+    <div class="section-header">
+      <p class="section-eyebrow"><i class="fa-solid fa-spa"></i> &nbsp;Unsere Leistungen</p>
+      <h2>Schönheit, die begeistert</h2>
+      <p class="section-desc">Jede Leistung wird mit größter Sorgfalt und Premium-Produkten durchgeführt – für ein Ergebnis, das Sie strahlen lässt.</p>
+      <div class="section-rule"></div>
+    </div>
+    <div class="services-grid">
+      <div class="svc-tile" style="--img:url('https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=900&q=80')">
+        <div class="svc-overlay"></div>
+        <div class="svc-content">
+          <div class="svc-icon-wrap">
+            <i class="fa-solid fa-scissors svc-icon"></i>
+          </div>
+          <h3>Damenhaarschnitt</h3>
+          <p>Präzise Schnitte, die Ihre Persönlichkeit betonen – von klassisch elegant bis modern trendy.</p>
+          <div class="svc-divider"></div>
+          <span class="svc-cta">Jetzt buchen <i class="fa-solid fa-arrow-right"></i></span>
+        </div>
+      </div>
+      <div class="svc-tile" style="--img:url('https://images.unsplash.com/photo-1560869713-7d0a29430803?w=900&q=80')">
+        <div class="svc-overlay"></div>
+        <div class="svc-content">
+          <div class="svc-icon-wrap">
+            <i class="fa-solid fa-palette svc-icon"></i>
+          </div>
+          <h3>Balayage</h3>
+          <p>Natürliche Farbverläufe für ein strahlendes, mehrdimensionales Farbergebnis.</p>
+          <div class="svc-divider"></div>
+          <span class="svc-cta">Jetzt buchen <i class="fa-solid fa-arrow-right"></i></span>
+        </div>
+      </div>
+      <div class="svc-tile" style="--img:url('https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?w=900&q=80')">
+        <div class="svc-overlay"></div>
+        <div class="svc-content">
+          <div class="svc-icon-wrap">
+            <i class="fa-solid fa-wand-sparkles svc-icon"></i>
+          </div>
+          <h3>Blondierung</h3>
+          <p>Perfekte Aufhellung mit schonenden Premium-Produkten für strahlend helles Haar.</p>
+          <div class="svc-divider"></div>
+          <span class="svc-cta">Jetzt buchen <i class="fa-solid fa-arrow-right"></i></span>
+        </div>
+      </div>
+      <div class="svc-tile" style="--img:url('https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?w=900&q=80')">
+        <div class="svc-overlay"></div>
+        <div class="svc-content">
+          <div class="svc-icon-wrap">
+            <i class="fa-solid fa-highlighter svc-icon"></i>
+          </div>
+          <h3>Strähnen &amp; Highlights</h3>
+          <p>Gezielte Farbakzente für mehr Tiefe, Glanz und Strahlkraft in Ihrem Haar.</p>
+          <div class="svc-divider"></div>
+          <span class="svc-cta">Jetzt buchen <i class="fa-solid fa-arrow-right"></i></span>
+        </div>
+      </div>
+      <div class="svc-tile" style="--img:url('https://images.unsplash.com/photo-1522337942116-2082f6c97124?w=900&q=80')">
+        <div class="svc-overlay"></div>
+        <div class="svc-content">
+          <div class="svc-icon-wrap">
+            <i class="fa-solid fa-wind svc-icon"></i>
+          </div>
+          <h3>Lockenfrisuren</h3>
+          <p>Traumhafte Locken und Wellen für jeden Anlass – Alltag oder besondere Momente.</p>
+          <div class="svc-divider"></div>
+          <span class="svc-cta">Jetzt buchen <i class="fa-solid fa-arrow-right"></i></span>
+        </div>
+      </div>
+      <div class="svc-tile" style="--img:url('https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=900&q=80')">
+        <div class="svc-overlay"></div>
+        <div class="svc-content">
+          <div class="svc-icon-wrap">
+            <i class="fa-regular fa-eye svc-icon"></i>
+          </div>
+          <h3>Augenbrauen</h3>
+          <p>Professionelles Formen, Zupfen und Styling für ausdrucksstarke Augenbrauen.</p>
+          <div class="svc-divider"></div>
+          <span class="svc-cta">Jetzt buchen <i class="fa-solid fa-arrow-right"></i></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Gallery Strip ───────────────────────────── -->
+  <div class="gallery-strip">
+    <div class="gallery-img" style="background-image:url('https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=600&q=80')"></div>
+    <div class="gallery-img" style="background-image:url('https://images.unsplash.com/photo-1562322140-8baeececf3df?w=600&q=80')"></div>
+    <div class="gallery-img" style="background-image:url('https://images.unsplash.com/photo-1600948836101-f9ffda59d250?w=600&q=80')"></div>
+    <div class="gallery-img" style="background-image:url('https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=600&q=80')"></div>
+    <div class="gallery-img" style="background-image:url('https://images.unsplash.com/photo-1607779097040-26e80aa78e66?w=600&q=80')"></div>
+  </div>
+
+  <!-- ── About ────────────────────────────────────── -->
+  <section id="about" class="section section-dark">
+    <div class="about-inner">
+      <div class="about-images">
+        <div class="ai-main af"></div>
+        <div class="ai-secondary af2"></div>
+        <div class="about-rating-badge">
+          <div class="arb-stars">★★★★★</div>
+          <div class="arb-val">4,9</div>
+          <div class="arb-label">Google-Bewertung</div>
+          <div class="arb-count">432 Stimmen</div>
+        </div>
+      </div>
+      <div class="about-text">
+        <p class="section-eyebrow"><i class="fa-solid fa-crown"></i> &nbsp;Über uns</p>
+        <h2>Ihr Wohlfühlort<br><em>für Schönheit</em></h2>
+        <div class="section-rule" style="margin:1.4rem 0 2rem"></div>
+        <p class="about-lead">Willkommen bei Gamzem Coiffeur – Ihrem Premium-Friseursalon für Frauen im Herzen von Mönchengladbach. Seit über einem Jahrzehnt widmen wir uns mit Leidenschaft der Schönheitspflege unserer Kundinnen.</p>
+        <p>Spezialisiert auf moderne Farbtechniken wie Balayage, Highlights und Blondierung verbinden wir handwerkliche Perfektion mit einem tiefen Gespür für aktuelle Trends. Jede Kundin ist einzigartig – und genau so behandeln wir sie.</p>
+        <p>Unser Salon bietet Ihnen eine entspannte, feminine Atmosphäre, in der Sie sich von Anfang an wohlfühlen. Ihr persönlicher Stil steht bei uns immer im Mittelpunkt.</p>
+        <div class="about-feats">
+          <div class="af-item">
+            <i class="fa-solid fa-spa af-icon"></i>
+            <div><strong>Premium Farbtechniken</strong><br><small>Balayage, Highlights &amp; mehr</small></div>
+          </div>
+          <div class="af-item">
+            <i class="fa-solid fa-bottle-droplet af-icon"></i>
+            <div><strong>L'Oréal &amp; Wella</strong><br><small>Nur die besten Produkte</small></div>
+          </div>
+          <div class="af-item">
+            <i class="fa-solid fa-heart af-icon"></i>
+            <div><strong>Persönliche Beratung</strong><br><small>Individuell &amp; einfühlsam</small></div>
+          </div>
+          <div class="af-item">
+            <i class="fa-solid fa-star af-icon"></i>
+            <div><strong>4,9 bei Google</strong><br><small>432 begeisterte Bewertungen</small></div>
+          </div>
+        </div>
+        <a href="#booking" class="btn-primary" style="margin-top:2.2rem;display:inline-flex;align-items:center;gap:0.6rem;">
+          <i class="fa-regular fa-calendar-check"></i> Termin vereinbaren
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Booking ───────────────────────────────────── -->
+  <section id="booking" class="section">
+    <div class="section-header">
+      <p class="section-eyebrow"><i class="fa-regular fa-calendar-check"></i> &nbsp;Terminbuchung</p>
+      <h2>Ihren Wunschtermin wählen</h2>
+      <p class="section-desc">Wählen Sie ein Datum und eine Uhrzeit – wir freuen uns auf Ihren Besuch.</p>
+      <div class="section-rule"></div>
+    </div>
+    <div class="booking-wrapper">
+      <!-- Calendar -->
+      <div class="cal-panel">
+        <div class="cal-nav">
+          <button id="calPrev" class="cal-nav-btn"><i class="fa-solid fa-chevron-left"></i></button>
+          <span id="calTitle" class="cal-title"></span>
+          <button id="calNext" class="cal-nav-btn"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+        <div class="cal-weekdays">
+          <span>Mo</span><span>Di</span><span>Mi</span><span>Do</span><span>Fr</span><span>Sa</span><span>So</span>
+        </div>
+        <div id="calGrid" class="cal-grid"></div>
+        <div class="cal-legend">
+          <span class="leg-item"><span class="leg-dot leg-open"></span>Verfügbar</span>
+          <span class="leg-item"><span class="leg-dot leg-today"></span>Heute</span>
+          <span class="leg-item"><span class="leg-dot leg-closed"></span>Geschlossen</span>
+        </div>
+      </div>
+      <!-- Slots -->
+      <div class="slots-panel">
+        <div class="slots-header">
+          <h4><i class="fa-regular fa-clock"></i> Verfügbare Zeiten</h4>
+          <span id="slotsDate" class="slots-date-label">Datum wählen</span>
+        </div>
+        <div id="slotsGrid" class="slots-grid">
+          <p class="slots-placeholder"><i class="fa-regular fa-calendar"></i><br>Bitte zuerst ein Datum wählen.</p>
+        </div>
+      </div>
+      <!-- Form -->
+      <div class="booking-form-panel">
+        <h4><i class="fa-solid fa-user-pen"></i> Ihre Angaben</h4>
+        <div class="booking-summary">
+          <div class="bs-row"><span class="bs-label"><i class="fa-regular fa-calendar"></i> Datum</span><span id="bsDate">–</span></div>
+          <div class="bs-row"><span class="bs-label"><i class="fa-regular fa-clock"></i> Uhrzeit</span><span id="bsTime">–</span></div>
+        </div>
+        <form id="bookingForm" novalidate>
+          <div class="form-group">
+            <label for="bfName"><i class="fa-solid fa-user"></i> Name *</label>
+            <input id="bfName" type="text" placeholder="Ihr vollständiger Name" required>
+          </div>
+          <div class="form-group">
+            <label for="bfPhone"><i class="fa-solid fa-phone"></i> Telefon *</label>
+            <input id="bfPhone" type="tel" placeholder="+49 …" required>
+          </div>
+          <div class="form-group">
+            <label for="bfService"><i class="fa-solid fa-scissors"></i> Leistung *</label>
+            <select id="bfService" required>
+              <option value="">Bitte wählen …</option>
+              <option>Damenhaarschnitt</option>
+              <option>Balayage</option>
+              <option>Blondierung</option>
+              <option>Strähnen &amp; Highlights</option>
+              <option>Lockenfrisuren</option>
+              <option>Augenbrauen</option>
+              <option>Sonstiges</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="bfNote"><i class="fa-solid fa-pen-to-square"></i> Anmerkung</label>
+            <textarea id="bfNote" rows="3" placeholder="Besondere Wünsche …"></textarea>
+          </div>
+          <div id="bookingErr" class="form-msg form-err hidden"><i class="fa-solid fa-circle-exclamation"></i> Bitte Datum, Uhrzeit und alle Pflichtfelder ausfüllen.</div>
+          <div id="bookingOk"  class="form-msg form-ok  hidden"><i class="fa-solid fa-circle-check"></i> Ihr Termin wurde übermittelt! Wir freuen uns auf Sie.</div>
+          <button id="bookSubmitBtn" type="submit" class="btn-primary btn-full">
+            <span id="bookBtnText"><i class="fa-solid fa-paper-plane"></i> Termin anfragen</span>
+            <span id="bookBtnSpinner" class="btn-spinner hidden"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Reviews ──────────────────────────────────── -->
+  <section id="reviews" class="section section-dark">
+    <div class="section-header">
+      <p class="section-eyebrow"><i class="fa-solid fa-star"></i> &nbsp;Kundenbewertungen</p>
+      <h2>Was unsere Kundinnen sagen</h2>
+      <p class="section-desc">Über 432 begeisterte Bewertungen bei Google – lesen Sie selbst.</p>
+      <div class="section-rule"></div>
+      <div class="reviews-meta">
+        <span class="rm-stars">★★★★★</span>
+        <span class="rm-score">4,9</span>
+        <span class="rm-slash">/</span>
+        <span class="rm-max">5,0</span>
+        <span class="rm-count">· 432 Google-Bewertungen</span>
+      </div>
+    </div>
+    <div class="reviews-masonry">
+      <div class="rv">
+        <div class="rv-top">
+          <div class="rv-stars">★★★★★</div>
+          <span class="rv-date">vor 2 Wochen</span>
+        </div>
+        <p class="rv-text">„Absolut fantastisch! Gamzem hat mein Haar perfekt verstanden. Das Balayage-Ergebnis ist atemberaubend – ich bekomme überall Komplimente. Der Salon ist wunderschön und die Atmosphäre so entspannt. Ich komme definitiv wieder!"</p>
+        <div class="rv-author">
+          <span class="rv-avatar">A</span>
+          <div><span class="rv-name">Anja Spensberger</span><span class="rv-verified"><i class="fa-solid fa-circle-check"></i> Google</span></div>
+        </div>
+      </div>
+      <div class="rv">
+        <div class="rv-top">
+          <div class="rv-stars">★★★★★</div>
+          <span class="rv-date">vor 3 Wochen</span>
+        </div>
+        <p class="rv-text">„Sehr freundliche und professionelle Atmosphäre. Meine Highlights wurden genau so, wie ich es mir vorgestellt hatte. Endlich ein Salon, der wirklich zuhört und versteht, was man möchte. Absolut empfehlenswert!"</p>
+        <div class="rv-author">
+          <span class="rv-avatar">C</span>
+          <div><span class="rv-name">Itsme92</span><span class="rv-verified"><i class="fa-solid fa-circle-check"></i> Google</span></div>
+        </div>
+      </div>
+      <div class="rv">
+        <div class="rv-top">
+          <div class="rv-stars">★★★★★</div>
+          <span class="rv-date">vor 1 Monat</span>
+        </div>
+        <p class="rv-text">„Gamzem ist einfach die Beste! Ich war noch nie so zufrieden mit meiner Haarfarbe. Die Blondierung ist gleichmäßig und schonend durchgeführt worden. Tolle Beratung und super Preis-Leistung!"</p>
+        <div class="rv-author">
+          <span class="rv-avatar">D</span>
+          <div><span class="rv-name">Dilara</span><span class="rv-verified"><i class="fa-solid fa-circle-check"></i> Google</span></div>
+        </div>
+      </div>
+      <div class="rv">
+        <div class="rv-top">
+          <div class="rv-stars">★★★★★</div>
+          <span class="rv-date">vor 1 Monat</span>
+        </div>
+        <p class="rv-text">„Wirklich ein tolles Erlebnis von Anfang bis Ende. Die Beratung war sehr kompetent und mein neuer Haarschnitt sitzt perfekt. Man fühlt sich sofort wohl und gut aufgehoben. Ich werde den Salon auf jeden Fall weiterempfehlen."</p>
+        <div class="rv-author">
+          <span class="rv-avatar">P</span>
+          <div><span class="rv-name">Patricia Schuhen</span><span class="rv-verified"><i class="fa-solid fa-circle-check"></i> Google</span></div>
+        </div>
+      </div>
+      <div class="rv">
+        <div class="rv-top">
+          <div class="rv-stars">★★★★★</div>
+          <span class="rv-date">vor 2 Monaten</span>
+        </div>
+        <p class="rv-text">„Meine Frau war begeistert! Das Balayage sieht unglaublich natürlich und schön aus. Gamzem hat sich sehr viel Zeit genommen und sehr professionell gearbeitet. Wir kommen auf jeden Fall wieder."</p>
+        <div class="rv-author">
+          <span class="rv-avatar">M</span>
+          <div><span class="rv-name">Michael Drews</span><span class="rv-verified"><i class="fa-solid fa-circle-check"></i> Google</span></div>
+        </div>
+      </div>
+      <div class="rv">
+        <div class="rv-top">
+          <div class="rv-stars">★★★★★</div>
+          <span class="rv-date">vor 2 Monaten</span>
+        </div>
+        <p class="rv-text">„Toller Salon mit sehr freundlichem Service. Mein Bob-Schnitt ist genau so geworden, wie ich es wollte. Die Atmosphäre ist sehr angenehm und man fühlt sich rundum gut beraten. Sehr gerne wieder!"</p>
+        <div class="rv-author">
+          <span class="rv-avatar">C</span>
+          <div><span class="rv-name">Charlotte Rauch</span><span class="rv-verified"><i class="fa-solid fa-circle-check"></i> Google</span></div>
+        </div>
+      </div>
+      <div class="rv">
+        <div class="rv-top">
+          <div class="rv-stars">★★★★★</div>
+          <span class="rv-date">vor 3 Monaten</span>
+        </div>
+        <p class="rv-text">„Çok memnun kaldım! Gamzem Hanım gerçekten çok profesyonel ve ilgili. Saçlarım çok güzel oldu. Balayage ve kesim için kesinlikle tavsiye ederim. Çok teşekkürler!"</p>
+        <div class="rv-author">
+          <span class="rv-avatar">S</span>
+          <div><span class="rv-name">Sevgi Doğan</span><span class="rv-verified"><i class="fa-solid fa-circle-check"></i> Google</span></div>
+        </div>
+      </div>
+      <div class="rv">
+        <div class="rv-top">
+          <div class="rv-stars">★★★★★</div>
+          <span class="rv-date">vor 3 Monaten</span>
+        </div>
+        <p class="rv-text">„Meine Frau lässt hier seit Jahren ihre Haare machen und ist immer begeistert. Das Ergebnis ist stets hervorragend und der Service sehr persönlich. Ein echter Geheimtipp in Mönchengladbach!"</p>
+        <div class="rv-author">
+          <span class="rv-avatar">U</span>
+          <div><span class="rv-name">Udo Pesch</span><span class="rv-verified"><i class="fa-solid fa-circle-check"></i> Google</span></div>
+        </div>
+      </div>
+      <div class="rv">
+        <div class="rv-top">
+          <div class="rv-stars">★★★★★</div>
+          <span class="rv-date">vor 4 Monaten</span>
+        </div>
+        <p class="rv-text">„Wunderschöner Salon, kompetente Beratung und fantastisches Ergebnis. Meine Locken wurden perfekt in Szene gesetzt. Gamzem nimmt sich wirklich Zeit für jeden Wunsch. Ich bin so glücklich!"</p>
+        <div class="rv-author">
+          <span class="rv-avatar">B</span>
+          <div><span class="rv-name">Barbara Flocken-Zimmermanns</span><span class="rv-verified"><i class="fa-solid fa-circle-check"></i> Google</span></div>
+        </div>
+      </div>
+      <div class="rv">
+        <div class="rv-top">
+          <div class="rv-stars">★★★★★</div>
+          <span class="rv-date">vor 5 Monaten</span>
+        </div>
+        <p class="rv-text">„Sehr professionell und freundlich. Die Highlights sind genau nach meinen Wünschen geworden. Der Salon ist sehr sauber und einladend. Ich freue mich schon auf meinen nächsten Besuch!"</p>
+        <div class="rv-author">
+          <span class="rv-avatar">I</span>
+          <div><span class="rv-name">Iwona Kukawka</span><span class="rv-verified"><i class="fa-solid fa-circle-check"></i> Google</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Contact ───────────────────────────────────── -->
+  <section id="contact" class="section">
+    <div class="section-header">
+      <p class="section-eyebrow"><i class="fa-solid fa-location-dot"></i> &nbsp;Kontakt &amp; Anfahrt</p>
+      <h2>Finden Sie uns</h2>
+      <div class="section-rule"></div>
+    </div>
+    <div class="contact-grid">
+      <div class="cc">
+        <div class="cc-icon-wrap"><i class="fa-solid fa-location-dot cc-icon"></i></div>
+        <h4>Adresse</h4>
+        <p>Erzbergerstraße 162<br>41061 Mönchengladbach</p>
+      </div>
+      <div class="cc">
+        <div class="cc-icon-wrap"><i class="fa-solid fa-phone cc-icon"></i></div>
+        <h4>Telefon</h4>
+        <p><a href="tel:+4921616784842">02161 6784842</a></p>
+      </div>
+      <div class="cc">
+        <div class="cc-icon-wrap"><i class="fa-regular fa-clock cc-icon"></i></div>
+        <h4>Öffnungszeiten</h4>
+        <table class="hours-table ht-row">
+          <tr><td>Montag</td><td>11:30 – 16:00</td></tr>
+          <tr><td>Dienstag – Freitag</td><td>10:00 – 18:00</td></tr>
+          <tr><td>Samstag</td><td>09:00 – 14:00</td></tr>
+          <tr class="closed"><td>Sonntag</td><td>Geschlossen</td></tr>
+        </table>
+      </div>
+      <div class="cc">
+        <div class="cc-icon-wrap"><i class="fa-solid fa-star cc-icon"></i></div>
+        <h4>Bewertung</h4>
+        <p class="cc-rating">4,9 <span>★★★★★</span></p>
+        <p>432 Google-Bewertungen</p>
+      </div>
+    </div>
+    <div class="map-wrap">
+      <iframe
+        src="https://maps.google.com/maps?q=Erzbergstra%C3%9Fe+162+41061+M%C3%B6nchengladbach&output=embed"
+        width="100%" height="420" style="border:0;" allowfullscreen="" loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+  </section>
+
+  <!-- ── Footer ────────────────────────────────────── -->
+  <footer>
+    <div class="footer-logo">
+      <svg width="240" height="72" viewBox="0 0 400 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="ftRG" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%"   stop-color="#f0d5c0"/>
+            <stop offset="50%"  stop-color="#c9936a"/>
+            <stop offset="100%" stop-color="#9a6040"/>
+          </linearGradient>
+        </defs>
+        <path d="M30,60 Q50,44 70,60 Q50,76 30,60Z" fill="url(#ftRG)" opacity="0.6"/>
+        <text x="200" y="66" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="52" font-weight="600" font-style="italic" letter-spacing="6" fill="url(#ftRG)">Gamzem</text>
+        <text x="200" y="88" text-anchor="middle" font-family="Raleway, sans-serif" font-size="11" font-weight="400" letter-spacing="8" fill="url(#ftRG)" opacity="0.75">COIFFEUR</text>
+        <path d="M370,60 Q350,44 330,60 Q350,76 370,60Z" fill="url(#ftRG)" opacity="0.6"/>
+      </svg>
+    </div>
+    <p class="footer-tagline">Premium Friseursalon für Frauen</p>
+    <p class="footer-addr">Erzbergerstraße 162 · 41061 Mönchengladbach · <a href="tel:+4921616784842">02161 6784842</a></p>
+    <div class="footer-links">
+      <a href="#">Impressum</a>
+      <span>·</span>
+      <a href="#">Datenschutz</a>
+    </div>
+    <p class="footer-copy">© 2025 Gamzem Coiffeur · Alle Rechte vorbehalten</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
