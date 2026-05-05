@@ -1,502 +1,423 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Malek Barbershop Willich – Premium Herrenfriseur</title>
-  <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
 
-  <!-- Navbar -->
-  <nav class="navbar" id="navbar">
-    <div class="nav-container">
-      <a href="#home" class="logo">
-        <div class="logo-icon-wrap"><span>✂</span></div>
-        <div class="logo-text">
-          <span class="logo-name">MALEK</span>
-          <span class="logo-sub">BARBERSHOP · WILLICH</span>
-        </div>
-      </a>
-      <ul class="nav-links" id="navLinks">
-        <li><a href="#home">Home</a></li>
-        <li><a href="#tools">Leistungen</a></li>
-        <li><a href="#gallery">Galerie</a></li>
-        <li><a href="#reviews">Bewertungen</a></li>
-        <li><a href="#contact">Kontakt</a></li>
-      </ul>
-      <a href="tel:015730170760" class="btn btn-gold nav-cta">☎ Anrufen</a>
-      <button class="hamburger" id="hamburger">☰</button>
-    </div>
-  </nav>
+<!-- ═══ NAVBAR ═══ -->
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="#home" class="nav-logo">
+      <!-- Inline ornamental SVG logo -->
+      <svg class="logo-svg" viewBox="0 0 260 70" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="gGold" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%"   stop-color="#f0c040"/>
+            <stop offset="50%"  stop-color="#d4a017"/>
+            <stop offset="100%" stop-color="#9a7010"/>
+          </linearGradient>
+        </defs>
+        <!-- Decorative lines top -->
+        <line x1="10" y1="14" x2="95" y2="14" stroke="url(#gGold)" stroke-width="0.8"/>
+        <line x1="165" y1="14" x2="250" y2="14" stroke="url(#gGold)" stroke-width="0.8"/>
+        <!-- Scissors left -->
+        <text x="12" y="22" font-size="14" fill="url(#gGold)" font-family="sans-serif">✂</text>
+        <!-- Comb right -->
+        <text x="232" y="22" font-size="13" fill="url(#gGold)" font-family="sans-serif">𝄐</text>
+        <!-- Barber pole center top -->
+        <rect x="126" y="4" width="8" height="22" rx="4" fill="#111"/>
+        <rect x="126" y="4" width="8" height="22" rx="4" fill="none" stroke="url(#gGold)" stroke-width="0.6"/>
+        <line x1="127" y1="7"  x2="133" y2="13" stroke="#c0392b" stroke-width="1.5"/>
+        <line x1="127" y1="13" x2="133" y2="19" stroke="#2471a3" stroke-width="1.5"/>
+        <line x1="127" y1="19" x2="133" y2="25" stroke="#c0392b" stroke-width="1.5"/>
+        <!-- Ornamental diamonds -->
+        <polygon points="100,14 104,10 108,14 104,18" fill="url(#gGold)"/>
+        <polygon points="152,14 156,10 160,14 156,18" fill="url(#gGold)"/>
+        <!-- Main name -->
+        <text x="130" y="46" text-anchor="middle" font-family="Cinzel, serif" font-size="22" font-weight="900" fill="url(#gGold)" letter-spacing="6">MALEK</text>
+        <!-- Sub name -->
+        <text x="130" y="62" text-anchor="middle" font-family="Inter, sans-serif" font-size="7.5" fill="#b8901a" letter-spacing="5.5">BARBERSHOP · WILLICH</text>
+        <!-- Decorative lines bottom -->
+        <line x1="20" y1="68" x2="110" y2="68" stroke="url(#gGold)" stroke-width="0.5"/>
+        <line x1="150" y1="68" x2="240" y2="68" stroke="url(#gGold)" stroke-width="0.5"/>
+        <circle cx="130" cy="68" r="2" fill="url(#gGold)"/>
+      </svg>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#services">Leistungen</a></li>
+      <li><a href="#about">Über uns</a></li>
+      <li><a href="#booking">Termin</a></li>
+      <li><a href="#reviews">Bewertungen</a></li>
+      <li><a href="#contact">Kontakt</a></li>
+    </ul>
+    <a href="#booking" class="nav-cta">Termin buchen</a>
+    <button class="hamburger" id="hamburger">☰</button>
+  </div>
+</nav>
 
-  <!-- Hero -->
-  <section class="hero" id="home">
-    <div class="hero-bg"></div>
-    <div class="hero-overlay"></div>
-    <div class="particles" id="particles"></div>
-    <div class="hero-content">
-      <div class="hero-badge">
-        <span class="badge-dot"></span>
-        Premium Barbershop · Willich · Geöffnet
-      </div>
-      <h1 class="hero-title">
-        <span class="title-line-1">Dein Style.</span>
-        <span class="title-line-2">Dein <em>Statement</em>.</span>
-      </h1>
-      <p class="hero-sub">
-        <span class="typewriter" id="typewriter"></span>
-      </p>
-      <div class="hero-actions">
-        <a href="tel:015730170760" class="btn btn-gold btn-lg">☎ Jetzt anrufen</a>
-        <a href="#tools" class="btn btn-ghost btn-lg">Unsere Services</a>
-      </div>
-      <div class="hero-trust">
-        <div class="trust-item">
-          <div class="trust-stars">★★★★★</div>
-          <div class="trust-text"><strong>5,0</strong> Google Bewertung</div>
-        </div>
-        <div class="trust-sep"></div>
-        <div class="trust-item">
-          <div class="trust-num">183</div>
-          <div class="trust-text">Rezensionen</div>
-        </div>
-        <div class="trust-sep"></div>
-        <div class="trust-item">
-          <div class="trust-num">#1</div>
-          <div class="trust-text">Barbershop Willich</div>
-        </div>
-      </div>
+<!-- ═══ HERO ═══ -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-vignette"></div>
+  <div id="particles" class="particles"></div>
+  <div class="hero-body">
+    <div class="hero-eyebrow">
+      <span class="eyebrow-line"></span>
+      <span class="eyebrow-dot"></span>
+      Premium Barbershop &bull; Willich &bull; Geöffnet
+      <span class="eyebrow-dot"></span>
+      <span class="eyebrow-line"></span>
     </div>
-    <div class="hero-scroll-hint">
-      <div class="scroll-mouse"><div class="scroll-wheel"></div></div>
+    <h1 class="hero-h1">
+      <em>Perfektion</em><br/>
+      <span>beginnt hier.</span>
+    </h1>
+    <p class="hero-lead" id="typewriter"></p>
+    <div class="hero-ctas">
+      <a href="#booking" class="btn-primary">Jetzt Termin buchen</a>
+      <a href="tel:015730170760" class="btn-secondary">☎ 01573 0170760</a>
     </div>
-  </section>
-
-  <!-- Info Bar -->
-  <div class="info-bar">
-    <div class="info-bar-inner">
-      <div class="ib-item"><span>📍</span> Jakob-Krebs-Straße 48, 47877 Willich</div>
-      <div class="ib-sep"></div>
-      <div class="ib-item"><span>📞</span><a href="tel:015730170760">01573 0170760</a></div>
-      <div class="ib-sep"></div>
-      <div class="ib-item"><span>🟢</span> Mo–Fr 09–18:30 · Sa 08:30–16:00</div>
-      <div class="ib-sep"></div>
-      <div class="ib-item"><span>💈</span> Auch ohne Termin willkommen!</div>
+    <div class="hero-kpi">
+      <div class="kpi"><span class="kpi-n">5,0</span><span class="kpi-s">★★★★★</span><span class="kpi-l">Google</span></div>
+      <div class="kpi-div"></div>
+      <div class="kpi"><span class="kpi-n">183</span><span class="kpi-l">Bewertungen</span></div>
+      <div class="kpi-div"></div>
+      <div class="kpi"><span class="kpi-n">#1</span><span class="kpi-l">Willich</span></div>
     </div>
   </div>
+  <div class="hero-ornament">
+    <svg viewBox="0 0 120 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="60" y1="0" x2="60" y2="400" stroke="#d4a017" stroke-width="0.5" stroke-dasharray="4 6" opacity="0.4"/>
+      <circle cx="60" cy="80"  r="4" fill="#d4a017" opacity="0.6"/>
+      <circle cx="60" cy="180" r="6" fill="#d4a017" opacity="0.5"/>
+      <circle cx="60" cy="280" r="4" fill="#d4a017" opacity="0.6"/>
+      <polygon points="60,50 65,65 60,80 55,65" fill="#d4a017" opacity="0.3"/>
+    </svg>
+  </div>
+  <a href="#services" class="hero-scroll-btn" aria-label="Scroll">
+    <div class="scroll-track"><div class="scroll-thumb"></div></div>
+    <span>Scroll</span>
+  </a>
+</section>
 
-  <!-- Tools / Services -->
-  <section class="tools-section" id="tools">
-    <div class="section-tag">Was wir anbieten</div>
-    <h2 class="section-heading">Unsere <span>Leistungen</span></h2>
-    <p class="section-desc">Jeder Schnitt ist ein Kunstwerk – mit Leidenschaft, Präzision und erstklassigen Werkzeugen.</p>
+<!-- ═══ STRIP ═══ -->
+<div class="strip">
+  <div class="strip-inner">
+    <span>✂ Jakob-Krebs-Straße 48, 47877 Willich</span>
+    <span class="strip-sep">◆</span>
+    <a href="tel:015730170760">☎ 01573 0170760</a>
+    <span class="strip-sep">◆</span>
+    <span>🟢 Mo–Fr 09–18:30 &nbsp;·&nbsp; Sa 08:30–16</span>
+    <span class="strip-sep">◆</span>
+    <span>💈 Walk-in willkommen</span>
+  </div>
+</div>
 
-    <div class="tools-icons">
-      <div class="tool-icon-item">
-        <div class="tool-icon-circle">✂</div>
-        <span>Schere</span>
-      </div>
-      <div class="tool-icon-item">
-        <div class="tool-icon-circle">🪒</div>
-        <span>Rasierer</span>
-      </div>
-      <div class="tool-icon-item">
-        <div class="tool-icon-circle">💈</div>
-        <span>Barber Pol</span>
-      </div>
-      <div class="tool-icon-item">
-        <div class="tool-icon-circle">🧴</div>
-        <span>Pflegemittel</span>
-      </div>
-      <div class="tool-icon-item">
-        <div class="tool-icon-circle">🪮</div>
-        <span>Kamm & Bürste</span>
-      </div>
-      <div class="tool-icon-item">
-        <div class="tool-icon-circle">⚡</div>
-        <span>Haarmaschine</span>
-      </div>
-    </div>
+<!-- ═══ SERVICES ═══ -->
+<section class="services-section" id="services">
+  <div class="s-header">
+    <div class="ornament-tag">Was wir anbieten</div>
+    <h2>Unsere <em>Leistungen</em></h2>
+    <p>Jeder Schnitt ist ein Kunstwerk – ausgeführt mit Leidenschaft, Präzision und besten Werkzeugen.</p>
+  </div>
+  <div class="svc-grid">
 
-    <div class="services-grid">
-      <div class="svc-card">
-        <div class="svc-num">01</div>
-        <div class="svc-icon">✂</div>
+    <div class="svc-tile" style="--img:url('https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=700&q=80')">
+      <div class="svc-img"></div>
+      <div class="svc-body">
+        <div class="svc-tools">✂</div>
         <h3>Haarschnitt</h3>
-        <p>Klassisch oder trendy – wir bringen deinen Stil perfekt zur Geltung. Individuell abgestimmt auf Kopfform und Wunsch.</p>
-        <div class="svc-footer">
-          <span class="svc-price">ab 15 €</span>
-          <span class="svc-duration">~30 Min</span>
-        </div>
+        <p>Klassisch oder modern – auf deine Kopfform und deinen Stil individuell abgestimmt.</p>
+        <div class="svc-meta"><span class="svc-p">ab 15 €</span><span class="svc-d">~ 30 Min</span></div>
       </div>
-      <div class="svc-card featured">
-        <div class="svc-popular">Beliebt</div>
-        <div class="svc-num">02</div>
-        <div class="svc-icon">🧔</div>
+    </div>
+
+    <div class="svc-tile svc-featured" style="--img:url('https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=700&q=80')">
+      <div class="svc-badge">Beliebt</div>
+      <div class="svc-img"></div>
+      <div class="svc-body">
+        <div class="svc-tools">🧔</div>
         <h3>Haarschnitt + Bart</h3>
-        <p>Das perfekte Kombi-Paket: frischer Schnitt plus makellos geformter Bart. Das Rundum-Ergebnis, das beeindruckt.</p>
-        <div class="svc-footer">
-          <span class="svc-price">ab 25 €</span>
-          <span class="svc-duration">~50 Min</span>
-        </div>
+        <p>Das perfekte Kombipaket – frischer Schnitt und makellos geformter Bart in einem.</p>
+        <div class="svc-meta"><span class="svc-p">ab 25 €</span><span class="svc-d">~ 50 Min</span></div>
       </div>
-      <div class="svc-card">
-        <div class="svc-num">03</div>
-        <div class="svc-icon">🪒</div>
+    </div>
+
+    <div class="svc-tile" style="--img:url('https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=700&q=80')">
+      <div class="svc-img"></div>
+      <div class="svc-body">
+        <div class="svc-tools">🪒</div>
         <h3>Bartpflege & Rasur</h3>
-        <p>Trimmen, konturieren, rasieren – dein Bart wird mit heißem Handtuch und klassischer Technik perfektioniert.</p>
-        <div class="svc-footer">
-          <span class="svc-price">ab 10 €</span>
-          <span class="svc-duration">~20 Min</span>
-        </div>
+        <p>Trimmen, konturieren, heiße Nassrasur – dein Bart wird mit klassischer Technik perfektioniert.</p>
+        <div class="svc-meta"><span class="svc-p">ab 10 €</span><span class="svc-d">~ 20 Min</span></div>
       </div>
-      <div class="svc-card">
-        <div class="svc-num">04</div>
-        <div class="svc-icon">⚡</div>
+    </div>
+
+    <div class="svc-tile" style="--img:url('https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=700&q=80')">
+      <div class="svc-img"></div>
+      <div class="svc-body">
+        <div class="svc-tools">⚡</div>
         <h3>Skin Fade</h3>
-        <p>Präziser Maschinenübergang von Null bis zur gewünschten Länge – der modernste und sauberste Look.</p>
-        <div class="svc-footer">
-          <span class="svc-price">ab 18 €</span>
-          <span class="svc-duration">~35 Min</span>
-        </div>
+        <p>Präziser Maschinenübergang von Null bis zur Wunschlänge – der sauberste, modernste Look.</p>
+        <div class="svc-meta"><span class="svc-p">ab 18 €</span><span class="svc-d">~ 35 Min</span></div>
       </div>
-      <div class="svc-card">
-        <div class="svc-num">05</div>
-        <div class="svc-icon">👦</div>
+    </div>
+
+    <div class="svc-tile" style="--img:url('https://images.unsplash.com/photo-1560066984-138dadb4c035?w=700&q=80')">
+      <div class="svc-img"></div>
+      <div class="svc-body">
+        <div class="svc-tools">👦</div>
         <h3>Kinder-Haarschnitt</h3>
-        <p>Geduldig, freundlich und kindgerecht – für unsere jüngsten Kunden sorgen wir für ein entspanntes Erlebnis.</p>
-        <div class="svc-footer">
-          <span class="svc-price">ab 10 €</span>
-          <span class="svc-duration">~25 Min</span>
-        </div>
+        <p>Geduldig, kinderfreundlich und professionell – für unsere jüngsten Kunden.</p>
+        <div class="svc-meta"><span class="svc-p">ab 10 €</span><span class="svc-d">~ 25 Min</span></div>
       </div>
-      <div class="svc-card">
-        <div class="svc-num">06</div>
-        <div class="svc-icon">✨</div>
+    </div>
+
+    <div class="svc-tile svc-premium" style="--img:url('https://images.unsplash.com/photo-1599351431613-18ef1fdd27e1?w=700&q=80')">
+      <div class="svc-img"></div>
+      <div class="svc-body">
+        <div class="svc-tools">✨</div>
         <h3>Premium-Paket</h3>
-        <p>Haarschnitt, Bartpflege, Nassrasur und Styling in einem – das vollständige Luxus-Erlebnis bei Malek.</p>
-        <div class="svc-footer">
-          <span class="svc-price">ab 35 €</span>
-          <span class="svc-duration">~70 Min</span>
-        </div>
+        <p>Haarschnitt, Bartpflege, Nassrasur und Styling – das vollständige Luxus-Erlebnis.</p>
+        <div class="svc-meta"><span class="svc-p">ab 35 €</span><span class="svc-d">~ 70 Min</span></div>
       </div>
     </div>
-  </section>
 
-  <!-- Gallery -->
-  <section class="gallery-section" id="gallery">
-    <div class="section-tag">Unsere Arbeit</div>
-    <h2 class="section-heading">Galerie</h2>
-    <p class="section-desc">Qualität, die für sich spricht — direkt aus unserem Salon in Willich.</p>
-    <div class="gallery-grid">
-      <div class="g-item g-large" style="background-image:url('https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=900&q=85')">
-        <div class="g-overlay"><span>Precision Cut</span></div>
-      </div>
-      <div class="g-item" style="background-image:url('https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=600&q=85')">
-        <div class="g-overlay"><span>Skin Fade</span></div>
-      </div>
-      <div class="g-item" style="background-image:url('https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=600&q=85')">
-        <div class="g-overlay"><span>Barber Craft</span></div>
-      </div>
-      <div class="g-item" style="background-image:url('https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=600&q=85')">
-        <div class="g-overlay"><span>Beard Styling</span></div>
-      </div>
-      <div class="g-item g-large" style="background-image:url('https://images.unsplash.com/photo-1599351431613-18ef1fdd27e1?w=900&q=85')">
-        <div class="g-overlay"><span>Premium Finish</span></div>
-      </div>
-      <div class="g-item" style="background-image:url('https://images.unsplash.com/photo-1534297635766-a262cdcb8ee4?w=600&q=85')">
-        <div class="g-overlay"><span>Classic Shave</span></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- About / Why us -->
-  <section class="about-section" id="about">
-    <div class="about-inner">
-      <div class="about-left">
-        <div class="about-img-stack">
-          <div class="about-img-main" style="background-image:url('https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=700&q=85')"></div>
-          <div class="about-img-accent" style="background-image:url('https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=400&q=85')"></div>
-          <div class="about-gold-badge">
-            <span class="badge-star">★</span>
-            <strong>5,0</strong>
-            <small>Google</small>
-          </div>
-        </div>
-      </div>
-      <div class="about-right">
-        <div class="section-tag">Über uns</div>
-        <h2 class="section-heading">Handwerk mit<br /><span>echter Leidenschaft</span></h2>
-        <p>Willkommen bei Malek Barbershop – dem Herrenfriseur mit der perfekten Google-Bewertung in Willich. Wir vereinen traditionelles Barbier-Handwerk mit modernen Techniken.</p>
-        <p>Bei uns wirst du wie ein Gast behandelt: Es wird dir ein Getränk angeboten, die Atmosphäre ist entspannt und luxuriös, die Maschinen sind top gepflegt. Und du kannst oft sogar ohne Termin direkt drankommen.</p>
-        <div class="about-pillars">
-          <div class="pillar">
-            <div class="pillar-icon">💎</div>
-            <div>
-              <strong>Luxuriöse Ausstattung</strong>
-              <span>Gepflegte Maschinen & edles Ambiente</span>
-            </div>
-          </div>
-          <div class="pillar">
-            <div class="pillar-icon">🍵</div>
-            <div>
-              <strong>Getränke inklusive</strong>
-              <span>Dir wird etwas angeboten – sag einfach was du magst</span>
-            </div>
-          </div>
-          <div class="pillar">
-            <div class="pillar-icon">⚡</div>
-            <div>
-              <strong>Oft ohne Termin</strong>
-              <span>Einfach vorbeikommen & schnell drankommen</span>
-            </div>
-          </div>
-          <div class="pillar">
-            <div class="pillar-icon">👨‍👦</div>
-            <div>
-              <strong>Für alle Altersgruppen</strong>
-              <span>Kinder bis Erwachsene – jeder ist willkommen</span>
-            </div>
-          </div>
-        </div>
-        <a href="tel:015730170760" class="btn btn-gold btn-lg">☎ 01573 0170760</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Reviews -->
-  <section class="reviews-section" id="reviews">
-    <div class="section-tag">Was Kunden sagen</div>
-    <h2 class="section-heading">Google <span>Bewertungen</span></h2>
-    <div class="rating-bar">
-      <div class="rating-score">5,0</div>
-      <div class="rating-details">
-        <div class="rating-stars-row">★★★★★</div>
-        <div class="rating-count">Basierend auf 183 Google-Bewertungen</div>
-        <div class="rating-bars">
-          <div class="r-bar-row"><span>5★</span><div class="r-bar"><div class="r-fill" style="width:95%"></div></div></div>
-          <div class="r-bar-row"><span>4★</span><div class="r-bar"><div class="r-fill" style="width:4%"></div></div></div>
-          <div class="r-bar-row"><span>3★</span><div class="r-bar"><div class="r-fill" style="width:1%"></div></div></div>
-        </div>
-      </div>
-    </div>
-    <div class="reviews-grid">
-      <div class="rev-card">
-        <div class="rev-head">
-          <div class="rev-av" style="background:#c9a84c">K</div>
-          <div class="rev-meta"><strong>Kerim Zeies</strong><div class="rev-stars">★★★★★</div><small>vor 2 Monaten</small></div>
-        </div>
-        <p>„Besonders beeindruckt hat mich, mit wie viel Sorgfalt und Liebe zum Detail gearbeitet wurde. Man merkt einfach, dass hier echte Leidenschaft steckt."</p>
-      </div>
-      <div class="rev-card">
-        <div class="rev-head">
-          <div class="rev-av" style="background:#8b6914">J</div>
-          <div class="rev-meta"><strong>Jochem Schriefers</strong><div class="rev-stars">★★★★★</div><small>vor 3 Monaten</small></div>
-        </div>
-        <p>„Nicht nur das man mir etwas zu trinken angeboten hat, sondern man hat wirklich gute Arbeit geleistet. Ich werde mit Sicherheit wiederkommen!"</p>
-      </div>
-      <div class="rev-card">
-        <div class="rev-head">
-          <div class="rev-av" style="background:#b8860b">S</div>
-          <div class="rev-meta"><strong>Sarah Be</strong><div class="rev-stars">★★★★★</div><small>vor 2 Monaten</small></div>
-        </div>
-        <p>„Mega nette Menschen hier. Die Haare liegen danach immer gut. Es wird jeder Wunsch umgesetzt. Immer wieder gerne!"</p>
-      </div>
-      <div class="rev-card">
-        <div class="rev-head">
-          <div class="rev-av" style="background:#a07830">H</div>
-          <div class="rev-meta"><strong>Hamo Sido</strong><div class="rev-stars">★★★★★</div><small>vor 4 Monaten</small></div>
-        </div>
-        <p>„Sehr freundliches Team, sauberer Salon und ein perfekter Haarschnitt. Komme auf jeden Fall wieder! 💪"</p>
-      </div>
-      <div class="rev-card">
-        <div class="rev-head">
-          <div class="rev-av" style="background:#c9a84c">R</div>
-          <div class="rev-meta"><strong>Ramazan Polat</strong><div class="rev-stars">★★★★★</div><small>vor 1 Monat</small></div>
-        </div>
-        <p>„Ein sehr schöner Ort mit sehr gepflegten Maschinen – sehr luxuriös – und auch ein Traum Haarschnitt! Absolut empfehlenswert."</p>
-      </div>
-      <div class="rev-card">
-        <div class="rev-head">
-          <div class="rev-av" style="background:#7a5c10">D</div>
-          <div class="rev-meta"><strong>Dilara Ksari</strong><div class="rev-stars">★★★★★</div><small>vor 7 Monaten</small></div>
-        </div>
-        <p>„Beide waren unheimlich freundlich und den Jungs gegenüber sehr zugewandt sowie geduldig. Mit 6 Jungs da und allesamt sehr zufrieden!"</p>
-      </div>
-      <div class="rev-card">
-        <div class="rev-head">
-          <div class="rev-av" style="background:#c9a84c">M</div>
-          <div class="rev-meta"><strong>Marcel</strong><div class="rev-stars">★★★★★</div><small>vor 10 Monaten</small></div>
-        </div>
-        <p>„Top Herrenfriseur, absolut empfehlenswert! Ich war jetzt mehrfach hier und bin jedes Mal super zufrieden. Der Haarschnitt sitzt einfach perfekt."</p>
-      </div>
-      <div class="rev-card">
-        <div class="rev-head">
-          <div class="rev-av" style="background:#8b6914">O</div>
-          <div class="rev-meta"><strong>Othman Alsharabi</strong><div class="rev-stars">★★★★★</div><small>vor 4 Monaten</small></div>
-        </div>
-        <p>„Sehr professioneller Friseur, freundlicher Service. Ich komme auf jeden Fall wieder. Sehr sauber, sehr präzise – perfekt!"</p>
-      </div>
-      <div class="rev-card">
-        <div class="rev-head">
-          <div class="rev-av" style="background:#a07830">J</div>
-          <div class="rev-meta"><strong>Juan Perez</strong><div class="rev-stars">★★★★★</div><small>vor 9 Monaten</small></div>
-        </div>
-        <p>„Bin vor Kurzem umgezogen und war auf der Suche nach einem Friseur – inzwischen war ich schon drei Mal hier und bin rundum begeistert!"</p>
-      </div>
-      <div class="rev-card">
-        <div class="rev-head">
-          <div class="rev-av" style="background:#b8860b">S</div>
-          <div class="rev-meta"><strong>Sebastian Nöhles</strong><div class="rev-stars">★★★★★</div><small>vor 10 Monaten</small></div>
-        </div>
-        <p>„Spontan hingegangen und sofort bedient worden. Haare waschen war angenehm, Schnitt war exzellent. Werde definitiv wiederkommen."</p>
-      </div>
-      <div class="rev-card">
-        <div class="rev-head">
-          <div class="rev-av" style="background:#c9a84c">A</div>
-          <div class="rev-meta"><strong>Ahmed K.</strong><div class="rev-stars">★★★★★</div><small>vor 5 Monaten</small></div>
-        </div>
-        <p>„Bester Barbershop in ganz Willich! Die Preise sind fair, der Service ist top und man fühlt sich sofort wohl. Klare Empfehlung!"</p>
-      </div>
-      <div class="rev-card">
-        <div class="rev-head">
-          <div class="rev-av" style="background:#7a5c10">T</div>
-          <div class="rev-meta"><strong>Thomas W.</strong><div class="rev-stars">★★★★★</div><small>vor 6 Monaten</small></div>
-        </div>
-        <p>„Wirklich beeindruckend! Das Team ist super professionell, die Atmosphäre entspannt und der Haarschnitt sitzt wie beim Profi."</p>
-      </div>
-    </div>
-    <div class="reviews-action">
-      <a href="https://maps.app.goo.gl/a6KmGanLhkHBfXYU8" target="_blank" class="btn btn-outline-gold">Alle 183 Bewertungen auf Google lesen →</a>
-    </div>
-  </section>
-
-  <!-- Contact -->
-  <section class="contact-section" id="contact">
-    <div class="contact-grid">
-      <div class="contact-left">
-        <div class="section-tag">Kontakt & Anfahrt</div>
-        <h2 class="section-heading">Besuche <span>uns</span></h2>
-        <div class="contact-cards">
-          <a href="tel:015730170760" class="c-card c-card-highlight">
-            <div class="c-card-icon">📞</div>
-            <div><h4>Telefon</h4><p>01573 0170760</p></div>
-            <span class="c-card-arrow">→</span>
-          </a>
-          <div class="c-card">
-            <div class="c-card-icon">📍</div>
-            <div><h4>Adresse</h4><p>Jakob-Krebs-Straße 48, EG<br/>47877 Willich</p></div>
-          </div>
-          <a href="https://www.instagram.com/malek_barbershop/" target="_blank" class="c-card">
-            <div class="c-card-icon">📸</div>
-            <div><h4>Instagram</h4><p>@malek_barbershop</p></div>
-            <span class="c-card-arrow">→</span>
-          </a>
-          <div class="c-card c-card-tip">
-            <div class="c-card-icon">💡</div>
-            <div><h4>Walk-in</h4><p>Oft auch ohne Termin sofort möglich!</p></div>
-          </div>
-        </div>
-        <div class="hours-card">
-          <h3>Öffnungszeiten</h3>
-          <div class="h-list">
-            <div class="h-row"><span>Montag</span><span>09:00 – 18:30</span></div>
-            <div class="h-row"><span>Dienstag</span><span>09:00 – 18:30</span></div>
-            <div class="h-row"><span>Mittwoch</span><span>09:00 – 18:30</span></div>
-            <div class="h-row"><span>Donnerstag</span><span>09:00 – 18:30</span></div>
-            <div class="h-row"><span>Freitag</span><span>09:00 – 18:30</span></div>
-            <div class="h-row"><span>Samstag</span><span>08:30 – 16:00</span></div>
-            <div class="h-row h-closed"><span>Sonntag</span><span>Geschlossen</span></div>
-          </div>
-        </div>
-      </div>
-      <div class="contact-right">
-        <div class="form-card">
-          <h3>Termin anfragen</h3>
-          <p class="form-note">Oder ruf uns direkt an: <a href="tel:015730170760">01573 0170760</a></p>
-          <form id="contactForm">
-            <div class="fg">
-              <label>Name</label>
-              <input type="text" placeholder="Dein Name" required />
-            </div>
-            <div class="fg">
-              <label>Telefon</label>
-              <input type="tel" placeholder="+49 ..." required />
-            </div>
-            <div class="fg">
-              <label>Gewünschter Service</label>
-              <select required>
-                <option value="" disabled selected>Service auswählen…</option>
-                <option>Haarschnitt (ab 15 €)</option>
-                <option>Haarschnitt + Bart (ab 25 €)</option>
-                <option>Bartpflege & Rasur (ab 10 €)</option>
-                <option>Skin Fade (ab 18 €)</option>
-                <option>Kinder-Haarschnitt (ab 10 €)</option>
-                <option>Premium-Paket (ab 35 €)</option>
-              </select>
-            </div>
-            <div class="fg">
-              <label>Wunschdatum & Uhrzeit</label>
-              <input type="text" placeholder="z.B. Donnerstag, 15:00 Uhr" />
-            </div>
-            <div class="fg">
-              <label>Nachricht (optional)</label>
-              <textarea rows="3" placeholder="Besondere Wünsche…"></textarea>
-            </div>
-            <button type="submit" class="btn btn-gold btn-full">Termin anfragen ✓</button>
-            <p class="form-ok" id="formSuccess">✓ Danke! Wir melden uns bei dir.</p>
-          </form>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Map -->
-  <div class="map-wrap">
-    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1249.9!2d6.5521!3d51.2631!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sJakob-Krebs-Stra%C3%9Fe+48%2C+47877+Willich!5e0!3m2!1sde!2sde!4v1" width="100%" height="420" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
   </div>
+</section>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="footer-top">
-      <div class="footer-brand">
-        <div class="logo-icon-wrap"><span>✂</span></div>
-        <div class="logo-text">
-          <span class="logo-name">MALEK</span>
-          <span class="logo-sub">BARBERSHOP · WILLICH</span>
-        </div>
-      </div>
-      <div class="footer-cols">
-        <div class="footer-col">
-          <h4>Navigation</h4>
-          <a href="#home">Home</a>
-          <a href="#tools">Leistungen</a>
-          <a href="#gallery">Galerie</a>
-          <a href="#reviews">Bewertungen</a>
-          <a href="#contact">Kontakt</a>
-        </div>
-        <div class="footer-col">
-          <h4>Kontakt</h4>
-          <a href="tel:015730170760">01573 0170760</a>
-          <a href="https://www.instagram.com/malek_barbershop/" target="_blank">@malek_barbershop</a>
-          <a href="https://maps.app.goo.gl/a6KmGanLhkHBfXYU8" target="_blank">Google Maps</a>
-        </div>
-        <div class="footer-col">
-          <h4>Öffnungszeiten</h4>
-          <span>Mo–Fr: 09:00 – 18:30</span>
-          <span>Samstag: 08:30 – 16:00</span>
-          <span>Sonntag: Geschlossen</span>
-        </div>
+<!-- ═══ ABOUT ═══ -->
+<section class="about-section" id="about">
+  <div class="about-grid">
+    <div class="about-visuals">
+      <div class="about-photo-main" style="background-image:url('https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=800&q=85')"></div>
+      <div class="about-photo-sm" style="background-image:url('https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=400&q=85')"></div>
+      <div class="about-rating-badge">
+        <span>★</span>
+        <strong>5,0</strong>
+        <small>Google</small>
       </div>
     </div>
-    <div class="footer-bottom">
-      <p>Jakob-Krebs-Straße 48 · 47877 Willich · ⭐ 5,0 (183 Google-Bewertungen)</p>
-      <p>&copy; 2026 Malek Barbershop Willich. Alle Rechte vorbehalten.</p>
+    <div class="about-text">
+      <div class="ornament-tag">Über uns</div>
+      <h2>Handwerk mit<br/><em>echter Leidenschaft</em></h2>
+      <p class="about-lead">Willkommen bei Malek Barbershop – dem Herrenfriseur mit der perfekten Google-Bewertung in Willich. Hier vereinen sich traditionelles Barbier-Handwerk und moderne Technik.</p>
+      <p>Bei uns wird dir ein Getränk angeboten, die Atmosphäre ist entspannt und luxuriös. Du kannst oft sogar ohne Termin vorbeikommen. Unsere Maschinen sind top gepflegt, das Team leidenschaftlich.</p>
+      <div class="about-features">
+        <div class="af"><div class="af-icon">💎</div><div><strong>Luxuriöse Ausstattung</strong><span>Gepflegte Maschinen & edles Ambiente</span></div></div>
+        <div class="af"><div class="af-icon">🍵</div><div><strong>Getränke inklusive</strong><span>Dir wird etwas angeboten – sag einfach was</span></div></div>
+        <div class="af"><div class="af-icon">⚡</div><div><strong>Walk-in möglich</strong><span>Oft sofort dran – einfach vorbeikommen</span></div></div>
+        <div class="af"><div class="af-icon">👨‍👦</div><div><strong>Alle Altersgruppen</strong><span>Von Kinder bis Erwachsene</span></div></div>
+      </div>
+      <a href="#booking" class="btn-primary">Termin buchen</a>
     </div>
-  </footer>
+  </div>
+</section>
 
-  <script src="script.js"></script>
+<!-- ═══ BOOKING ═══ -->
+<section class="booking-section" id="booking">
+  <div class="booking-header">
+    <div class="ornament-tag">Online buchen</div>
+    <h2>Termin <em>vereinbaren</em></h2>
+    <p>Wähle deinen Wunschtermin – wir bestätigen per Rückruf oder Nachricht.</p>
+  </div>
+  <div class="booking-layout">
+
+    <!-- Calendar -->
+    <div class="cal-panel">
+      <div class="cal-nav">
+        <button id="calPrev" class="cal-nav-btn">&#8249;</button>
+        <span id="calTitle" class="cal-title"></span>
+        <button id="calNext" class="cal-nav-btn">&#8250;</button>
+      </div>
+      <div class="cal-weekdays">
+        <span>Mo</span><span>Di</span><span>Mi</span><span>Do</span><span>Fr</span><span>Sa</span><span>So</span>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+
+    <!-- Time slots -->
+    <div class="slots-panel">
+      <div class="slots-header">
+        <h4>Verfügbare Zeiten</h4>
+        <span id="slotsDate" class="slots-date">Bitte Datum wählen</span>
+      </div>
+      <div class="slots-grid" id="slotsGrid">
+        <p class="slots-placeholder">← Datum im Kalender auswählen</p>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <div class="booking-form-panel">
+      <h4>Deine Buchung</h4>
+      <div class="booking-summary" id="bookingSummary">
+        <div class="bs-item"><span>📅</span><span id="bsDate">Kein Datum gewählt</span></div>
+        <div class="bs-item"><span>🕐</span><span id="bsTime">Keine Zeit gewählt</span></div>
+      </div>
+      <form id="bookingForm">
+        <div class="bf-group">
+          <label>Service *</label>
+          <select id="bfService" required>
+            <option value="" disabled selected>Service wählen…</option>
+            <option value="Haarschnitt (ab 15€)">Haarschnitt (ab 15 €)</option>
+            <option value="Haarschnitt + Bart (ab 25€)">Haarschnitt + Bart (ab 25 €)</option>
+            <option value="Bartpflege & Rasur (ab 10€)">Bartpflege & Rasur (ab 10 €)</option>
+            <option value="Skin Fade (ab 18€)">Skin Fade (ab 18 €)</option>
+            <option value="Kinder-Haarschnitt (ab 10€)">Kinder-Haarschnitt (ab 10 €)</option>
+            <option value="Premium-Paket (ab 35€)">Premium-Paket (ab 35 €)</option>
+          </select>
+        </div>
+        <div class="bf-row">
+          <div class="bf-group">
+            <label>Name *</label>
+            <input type="text" id="bfName" placeholder="Dein Name" required/>
+          </div>
+          <div class="bf-group">
+            <label>Telefon *</label>
+            <input type="tel" id="bfPhone" placeholder="+49 …" required/>
+          </div>
+        </div>
+        <div class="bf-group">
+          <label>Nachricht (optional)</label>
+          <textarea id="bfNote" rows="3" placeholder="Besondere Wünsche…"></textarea>
+        </div>
+        <button type="submit" class="btn-primary btn-book" id="bookSubmitBtn">
+          <span id="bookBtnText">Termin anfragen & Mail senden</span>
+          <span id="bookBtnSpinner" class="spinner hidden">⟳</span>
+        </button>
+        <p class="booking-ok hidden" id="bookingOk">✓ Termin-Anfrage gesendet! Wir melden uns bald bei dir.</p>
+        <p class="booking-err hidden" id="bookingErr">⚠ Bitte Datum, Uhrzeit und alle Pflichtfelder ausfüllen.</p>
+      </form>
+      <div class="booking-alt">
+        <p>Oder direkt anrufen:</p>
+        <a href="tel:015730170760" class="btn-secondary">☎ 01573 0170760</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ REVIEWS ═══ -->
+<section class="reviews-section" id="reviews">
+  <div class="s-header">
+    <div class="ornament-tag">Was Kunden sagen</div>
+    <h2>Google <em>Bewertungen</em></h2>
+  </div>
+  <div class="rating-hero">
+    <div class="rh-score">5,0</div>
+    <div class="rh-right">
+      <div class="rh-stars">★★★★★</div>
+      <div class="rh-count">Basierend auf 183 Google-Bewertungen</div>
+      <div class="rh-bars">
+        <div class="rb-row"><span>5★</span><div class="rb-track"><div class="rb-fill" data-w="95%"></div></div><span>95%</span></div>
+        <div class="rb-row"><span>4★</span><div class="rb-track"><div class="rb-fill" data-w="4%"></div></div><span>4%</span></div>
+        <div class="rb-row"><span>3★</span><div class="rb-track"><div class="rb-fill" data-w="1%"></div></div><span>1%</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="reviews-masonry">
+    <div class="rv"><div class="rv-top"><div class="rv-av" style="--c:#d4a017">K</div><div><strong>Kerim Zeies</strong><div class="rv-stars">★★★★★</div><small>vor 2 Monaten</small></div></div><p>„Besonders beeindruckt hat mich, mit wie viel Sorgfalt und Liebe zum Detail gearbeitet wurde. Man merkt einfach, dass hier echte Leidenschaft steckt."</p></div>
+    <div class="rv"><div class="rv-top"><div class="rv-av" style="--c:#9a7010">J</div><div><strong>Jochem Schriefers</strong><div class="rv-stars">★★★★★</div><small>vor 3 Monaten</small></div></div><p>„Nicht nur das man mir etwas zu trinken angeboten hat – man hat wirklich gute Arbeit geleistet. Ich werde mit Sicherheit wiederkommen!"</p></div>
+    <div class="rv"><div class="rv-top"><div class="rv-av" style="--c:#b8860b">S</div><div><strong>Sarah Be</strong><div class="rv-stars">★★★★★</div><small>vor 2 Monaten</small></div></div><p>„Mega nette Menschen hier. Die Haare liegen danach immer gut. Es wird jeder Wunsch umgesetzt. Immer wieder gerne!"</p></div>
+    <div class="rv rv-highlight"><div class="rv-top"><div class="rv-av" style="--c:#c0392b">H</div><div><strong>Hamo Sido</strong><div class="rv-stars">★★★★★</div><small>vor 4 Monaten</small></div></div><p>„Sehr freundliches Team, sauberer Salon und ein perfekter Haarschnitt. Komme auf jeden Fall wieder! 💪 Absolut empfehlenswert!"</p></div>
+    <div class="rv"><div class="rv-top"><div class="rv-av" style="--c:#d4a017">R</div><div><strong>Ramazan Polat</strong><div class="rv-stars">★★★★★</div><small>vor 1 Monat</small></div></div><p>„Ein sehr schöner Ort mit sehr gepflegten Maschinen – sehr luxuriös – und auch ein Traum Haarschnitt!"</p></div>
+    <div class="rv"><div class="rv-top"><div class="rv-av" style="--c:#7a5c10">D</div><div><strong>Dilara Ksari</strong><div class="rv-stars">★★★★★</div><small>vor 7 Monaten</small></div></div><p>„Unheimlich freundlich und sehr geduldig. Wir waren mit 6 Jungs da und allesamt waren sehr zufrieden!"</p></div>
+    <div class="rv"><div class="rv-top"><div class="rv-av" style="--c:#d4a017">M</div><div><strong>Marcel</strong><div class="rv-stars">★★★★★</div><small>vor 10 Monaten</small></div></div><p>„Top Herrenfriseur, absolut empfehlenswert! Ich war jetzt mehrfach hier und bin jedes Mal super zufrieden."</p></div>
+    <div class="rv"><div class="rv-top"><div class="rv-av" style="--c:#9a7010">O</div><div><strong>Othman Alsharabi</strong><div class="rv-stars">★★★★★</div><small>vor 4 Monaten</small></div></div><p>„Sehr professioneller Friseur, freundlicher Service. Sauber, präzise – ich komme auf jeden Fall wieder!"</p></div>
+    <div class="rv"><div class="rv-top"><div class="rv-av" style="--c:#b8860b">J</div><div><strong>Juan Perez</strong><div class="rv-stars">★★★★★</div><small>vor 9 Monaten</small></div></div><p>„Bin umgezogen und war auf der Suche – inzwischen war ich schon drei Mal hier und bin rundum begeistert!"</p></div>
+    <div class="rv rv-highlight"><div class="rv-top"><div class="rv-av" style="--c:#2471a3">S</div><div><strong>Sebastian Nöhles</strong><div class="rv-stars">★★★★★</div><small>vor 10 Monaten</small></div></div><p>„Spontan hingegangen und sofort bedient worden. Schnitt war exzellent, werde definitiv wiederkommen."</p></div>
+    <div class="rv"><div class="rv-top"><div class="rv-av" style="--c:#d4a017">A</div><div><strong>Ahmed K.</strong><div class="rv-stars">★★★★★</div><small>vor 5 Monaten</small></div></div><p>„Bester Barbershop in Willich! Faire Preise, top Service, man fühlt sich sofort wohl. Klare Empfehlung!"</p></div>
+    <div class="rv"><div class="rv-top"><div class="rv-av" style="--c:#7a5c10">T</div><div><strong>Thomas W.</strong><div class="rv-stars">★★★★★</div><small>vor 6 Monaten</small></div></div><p>„Wirklich beeindruckend – professionelles Team, entspannte Atmosphäre und der Haarschnitt sitzt wie beim Profi."</p></div>
+  </div>
+  <div class="reviews-cta">
+    <a href="https://maps.app.goo.gl/a6KmGanLhkHBfXYU8" target="_blank" class="btn-outline">Alle 183 Bewertungen auf Google →</a>
+  </div>
+</section>
+
+<!-- ═══ CONTACT ═══ -->
+<section class="contact-section" id="contact">
+  <div class="contact-grid">
+    <div class="contact-left">
+      <div class="ornament-tag">Besuche uns</div>
+      <h2>Kontakt & <em>Anfahrt</em></h2>
+      <div class="contact-cards">
+        <a href="tel:015730170760" class="cc cc-gold">
+          <span class="cc-icon">📞</span>
+          <div><strong>Telefon</strong><span>01573 0170760</span></div>
+          <span class="cc-arr">→</span>
+        </a>
+        <div class="cc">
+          <span class="cc-icon">📍</span>
+          <div><strong>Adresse</strong><span>Jakob-Krebs-Straße 48, EG<br/>47877 Willich</span></div>
+        </div>
+        <a href="https://www.instagram.com/malek_barbershop/" target="_blank" class="cc">
+          <span class="cc-icon">📸</span>
+          <div><strong>Instagram</strong><span>@malek_barbershop</span></div>
+          <span class="cc-arr">→</span>
+        </a>
+        <a href="https://maps.app.goo.gl/a6KmGanLhkHBfXYU8" target="_blank" class="cc">
+          <span class="cc-icon">🗺</span>
+          <div><strong>Google Maps</strong><span>Route planen</span></div>
+          <span class="cc-arr">→</span>
+        </a>
+      </div>
+      <div class="hours-table">
+        <h4>Öffnungszeiten</h4>
+        <div class="ht-row"><span>Montag</span><span>09:00 – 18:30</span></div>
+        <div class="ht-row"><span>Dienstag</span><span>09:00 – 18:30</span></div>
+        <div class="ht-row"><span>Mittwoch</span><span>09:00 – 18:30</span></div>
+        <div class="ht-row"><span>Donnerstag</span><span>09:00 – 18:30</span></div>
+        <div class="ht-row"><span>Freitag</span><span>09:00 – 18:30</span></div>
+        <div class="ht-row"><span>Samstag</span><span>08:30 – 16:00</span></div>
+        <div class="ht-row ht-closed"><span>Sonntag</span><span>Geschlossen</span></div>
+      </div>
+    </div>
+    <div class="contact-map">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1249.9!2d6.5521!3d51.2631!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sJakob-Krebs-Stra%C3%9Fe+48%2C+47877+Willich!5e0!3m2!1sde!2sde!4v1" width="100%" height="100%" style="border:0" allowfullscreen loading="lazy"></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="footer">
+  <div class="footer-logo-wrap">
+    <svg class="logo-svg logo-svg-lg" viewBox="0 0 260 70" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="gGold2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f0c040"/><stop offset="50%" stop-color="#d4a017"/><stop offset="100%" stop-color="#9a7010"/></linearGradient></defs>
+      <line x1="10" y1="14" x2="95" y2="14" stroke="url(#gGold2)" stroke-width="0.8"/>
+      <line x1="165" y1="14" x2="250" y2="14" stroke="url(#gGold2)" stroke-width="0.8"/>
+      <text x="12" y="22" font-size="14" fill="url(#gGold2)" font-family="sans-serif">✂</text>
+      <rect x="126" y="4" width="8" height="22" rx="4" fill="#111"/>
+      <rect x="126" y="4" width="8" height="22" rx="4" fill="none" stroke="url(#gGold2)" stroke-width="0.6"/>
+      <line x1="127" y1="7"  x2="133" y2="13" stroke="#c0392b" stroke-width="1.5"/>
+      <line x1="127" y1="13" x2="133" y2="19" stroke="#2471a3" stroke-width="1.5"/>
+      <line x1="127" y1="19" x2="133" y2="25" stroke="#c0392b" stroke-width="1.5"/>
+      <polygon points="100,14 104,10 108,14 104,18" fill="url(#gGold2)"/>
+      <polygon points="152,14 156,10 160,14 156,18" fill="url(#gGold2)"/>
+      <text x="130" y="46" text-anchor="middle" font-family="Cinzel, serif" font-size="22" font-weight="900" fill="url(#gGold2)" letter-spacing="6">MALEK</text>
+      <text x="130" y="62" text-anchor="middle" font-family="Inter, sans-serif" font-size="7.5" fill="#b8901a" letter-spacing="5.5">BARBERSHOP · WILLICH</text>
+      <line x1="20" y1="68" x2="110" y2="68" stroke="url(#gGold2)" stroke-width="0.5"/>
+      <line x1="150" y1="68" x2="240" y2="68" stroke="url(#gGold2)" stroke-width="0.5"/>
+      <circle cx="130" cy="68" r="2" fill="url(#gGold2)"/>
+    </svg>
+  </div>
+  <div class="footer-cols">
+    <div class="fc"><h5>Leistungen</h5><a href="#services">Haarschnitt</a><a href="#services">Haarschnitt + Bart</a><a href="#services">Bartpflege</a><a href="#services">Skin Fade</a><a href="#services">Premium-Paket</a></div>
+    <div class="fc"><h5>Kontakt</h5><a href="tel:015730170760">01573 0170760</a><a href="https://www.instagram.com/malek_barbershop/" target="_blank">@malek_barbershop</a><a href="https://maps.app.goo.gl/a6KmGanLhkHBfXYU8" target="_blank">Google Maps</a></div>
+    <div class="fc"><h5>Öffnungszeiten</h5><span>Mo–Fr: 09:00 – 18:30</span><span>Samstag: 08:30 – 16:00</span><span>Sonntag: Geschlossen</span></div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-divider"><span>◆</span></div>
+    <p>Jakob-Krebs-Straße 48 · 47877 Willich &nbsp;|&nbsp; ⭐ 5,0 · 183 Google-Bewertungen</p>
+    <p>&copy; 2026 Malek Barbershop Willich. Alle Rechte vorbehalten.</p>
+  </div>
+</footer>
+
+<script src="script.js"></script>
 </body>
 </html>
