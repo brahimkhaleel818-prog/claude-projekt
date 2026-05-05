@@ -26,6 +26,29 @@ const SHOP_EMAIL      = 'malekhanan99@wixsite.com'; // ← Shop-Email
 
 try { emailjs.init(EJS_PUBLIC_KEY); } catch(e) {}
 
+/* ── Cookie Banner ──────────────────────────────── */
+(function initCookieBanner() {
+  const banner  = document.getElementById('cookieBanner');
+  const accept  = document.getElementById('cookieAccept');
+  const decline = document.getElementById('cookieDecline');
+  if (!banner) return;
+
+  // Already decided? Hide immediately
+  if (localStorage.getItem('cookieConsent')) {
+    banner.style.display = 'none';
+    return;
+  }
+
+  function dismiss(choice) {
+    localStorage.setItem('cookieConsent', choice);
+    banner.classList.add('cookie-hidden');
+    setTimeout(() => { banner.style.display = 'none'; }, 450);
+  }
+
+  accept.addEventListener('click',  () => dismiss('accepted'));
+  decline.addEventListener('click', () => dismiss('declined'));
+})();
+
 /* ── Navbar ─────────────────────────────────────── */
 const navbar = document.getElementById('navbar');
 window.addEventListener('scroll', () =>
