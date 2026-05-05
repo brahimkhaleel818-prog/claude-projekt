@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Claude Projekt</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="#" class="logo">Claude<span>Projekt</span></a>
+      <ul class="nav-links">
+        <li><a href="#home">Start</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#about">Über uns</a></li>
+        <li><a href="#contact">Kontakt</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger">&#9776;</button>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero" id="home">
+    <div class="hero-content">
+      <h1>Willkommen bei <span>ClaudeProjekt</span></h1>
+      <p>Moderne Lösungen. Elegantes Design. Einfach erstaunlich.</p>
+      <div class="hero-buttons">
+        <a href="#features" class="btn btn-primary">Mehr erfahren</a>
+        <a href="#contact" class="btn btn-outline">Kontakt</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="floating-card card-1">
+        <span>&#128640;</span>
+        <p>Schnell</p>
+      </div>
+      <div class="floating-card card-2">
+        <span>&#128274;</span>
+        <p>Sicher</p>
+      </div>
+      <div class="floating-card card-3">
+        <span>&#127775;</span>
+        <p>Modern</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features" id="features">
+    <div class="section-header">
+      <h2>Unsere Features</h2>
+      <p>Alles was du brauchst, an einem Ort</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">&#9889;</div>
+        <h3>Blitzschnell</h3>
+        <p>Optimierte Performance für das beste Nutzererlebnis auf allen Geräten.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#127760;</div>
+        <h3>Responsiv</h3>
+        <p>Perfekt angepasst für Desktop, Tablet und Smartphone.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#127775;</div>
+        <h3>Modernes Design</h3>
+        <p>Klares, zeitgemäßes UI das Besucher begeistert.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#128274;</div>
+        <h3>Sicher</h3>
+        <p>Höchste Sicherheitsstandards zum Schutz deiner Daten.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#128200;</div>
+        <h3>Skalierbar</h3>
+        <p>Wächst mit deinem Projekt – von klein bis groß.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#129309;</div>
+        <h3>Support</h3>
+        <p>Wir sind immer für dich da, wenn du Hilfe brauchst.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="about" id="about">
+    <div class="about-inner">
+      <div class="about-text">
+        <h2>Über uns</h2>
+        <p>Wir sind ein leidenschaftliches Team, das moderne Weblösungen entwickelt. Mit Kreativität, Technik und Erfahrung bringen wir deine Ideen zum Leben.</p>
+        <ul class="about-list">
+          <li>&#10003; Professionelle Entwicklung</li>
+          <li>&#10003; Individuelle Anpassung</li>
+          <li>&#10003; Zuverlässiger Support</li>
+          <li>&#10003; Transparente Kommunikation</li>
+        </ul>
+        <a href="#contact" class="btn btn-primary">Jetzt starten</a>
+      </div>
+      <div class="about-stats">
+        <div class="stat-box">
+          <h3 class="counter" data-target="150">0</h3>
+          <p>Projekte</p>
+        </div>
+        <div class="stat-box">
+          <h3 class="counter" data-target="98">0</h3>
+          <p>% Zufrieden</p>
+        </div>
+        <div class="stat-box">
+          <h3 class="counter" data-target="5">0</h3>
+          <p>Jahre Erfahrung</p>
+        </div>
+        <div class="stat-box">
+          <h3 class="counter" data-target="24">0</h3>
+          <p>Support / 7</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="contact" id="contact">
+    <div class="section-header">
+      <h2>Kontakt</h2>
+      <p>Wir freuen uns von dir zu hören</p>
+    </div>
+    <div class="contact-container">
+      <form class="contact-form" id="contactForm">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" placeholder="Dein Name" required />
+        </div>
+        <div class="form-group">
+          <label for="email">E-Mail</label>
+          <input type="email" id="email" placeholder="deine@email.de" required />
+        </div>
+        <div class="form-group">
+          <label for="message">Nachricht</label>
+          <textarea id="message" rows="5" placeholder="Deine Nachricht..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full">Nachricht senden &#9654;</button>
+        <p class="form-success" id="formSuccess">Vielen Dank! Deine Nachricht wurde gesendet.</p>
+      </form>
+      <div class="contact-info">
+        <div class="info-item">
+          <span>&#128205;</span>
+          <p>Berlin, Deutschland</p>
+        </div>
+        <div class="info-item">
+          <span>&#128231;</span>
+          <p>hallo@claudeprojekt.de</p>
+        </div>
+        <div class="info-item">
+          <span>&#128222;</span>
+          <p>+49 123 456 789</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <p>&copy; 2026 ClaudeProjekt. Alle Rechte vorbehalten.</p>
+      <div class="footer-links">
+        <a href="#">Datenschutz</a>
+        <a href="#">Impressum</a>
+        <a href="#">AGB</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
