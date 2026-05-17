@@ -319,7 +319,25 @@
           </aside>
         </div>
       </section>
-      <section data-section="history" class="hidden"><div class="text-slate-500">History section — coming up.</div></section>
+      <section data-section="history" class="space-y-6 hidden">
+        <header class="flex items-center justify-between gap-4">
+          <div>
+            <h2 class="text-2xl font-bold">History</h2>
+            <p class="text-sm text-slate-400">Every generation, freshest first.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <select id="hist-filter" class="text-sm px-3 py-2 rounded-lg bg-slate-900 border border-slate-800">
+              <option value="">All statuses</option>
+              <option value="succeeded">Succeeded</option>
+              <option value="pending">Pending</option>
+              <option value="failed">Failed</option>
+            </select>
+            <button id="hist-refresh" class="text-sm px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700">Refresh</button>
+          </div>
+        </header>
+        <div id="hist-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        <p id="hist-empty" class="text-sm text-slate-500 hidden">No generations yet.</p>
+      </section>
       <section data-section="intel" class="hidden"><div class="text-slate-500">Brand Intelligence section — coming up.</div></section>
       <section data-section="campaigns" class="hidden"><div class="text-slate-500">Campaigns section — coming up.</div></section>
     </main>

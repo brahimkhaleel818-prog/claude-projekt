@@ -427,6 +427,73 @@ registerSection('assets', async () => { wireAssetSection(); await loadAssets(); 
 window.assetState = assetState;
 window.loadAssets = loadAssets;
 
+// ---------- history ----------
+const histState = { items: [], filter: '' };
+async function loadHistory() {
+  const params = new URLSearchParams();
+  if (histState.filter) params.set('status', histState.filter);
+  const { generations } = await api('GET', `/api/generations?${params}`);
+  histState.items = generations;
+  renderHistory();
+}
+function renderHistory() {
+  const grid = document.getElementById('hist-grid');
+  const empty = document.getElementById('hist-empty');
+  empty.classList.toggle('hidden', histState.items.length > 0);
+  grid.innerHTML = histState.items.map(g => {
+    const imgs = Array.isArray(g.images) ? g.images : [];
+    const cover = imgs[0]?.url;
+    const statusBadge = g.status === 'succeeded' ? 'bg-emerald-500/20 text-emerald-300'
+      : g.status === 'pending' ? 'bg-amber-500/20 text-amber-300 animate-pulse'
+      : 'bg-rose-500/20 text-rose-300';
+    return `
+      <article class="group rounded-xl overflow-hidden border border-slate-800 bg-slate-900 flex flex-col">
+        <div class="aspect-square bg-slate-950 relative">
+          ${cover ? `<img src="${escapeHtml(cover)}" class="w-full h-full object-cover" loading="lazy" />`
+            : g.status === 'failed'
+              ? `<div class="absolute inset-0 flex items-center justify-center text-rose-300 text-xs p-3 text-center">${escapeHtml((g.error || 'failed').slice(0, 200))}</div>`
+              : `<div class="absolute inset-0 flex items-center justify-center text-slate-500 text-xs">working...</div>`}
+          <span class="absolute top-2 left-2 text-[10px] px-2 py-0.5 rounded-full ${statusBadge}">${escapeHtml(g.status)}</span>
+          ${imgs.length > 1 ? `<span class="absolute top-2 right-2 text-[10px] px-2 py-0.5 rounded-full bg-slate-950/80 text-slate-300">${imgs.length}</span>` : ''}
+        </div>
+        <div class="p-3 space-y-2 flex-1 flex flex-col">
+          <p class="text-xs text-slate-400 line-clamp-3" title="${escapeHtml(g.prompt || '')}">${escapeHtml((g.prompt || '').slice(0, 200))}</p>
+          <div class="text-[10px] text-slate-600 mt-auto">${new Date(g.created_at).toLocaleString()}</div>
+          <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition">
+            <button data-hist-reprompt="${g.id}" class="text-xs px-2 py-1 rounded bg-slate-800 hover:bg-slate-700">re-prompt</button>
+            <button data-hist-save-tpl="${g.id}" ${g.status !== 'succeeded' ? 'disabled' : ''} class="text-xs px-2 py-1 rounded bg-slate-800 hover:bg-indigo-500/30 disabled:opacity-40">save as template</button>
+            <button data-hist-delete="${g.id}" class="text-xs px-2 py-1 rounded bg-rose-500/30 hover:bg-rose-500/50 ml-auto">del</button>
+          </div>
+        </div>
+      </article>
+    `;
+  }).join('');
+  grid.querySelectorAll('[data-hist-delete]').forEach(b => b.addEventListener('click', async () => {
+    if (!confirm('Delete generation?')) return;
+    try { await api('DELETE', `/api/generations/${b.dataset.histDelete}`); await loadHistory(); }
+    catch (err) { showToast(err.message, 'err'); }
+  }));
+  grid.querySelectorAll('[data-hist-save-tpl]').forEach(b => b.addEventListener('click', async () => {
+    if (b.disabled) return;
+    if (!window.saveGenerationAsTemplate) { showToast('Save as Template lands in the next phase', 'err'); return; }
+    try { await window.saveGenerationAsTemplate(b.dataset.histSaveTpl); }
+    catch (err) { showToast(err.message, 'err'); }
+  }));
+  grid.querySelectorAll('[data-hist-reprompt]').forEach(b => b.addEventListener('click', async () => {
+    if (!window.openRepromptModal) { showToast('Re-prompt lands in the next phase', 'err'); return; }
+    window.openRepromptModal(Number(b.dataset.histReprompt));
+  }));
+}
+function wireHistorySection() {
+  const f = document.getElementById('hist-filter');
+  if (f.dataset.wired) return;
+  f.dataset.wired = '1';
+  f.addEventListener('change', () => { histState.filter = f.value; loadHistory(); });
+  document.getElementById('hist-refresh').addEventListener('click', () => loadHistory());
+}
+registerSection('history', async () => { wireHistorySection(); await loadHistory(); });
+window.loadHistory = loadHistory;
+
 // ---------- generate ----------
 async function populateGenerateSelects() {
   try {
