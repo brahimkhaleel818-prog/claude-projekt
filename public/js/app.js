@@ -536,6 +536,64 @@ window.saveGenerationAsTemplate = async function (id) {
   showToast('saved as template');
 };
 
+// ---------- reverse engineer ----------
+window.openReverseModal = function (imageUrl) {
+  document.getElementById('reverse-modal').classList.remove('hidden');
+  document.getElementById('reverse-source').src = imageUrl;
+  document.getElementById('reverse-output').innerHTML = '';
+  document.getElementById('reverse-modal').dataset.src = imageUrl;
+};
+function wireReverseModal() {
+  const m = document.getElementById('reverse-modal');
+  if (m.dataset.wired) return;
+  m.dataset.wired = '1';
+  document.getElementById('reverse-close').addEventListener('click', () => m.classList.add('hidden'));
+  document.getElementById('reverse-run').addEventListener('click', async () => {
+    const imageUrl = m.dataset.src;
+    const variant_count = Number(document.getElementById('reverse-count').value) || 3;
+    const out = document.getElementById('reverse-output');
+    const btn = document.getElementById('reverse-run');
+    btn.disabled = true; btn.textContent = 'Analyzing...';
+    out.innerHTML = '<div class="text-slate-400 text-xs animate-pulse">working…</div>';
+    try {
+      const data = await api('POST', '/api/prompt/reverse', { image_url: imageUrl, variant_count });
+      out.innerHTML = `
+        <div class="space-y-2">
+          <div>
+            <div class="text-xs uppercase text-slate-500">Style prompt</div>
+            <div class="text-xs bg-slate-950 rounded-lg p-2 mt-1">${escapeHtml(data.style_prompt || '')}</div>
+            <button data-rev-apply-base class="mt-1 text-xs px-2 py-1 rounded bg-slate-800 hover:bg-indigo-500/30">Apply to generator</button>
+          </div>
+          ${data.variants?.length ? `<div><div class="text-xs uppercase text-slate-500">Variants</div>
+            ${data.variants.map((v, i) => `
+              <div class="text-xs bg-slate-950 rounded-lg p-2 mt-1 space-y-1">
+                <div class="font-semibold text-slate-300">${escapeHtml(v.label || `Variant ${i + 1}`)}</div>
+                <div>${escapeHtml(v.prompt || '')}</div>
+                <button data-rev-apply-variant="${i}" class="text-xs px-2 py-1 rounded bg-slate-800 hover:bg-indigo-500/30">Use this prompt</button>
+              </div>
+            `).join('')}</div>` : ''}
+          ${data.copy_skeleton ? `<div><div class="text-xs uppercase text-slate-500">Copy skeleton</div>
+            <pre class="text-xs bg-slate-950 rounded-lg p-2 mt-1 overflow-auto">${escapeHtml(JSON.stringify(data.copy_skeleton, null, 2))}</pre></div>` : ''}
+        </div>
+      `;
+      const applyTo = (text) => {
+        switchSection('generate');
+        const form = document.getElementById('generate-form');
+        form.prompt.value = text;
+        showToast('applied to generator');
+        m.classList.add('hidden');
+      };
+      out.querySelector('[data-rev-apply-base]')?.addEventListener('click', () => applyTo(data.style_prompt || ''));
+      out.querySelectorAll('[data-rev-apply-variant]').forEach(b => {
+        b.addEventListener('click', () => applyTo(data.variants[Number(b.dataset.revApplyVariant)]?.prompt || ''));
+      });
+    } catch (err) {
+      out.innerHTML = `<div class="text-rose-300 text-xs">${escapeHtml(err.message)}</div>`;
+    } finally { btn.disabled = false; btn.textContent = 'Analyze'; }
+  });
+}
+document.addEventListener('DOMContentLoaded', wireReverseModal);
+
 // ---------- brand intelligence ----------
 const intelState = { items: [] };
 const INTEL_FIELDS = [
@@ -711,6 +769,7 @@ function renderTplGrid() {
         <div class="flex items-center justify-between gap-2 text-xs text-slate-500">
           <span class="truncate">${escapeHtml(t.category || '—')}</span>
           <div class="flex gap-1 opacity-0 group-hover:opacity-100">
+            <button data-tpl-reverse="${escapeHtml(t.image_url || '')}" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-indigo-500/30">reverse</button>
             <button data-tpl-rename="${t.id}" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700">edit</button>
             <button data-tpl-delete="${t.id}" class="px-1.5 py-0.5 rounded bg-rose-500/30 hover:bg-rose-500/50">del</button>
           </div>
@@ -734,6 +793,9 @@ function renderTplGrid() {
     if (!confirm('Delete template?')) return;
     try { await api('DELETE', `/api/templates/${b.dataset.tplDelete}`); await loadTemplates(); }
     catch (err) { showToast(err.message, 'err'); }
+  }));
+  grid.querySelectorAll('[data-tpl-reverse]').forEach(b => b.addEventListener('click', () => {
+    if (b.dataset.tplReverse) window.openReverseModal(b.dataset.tplReverse);
   }));
 }
 function wireTemplatesSection() {

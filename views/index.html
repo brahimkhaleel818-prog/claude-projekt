@@ -218,6 +218,31 @@
         <p id="asset-empty" class="text-sm text-slate-500 hidden">No assets yet. Upload to get started.</p>
       </section>
 
+      <!-- Reverse engineer modal -->
+      <div id="reverse-modal" class="hidden fixed inset-0 z-40 bg-slate-950/80 flex items-center justify-center p-6 overflow-auto">
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 w-full max-w-3xl space-y-4 my-12">
+          <div class="flex items-center justify-between">
+            <h3 class="font-semibold">Reverse engineer ad</h3>
+            <button id="reverse-close" class="text-slate-500 hover:text-slate-200">✕</button>
+          </div>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <div class="text-xs uppercase text-slate-500 mb-1">Source</div>
+              <img id="reverse-source" class="rounded-lg w-full bg-slate-950" />
+            </div>
+            <div class="space-y-3 text-sm">
+              <div>
+                <div class="text-xs uppercase text-slate-500 mb-1">Variants</div>
+                <input id="reverse-count" type="number" min="1" max="6" value="3"
+                  class="w-24 px-2 py-1 rounded-lg bg-slate-950 border border-slate-800" />
+              </div>
+              <button id="reverse-run" class="text-sm px-3 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-400">Analyze</button>
+              <div id="reverse-output" class="space-y-3"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Reprompt modal -->
       <div id="reprompt-modal" class="hidden fixed inset-0 z-40 bg-slate-950/80 flex items-center justify-center p-6">
         <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 w-full max-w-lg space-y-4">

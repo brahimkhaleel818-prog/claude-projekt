@@ -131,5 +131,70 @@ Constraints:
   } catch (err) { next(err); }
 });
 
+// POST /api/prompt/reverse — analyze a winning image and emit a style prompt + copy skeleton + variants
+// Body: { image_url, variant_count? }
+router.post('/reverse', async (req, res, next) => {
+  try {
+    const imageUrl = typeof req.body?.image_url === 'string' ? req.body.image_url : '';
+    if (!imageUrl) return res.status(400).json({ error: 'image_url required' });
+    const variantCount = Math.max(1, Math.min(Number(req.body?.variant_count) || 3, 6));
+
+    if (!gemini.isAvailable()) {
+      return res.status(503).json({ error: 'gemini_unavailable', message: 'GEMINI_API_KEY is not set.' });
+    }
+
+    // Fetch the image inline so Gemini can see it.
+    let inlineData;
+    try {
+      const fetchUrl = imageUrl.startsWith('/') ? `${req.protocol}://${req.get('host')}${imageUrl}` : imageUrl;
+      const r = await fetch(fetchUrl);
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      const buf = Buffer.from(await r.arrayBuffer());
+      inlineData = {
+        data: buf.toString('base64'),
+        mimeType: r.headers.get('content-type') || 'image/png'
+      };
+    } catch (err) {
+      return res.status(400).json({ error: 'image_fetch_failed', message: err.message });
+    }
+
+    const system = `You are an ad reverse-engineering analyst. Output strict JSON only. NEVER copy competitor brand names, trademarks, or literal claims from the source image. Describe style, composition, and structure abstractly.`;
+    const prompt = `Analyze the supplied winning ad image. Return JSON of this exact shape:
+{
+  "style_prompt": "one paragraph describing composition, lighting, color, typography style — no brand names",
+  "copy_skeleton": {
+    "headline": "structural pattern, not the literal headline",
+    "subhead": "...",
+    "cta": "...",
+    "notes": "..."
+  },
+  "variants": [
+    { "label": "variant name", "prompt": "executable image-generation prompt that reuses the style abstractly" }
+  ]
+}
+Return exactly ${variantCount} variants. Variants must be distinct angles or formats while keeping the style language consistent. Do not include markdown or fences.`;
+
+    let parsed;
+    try {
+      const out = await gemini.generate({
+        system, prompt, json: true,
+        images: [{ inlineData }],
+        temperature: 0.6
+      });
+      parsed = out.json;
+    } catch (err) {
+      return res.status(502).json({ error: 'reverse_failed', message: err.message });
+    }
+
+    res.json({
+      style_prompt: parsed?.style_prompt || '',
+      copy_skeleton: parsed?.copy_skeleton || {},
+      variants: Array.isArray(parsed?.variants) ? parsed.variants.slice(0, variantCount) : [],
+      source_image: imageUrl,
+      model: gemini.MODEL
+    });
+  } catch (err) { next(err); }
+});
+
 module.exports = router;
 module.exports.deterministicCompose = deterministicCompose;
