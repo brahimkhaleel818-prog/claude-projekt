@@ -5,6 +5,7 @@ const express = require('express');
 const { initDatabase } = require('./database/init');
 const resolveClient = require('./middleware/resolveClient');
 const clientsRouter = require('./routes/clients');
+const brandKitsRouter = require('./routes/brandKits');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -29,6 +30,7 @@ app.get('/api/health', (req, res) => {
 // Every /api route below this point has access to req.client / req.clientId.
 app.use('/api', resolveClient);
 app.use('/api/clients', clientsRouter);
+app.use('/api/brand-kits', brandKitsRouter);
 
 // JSON error handler for /api routes so the UI never gets HTML stack traces.
 app.use('/api', (err, req, res, next) => {

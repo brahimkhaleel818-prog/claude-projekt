@@ -7,29 +7,28 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="/css/styles.css" />
 </head>
-<body class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-100">
-  <header class="border-b border-slate-700/50 backdrop-blur sticky top-0 z-30 bg-slate-900/60">
-    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
-      <h1 class="text-xl font-semibold tracking-tight">
+<body class="min-h-screen bg-slate-950 text-slate-100">
+  <header class="border-b border-slate-800 sticky top-0 z-30 bg-slate-950/80 backdrop-blur">
+    <div class="max-w-[1400px] mx-auto px-6 py-3 flex items-center justify-between gap-4">
+      <h1 class="text-lg font-semibold tracking-tight">
         <span class="text-indigo-400">Static</span> Ads Generator
       </h1>
 
       <div class="flex items-center gap-3">
         <div class="relative">
           <button id="client-switcher-btn"
-            class="flex items-center gap-2 text-sm px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700">
+            class="flex items-center gap-2 text-sm px-3 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800">
             <span class="text-slate-400 text-xs uppercase tracking-wide">Client</span>
             <span id="active-client-name" class="font-medium">—</span>
             <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
             </svg>
           </button>
-
           <div id="client-switcher-panel"
-            class="hidden absolute right-0 mt-2 w-80 rounded-xl border border-slate-700 bg-slate-900 shadow-xl p-3 z-40">
+            class="hidden absolute right-0 mt-2 w-80 rounded-xl border border-slate-800 bg-slate-900 shadow-xl p-3 z-40">
             <div class="text-xs uppercase tracking-wide text-slate-500 mb-2 px-1">Workspaces</div>
             <ul id="client-list" class="space-y-1 max-h-64 overflow-auto"></ul>
-            <div class="border-t border-slate-700 mt-3 pt-3">
+            <div class="border-t border-slate-800 mt-3 pt-3">
               <form id="new-client-form" class="flex gap-2">
                 <input id="new-client-name" type="text" required maxlength="200"
                   placeholder="New client name"
@@ -41,64 +40,134 @@
             </div>
           </div>
         </div>
-
-        <span id="health-badge" class="text-xs px-3 py-1 rounded-full bg-slate-700 text-slate-300">
+        <span id="health-badge" class="text-xs px-3 py-1 rounded-full bg-slate-800 text-slate-300">
           checking...
         </span>
       </div>
     </div>
   </header>
 
-  <main class="max-w-6xl mx-auto px-6 py-12">
-    <section class="text-center mb-12">
-      <h2 class="text-4xl md:text-5xl font-bold mb-4">
-        Generate static ads in seconds
-      </h2>
-      <p class="text-slate-400 max-w-2xl mx-auto">
-        Workspace-scoped from day one. Every brand kit, template, asset, and
-        generation lives under the active client above.
-      </p>
-    </section>
+  <div class="max-w-[1400px] mx-auto flex gap-6 px-6 py-6">
+    <aside class="w-56 shrink-0">
+      <nav id="sidebar" class="space-y-1 sticky top-20"></nav>
+    </aside>
 
-    <section class="grid md:grid-cols-3 gap-6">
-      <div class="rounded-xl border border-slate-700/50 bg-slate-800/40 p-6">
-        <h3 class="font-semibold mb-2">Backend</h3>
-        <p class="text-sm text-slate-400">Express + dotenv with JSON and form parsing.</p>
+    <main class="flex-1 min-w-0">
+      <div id="autosave-toast"
+        class="fixed bottom-6 right-6 hidden text-xs px-3 py-2 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 z-50">
+        saved
       </div>
-      <div class="rounded-xl border border-slate-700/50 bg-slate-800/40 p-6">
-        <h3 class="font-semibold mb-2">Client scoping</h3>
-        <p class="text-sm text-slate-400">
-          Every <code class="text-indigo-300">/api</code> request resolves an active client via
-          <code class="text-indigo-300">X-Client-Id</code>.
-        </p>
-      </div>
-      <div class="rounded-xl border border-slate-700/50 bg-slate-800/40 p-6">
-        <h3 class="font-semibold mb-2">Health Check</h3>
-        <p class="text-sm text-slate-400">
-          <code class="text-indigo-300">GET /api/health</code> returns service status JSON.
-        </p>
-      </div>
-    </section>
 
-    <section class="mt-12 rounded-xl border border-slate-700/50 bg-slate-800/40 p-6">
-      <div class="flex items-center justify-between mb-3">
-        <h3 class="font-semibold">Health probe</h3>
-        <button id="probe-btn"
-          class="text-sm px-4 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-400 transition">
-          Ping /api/health
-        </button>
-      </div>
-      <pre id="probe-output"
-        class="text-xs bg-slate-900/60 rounded-lg p-4 overflow-auto text-slate-300">
-(no response yet)</pre>
-    </section>
-  </main>
+      <!-- Brand Setup -->
+      <section data-section="brand" class="space-y-6 hidden">
+        <header class="flex items-center justify-between">
+          <div>
+            <h2 class="text-2xl font-bold">Brand Setup</h2>
+            <p class="text-sm text-slate-400">Identity used as prompt memory for generation.</p>
+          </div>
+          <div class="flex gap-1 rounded-lg bg-slate-900 border border-slate-800 p-1 text-sm">
+            <button data-tab="kit" class="brand-tab px-3 py-1 rounded-md bg-slate-800">Brand Kit</button>
+            <button data-tab="assets" class="brand-tab px-3 py-1 rounded-md">Brand Assets</button>
+          </div>
+        </header>
 
-  <footer class="border-t border-slate-700/50 mt-16">
-    <div class="max-w-6xl mx-auto px-6 py-4 text-xs text-slate-500">
-      Static Ads Generator &middot; Step 4 &middot; client-scoped workspace
-    </div>
-  </footer>
+        <div data-brand-tab="kit" class="grid md:grid-cols-3 gap-6">
+          <form id="brand-kit-form" class="md:col-span-2 space-y-4 rounded-xl border border-slate-800 bg-slate-900/40 p-6">
+            <div>
+              <label class="block text-xs uppercase tracking-wide text-slate-500 mb-1">Brand name</label>
+              <input name="name" type="text" maxlength="200"
+                class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:border-indigo-500 focus:outline-none" />
+            </div>
+            <div>
+              <label class="block text-xs uppercase tracking-wide text-slate-500 mb-1">Tagline</label>
+              <input name="tagline" type="text" maxlength="500"
+                class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:border-indigo-500 focus:outline-none" />
+            </div>
+            <div>
+              <label class="block text-xs uppercase tracking-wide text-slate-500 mb-1">Description</label>
+              <textarea name="description" rows="4" maxlength="5000"
+                class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:border-indigo-500 focus:outline-none"></textarea>
+            </div>
+            <div class="grid grid-cols-3 gap-3">
+              <div>
+                <label class="block text-xs uppercase tracking-wide text-slate-500 mb-1">Primary</label>
+                <input name="color-primary" type="color"
+                  class="w-full h-10 rounded-lg bg-slate-900 border border-slate-800" />
+              </div>
+              <div>
+                <label class="block text-xs uppercase tracking-wide text-slate-500 mb-1">Secondary</label>
+                <input name="color-secondary" type="color"
+                  class="w-full h-10 rounded-lg bg-slate-900 border border-slate-800" />
+              </div>
+              <div>
+                <label class="block text-xs uppercase tracking-wide text-slate-500 mb-1">Accent</label>
+                <input name="color-accent" type="color"
+                  class="w-full h-10 rounded-lg bg-slate-900 border border-slate-800" />
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs uppercase tracking-wide text-slate-500 mb-1">Primary font</label>
+                <input name="typo-primary" type="text" placeholder="e.g. Inter"
+                  class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:border-indigo-500 focus:outline-none" />
+              </div>
+              <div>
+                <label class="block text-xs uppercase tracking-wide text-slate-500 mb-1">Secondary font</label>
+                <input name="typo-secondary" type="text" placeholder="e.g. Playfair Display"
+                  class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:border-indigo-500 focus:outline-none" />
+              </div>
+            </div>
+          </form>
+
+          <aside class="rounded-xl border border-slate-800 bg-slate-900/40 p-6 space-y-4">
+            <div class="text-xs uppercase tracking-wide text-slate-500">Preview</div>
+            <div id="brand-preview" class="rounded-lg p-6 space-y-3 transition" style="background:#1e293b">
+              <div class="text-2xl font-bold" id="preview-name">Your brand</div>
+              <div class="text-sm opacity-80" id="preview-tagline">A short tagline lives here.</div>
+              <div class="flex gap-2 pt-2">
+                <span class="w-8 h-8 rounded-full border border-white/20" id="swatch-primary"></span>
+                <span class="w-8 h-8 rounded-full border border-white/20" id="swatch-secondary"></span>
+                <span class="w-8 h-8 rounded-full border border-white/20" id="swatch-accent"></span>
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <div data-brand-tab="assets" class="hidden">
+          <div id="brand-assets-mount" class="rounded-xl border border-slate-800 bg-slate-900/40 p-6 text-sm text-slate-400">
+            Brand assets (logos + media library) will appear here in upcoming phases.
+          </div>
+        </div>
+      </section>
+
+      <!-- Health (default landing) -->
+      <section data-section="health" class="space-y-6">
+        <header>
+          <h2 class="text-2xl font-bold">Overview</h2>
+          <p class="text-sm text-slate-400">Workspace-scoped from day one. Pick a section from the sidebar.</p>
+        </header>
+        <div class="rounded-xl border border-slate-800 bg-slate-900/40 p-6">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-semibold">Health probe</h3>
+            <button id="probe-btn"
+              class="text-sm px-4 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-400 transition">
+              Ping /api/health
+            </button>
+          </div>
+          <pre id="probe-output"
+            class="text-xs bg-slate-950 rounded-lg p-4 overflow-auto text-slate-300">(no response yet)</pre>
+        </div>
+      </section>
+
+      <!-- Placeholders filled in by later phases -->
+      <section data-section="assets" class="hidden"><div class="text-slate-500">Assets section — coming up.</div></section>
+      <section data-section="templates" class="hidden"><div class="text-slate-500">Templates section — coming up.</div></section>
+      <section data-section="generate" class="hidden"><div class="text-slate-500">Generate section — coming up.</div></section>
+      <section data-section="history" class="hidden"><div class="text-slate-500">History section — coming up.</div></section>
+      <section data-section="intel" class="hidden"><div class="text-slate-500">Brand Intelligence section — coming up.</div></section>
+      <section data-section="campaigns" class="hidden"><div class="text-slate-500">Campaigns section — coming up.</div></section>
+    </main>
+  </div>
 
   <script src="/js/app.js"></script>
 </body>

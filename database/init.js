@@ -126,12 +126,66 @@ const CREATE_TABLES = [
 const ALTER_MIGRATIONS = [
   `ALTER TABLE clients ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()`,
   `ALTER TABLE clients ADD COLUMN IF NOT EXISTS metadata JSONB NOT NULL DEFAULT '{}'::jsonb`,
+
   `ALTER TABLE brand_kits ADD COLUMN IF NOT EXISTS metadata JSONB NOT NULL DEFAULT '{}'::jsonb`,
+  `ALTER TABLE brand_kits ADD COLUMN IF NOT EXISTS description TEXT`,
+  `ALTER TABLE brand_kits ADD COLUMN IF NOT EXISTS typography JSONB NOT NULL DEFAULT '{}'::jsonb`,
+  `ALTER TABLE brand_kits ADD COLUMN IF NOT EXISTS logo_url_light TEXT`,
+  `ALTER TABLE brand_kits ADD COLUMN IF NOT EXISTS logo_url_dark TEXT`,
+  `DO $$ BEGIN
+     IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'brand_kits_client_id_unique') THEN
+       ALTER TABLE brand_kits ADD CONSTRAINT brand_kits_client_id_unique UNIQUE (client_id);
+     END IF;
+   END $$`,
+
   `ALTER TABLE templates ADD COLUMN IF NOT EXISTS metadata JSONB NOT NULL DEFAULT '{}'::jsonb`,
+  `ALTER TABLE templates ADD COLUMN IF NOT EXISTS category TEXT`,
+  `ALTER TABLE templates ADD COLUMN IF NOT EXISTS favorite BOOLEAN NOT NULL DEFAULT FALSE`,
+  `ALTER TABLE templates ADD COLUMN IF NOT EXISTS source_type TEXT`,
+  `ALTER TABLE templates ADD COLUMN IF NOT EXISTS source_generation_id INTEGER REFERENCES generations(id) ON DELETE SET NULL`,
+  `ALTER TABLE templates ADD COLUMN IF NOT EXISTS image_url TEXT`,
+
   `ALTER TABLE assets ADD COLUMN IF NOT EXISTS metadata JSONB NOT NULL DEFAULT '{}'::jsonb`,
+  `ALTER TABLE assets ADD COLUMN IF NOT EXISTS original_name TEXT`,
+  `ALTER TABLE assets ADD COLUMN IF NOT EXISTS category TEXT NOT NULL DEFAULT 'other'`,
+
   `ALTER TABLE generations ADD COLUMN IF NOT EXISTS metadata JSONB NOT NULL DEFAULT '{}'::jsonb`,
   `ALTER TABLE generations ADD COLUMN IF NOT EXISTS error TEXT`,
-  `ALTER TABLE brand_intelligence ADD COLUMN IF NOT EXISTS embeddings_ref TEXT`
+  `ALTER TABLE generations ADD COLUMN IF NOT EXISTS concept TEXT`,
+  `ALTER TABLE generations ADD COLUMN IF NOT EXISTS avatar TEXT`,
+  `ALTER TABLE generations ADD COLUMN IF NOT EXISTS parent_generation_id INTEGER REFERENCES generations(id) ON DELETE SET NULL`,
+  `ALTER TABLE generations ADD COLUMN IF NOT EXISTS campaign_id INTEGER`,
+
+  `ALTER TABLE brand_intelligence ADD COLUMN IF NOT EXISTS embeddings_ref TEXT`,
+  `ALTER TABLE brand_intelligence ADD COLUMN IF NOT EXISTS persona TEXT`,
+  `ALTER TABLE brand_intelligence ADD COLUMN IF NOT EXISTS pain_point TEXT`,
+  `ALTER TABLE brand_intelligence ADD COLUMN IF NOT EXISTS angle TEXT`,
+  `ALTER TABLE brand_intelligence ADD COLUMN IF NOT EXISTS visual_direction TEXT`,
+  `ALTER TABLE brand_intelligence ADD COLUMN IF NOT EXISTS emotion TEXT`,
+  `ALTER TABLE brand_intelligence ADD COLUMN IF NOT EXISTS copy_hook TEXT`,
+
+  `CREATE TABLE IF NOT EXISTS campaigns (
+    id SERIAL PRIMARY KEY,
+    client_id INTEGER NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    goal TEXT,
+    plan JSONB NOT NULL DEFAULT '[]'::jsonb,
+    status TEXT NOT NULL DEFAULT 'draft',
+    metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_campaigns_client_id ON campaigns(client_id)`,
+  `DO $$ BEGIN
+     IF NOT EXISTS (
+       SELECT 1 FROM information_schema.table_constraints
+       WHERE constraint_name='generations_campaign_id_fkey' AND table_name='generations'
+     ) THEN
+       ALTER TABLE generations
+         ADD CONSTRAINT generations_campaign_id_fkey
+         FOREIGN KEY (campaign_id) REFERENCES campaigns(id) ON DELETE SET NULL;
+     END IF;
+   END $$`
 ];
 
 const CREATE_INDEXES = [
@@ -155,7 +209,8 @@ const TOUCH_TABLES = [
   'assets',
   'generations',
   'campaign_tags',
-  'brand_intelligence'
+  'brand_intelligence',
+  'campaigns'
 ];
 
 async function attachUpdatedAtTriggers(client) {
