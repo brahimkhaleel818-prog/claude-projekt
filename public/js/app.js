@@ -493,6 +493,13 @@ function wireHistorySection() {
 }
 registerSection('history', async () => { wireHistorySection(); await loadHistory(); });
 window.loadHistory = loadHistory;
+window.saveGenerationAsTemplate = async function (id) {
+  const name = prompt('Template name', `Template from gen #${id}`);
+  if (name == null) return;
+  const category = prompt('Category', 'winner') || 'winner';
+  await api('POST', `/api/generations/${id}/save-as-template`, { name, category });
+  showToast('saved as template');
+};
 
 // ---------- generate ----------
 async function populateGenerateSelects() {
