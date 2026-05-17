@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node --watch server.js"
+    "dev": "node --watch server.js",
+    "cleanup": "node utils/cleanupUploads.js",
+    "cleanup:dry": "node utils/cleanupUploads.js --dry-run"
   },
   "dependencies": {
     "@fal-ai/client": "^1.10.1",
