@@ -11,6 +11,7 @@ const templatesRouter = require('./routes/templates');
 const generateRouter = require('./routes/generate');
 const generationsRouter = require('./routes/generations');
 const brandIntelRouter = require('./routes/brandIntelligence');
+const promptRouter = require('./routes/prompt');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -42,6 +43,7 @@ app.use('/api/templates', templatesRouter);
 app.use('/api/generate', generateRouter);
 app.use('/api/generations', generationsRouter);
 app.use('/api/brand-intelligence', brandIntelRouter);
+app.use('/api/prompt', promptRouter);
 
 // JSON error handler for /api routes so the UI never gets HTML stack traces.
 app.use('/api', (err, req, res, next) => {
