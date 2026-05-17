@@ -196,5 +196,79 @@ Return exactly ${variantCount} variants. Variants must be distinct angles or for
   } catch (err) { next(err); }
 });
 
+// POST /api/prompt/concepts — strategic concept directions from a reference + context
+// Body: { reference_image_url?, reference_asset_id?, goal?, count? }
+router.post('/concepts', async (req, res, next) => {
+  try {
+    const body = req.body || {};
+    const goal = typeof body.goal === 'string' ? body.goal.slice(0, 1000) : '';
+    const count = Math.max(1, Math.min(Number(body.count) || 4, 8));
+
+    let referenceUrl = body.reference_image_url || null;
+    if (!referenceUrl && body.reference_asset_id) {
+      const { rows } = await pool.query('SELECT url FROM assets WHERE client_id = $1 AND id = $2', [req.clientId, Number(body.reference_asset_id)]);
+      referenceUrl = rows[0]?.url || null;
+    }
+
+    const kit = await loadKit(req.clientId);
+    const intel = await loadIntel(req.clientId);
+
+    if (!gemini.isAvailable()) {
+      return res.status(503).json({ error: 'gemini_unavailable', message: 'GEMINI_API_KEY is not set.' });
+    }
+
+    let images = [];
+    if (referenceUrl) {
+      try {
+        const fetchUrl = referenceUrl.startsWith('/') ? `${req.protocol}://${req.get('host')}${referenceUrl}` : referenceUrl;
+        const r = await fetch(fetchUrl);
+        if (r.ok) {
+          const buf = Buffer.from(await r.arrayBuffer());
+          images.push({ inlineData: { data: buf.toString('base64'), mimeType: r.headers.get('content-type') || 'image/png' } });
+        }
+      } catch { /* ignore reference fetch failures - still call with text */ }
+    }
+
+    const system = `You are a senior ad strategist. Output strict JSON only, no markdown. Produce ${count} distinct concept directions, each with a different angle and audience stage.`;
+    const prompt = `Brand:
+${kit ? JSON.stringify({ name: kit.name, tagline: kit.tagline, description: kit.description }, null, 2) : 'unknown'}
+
+Audience profiles available:
+${intel.slice(0, 5).map(p => `- persona: ${p.persona || '-'}; pain: ${p.pain_point || '-'}; angle: ${p.angle || '-'}`).join('\n') || 'none'}
+
+Campaign goal: ${goal || 'general awareness'}
+
+Return JSON of this exact shape:
+{
+  "concepts": [
+    {
+      "concept_type": "e.g. testimonial, benefit-led, problem-agitation, social proof",
+      "angle": "...",
+      "audience_stage": "cold | warm | hot",
+      "why_distinct": "one sentence on why this direction is different",
+      "prompt_template": "executable image-generation prompt (plain prose, no markdown)"
+    }
+  ]
+}
+Return exactly ${count} concepts. Make audience_stage values cover a mix.`;
+
+    let parsed;
+    try {
+      const out = await gemini.generate({ system, prompt, json: true, images, temperature: 0.7 });
+      parsed = out.json;
+    } catch (err) {
+      return res.status(502).json({ error: 'concepts_failed', message: err.message });
+    }
+
+    const concepts = Array.isArray(parsed?.concepts) ? parsed.concepts.slice(0, count) : [];
+    res.json({
+      concepts,
+      goal,
+      reference_image: referenceUrl,
+      model: gemini.MODEL
+    });
+  } catch (err) { next(err); }
+});
+
 module.exports = router;
 module.exports.deterministicCompose = deterministicCompose;
