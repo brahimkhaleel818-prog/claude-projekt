@@ -1,0 +1,9 @@
+/* Project-specific overrides. Tailwind via CDN handles the rest. */
+
+html {
+  scroll-behavior: smooth;
+}
+
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

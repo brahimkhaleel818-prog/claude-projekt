@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Static Ads Generator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-100">
+  <header class="border-b border-slate-700/50 backdrop-blur">
+    <div class="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
+      <h1 class="text-xl font-semibold tracking-tight">
+        <span class="text-indigo-400">Static</span> Ads Generator
+      </h1>
+      <span id="health-badge" class="text-xs px-3 py-1 rounded-full bg-slate-700 text-slate-300">
+        checking...
+      </span>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-6 py-12">
+    <section class="text-center mb-12">
+      <h2 class="text-4xl md:text-5xl font-bold mb-4">
+        Generate static ads in seconds
+      </h2>
+      <p class="text-slate-400 max-w-2xl mx-auto">
+        A lightweight monolith scaffold. Step 1 sets up the server, the UI shell,
+        and static asset serving. AI generation and uploads come in later steps.
+      </p>
+    </section>
+
+    <section class="grid md:grid-cols-3 gap-6">
+      <div class="rounded-xl border border-slate-700/50 bg-slate-800/40 p-6">
+        <h3 class="font-semibold mb-2">Backend</h3>
+        <p class="text-sm text-slate-400">Express + dotenv with JSON and form parsing.</p>
+      </div>
+      <div class="rounded-xl border border-slate-700/50 bg-slate-800/40 p-6">
+        <h3 class="font-semibold mb-2">Frontend</h3>
+        <p class="text-sm text-slate-400">Vanilla JS with Tailwind via CDN.</p>
+      </div>
+      <div class="rounded-xl border border-slate-700/50 bg-slate-800/40 p-6">
+        <h3 class="font-semibold mb-2">Health Check</h3>
+        <p class="text-sm text-slate-400">
+          <code class="text-indigo-300">GET /api/health</code> returns service status JSON.
+        </p>
+      </div>
+    </section>
+
+    <section class="mt-12 rounded-xl border border-slate-700/50 bg-slate-800/40 p-6">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="font-semibold">Health probe</h3>
+        <button id="probe-btn"
+          class="text-sm px-4 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-400 transition">
+          Ping /api/health
+        </button>
+      </div>
+      <pre id="probe-output"
+        class="text-xs bg-slate-900/60 rounded-lg p-4 overflow-auto text-slate-300">
+(no response yet)</pre>
+    </section>
+  </main>
+
+  <footer class="border-t border-slate-700/50 mt-16">
+    <div class="max-w-6xl mx-auto px-6 py-4 text-xs text-slate-500">
+      Static Ads Generator &middot; Step 1 scaffold
+    </div>
+  </footer>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>
