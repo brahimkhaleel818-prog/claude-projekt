@@ -427,6 +427,68 @@ registerSection('assets', async () => { wireAssetSection(); await loadAssets(); 
 window.assetState = assetState;
 window.loadAssets = loadAssets;
 
+// ---------- generate ----------
+async function populateGenerateSelects() {
+  try {
+    const { assets } = await api('GET', '/api/assets');
+    const form = document.getElementById('generate-form');
+    for (const name of ['reference_asset_id', 'product_asset_id']) {
+      const sel = form[name];
+      const current = sel.value;
+      sel.innerHTML = '<option value="">— none —</option>' +
+        assets.map(a => `<option value="${a.id}">${escapeHtml(a.original_name || a.filename)} (${escapeHtml(a.category)})</option>`).join('');
+      sel.value = current;
+    }
+  } catch (err) { showToast(err.message, 'err'); }
+}
+function renderGenerateOutput(gen) {
+  const out = document.getElementById('generate-output');
+  if (!gen) { out.innerHTML = 'No generation yet.'; return; }
+  if (gen.status === 'failed') {
+    out.innerHTML = `<div class="text-rose-300 text-sm">Failed: ${escapeHtml(gen.error || 'unknown error')}</div>`;
+    return;
+  }
+  const imgs = Array.isArray(gen.images) ? gen.images : [];
+  out.innerHTML = `
+    <div class="grid grid-cols-2 gap-2">
+      ${imgs.map(i => `<a href="${escapeHtml(i.url)}" target="_blank"><img src="${escapeHtml(i.url)}" class="rounded-lg w-full" /></a>`).join('')}
+    </div>
+    <div class="text-xs text-slate-500 mt-2">Status: ${escapeHtml(gen.status)}</div>
+  `;
+}
+function wireGenerateForm() {
+  const form = document.getElementById('generate-form');
+  if (form.dataset.wired) return;
+  form.dataset.wired = '1';
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('generate-btn');
+    btn.disabled = true; btn.textContent = 'Generating...';
+    const out = document.getElementById('generate-output');
+    out.innerHTML = '<div class="text-slate-400 text-sm animate-pulse">working…</div>';
+    const payload = {
+      prompt: form.prompt.value,
+      reference_asset_id: form.reference_asset_id.value || null,
+      product_asset_id: form.product_asset_id.value || null,
+      aspect_ratio: form.aspect_ratio.value,
+      num_images: Number(form.num_images.value) || 1,
+      apply_brand_kit: form.apply_brand_kit.checked
+    };
+    try {
+      const data = await api('POST', '/api/generate', payload);
+      renderGenerateOutput(data.generation);
+      showToast('generated');
+      if (window.loadHistory) window.loadHistory();
+    } catch (err) {
+      renderGenerateOutput(err.body?.generation || { status: 'failed', error: err.message });
+      showToast(err.message, 'err');
+    } finally {
+      btn.disabled = false; btn.textContent = 'Generate';
+    }
+  });
+}
+registerSection('generate', async () => { wireGenerateForm(); await populateGenerateSelects(); });
+
 // ---------- templates ----------
 const tplState = { items: [], q: '', favOnly: false };
 async function loadTemplates() {
