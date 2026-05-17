@@ -62,7 +62,7 @@ default client if none exist. Re-running is always safe.
 | `DATABASE_SSL` | no | Set `true` for managed Postgres |
 | `PORT` | no | Defaults to `3000` |
 | `GEMINI_API_KEY` | no | Enables AI prompt composition, reverse, concepts, intel generation |
-| `GEMINI_MODEL` | no | Default `gemini-2.0-flash` |
+| `GEMINI_MODEL` | no | Default `gemini-2.5-flash` |
 | `FAL_KEY` | no | Enables actual image generation |
 | `FAL_MODEL` | no | Default `fal-ai/flux/dev` |
 | `FAL_TIMEOUT_MS` | no | Default `90000` |
