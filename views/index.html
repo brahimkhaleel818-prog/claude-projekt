@@ -237,7 +237,28 @@
           </div>
         </div>
       </div>
-      <section data-section="templates" class="hidden"><div class="text-slate-500">Templates section — coming up.</div></section>
+      <section data-section="templates" class="space-y-6 hidden">
+        <header class="flex items-center justify-between gap-4 flex-wrap">
+          <div>
+            <h2 class="text-2xl font-bold">Templates</h2>
+            <p class="text-sm text-slate-400">Starter references and your saved winners.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <input id="tpl-search" type="text" placeholder="Search..."
+              class="text-sm px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:border-indigo-500 focus:outline-none" />
+            <label class="text-sm flex items-center gap-1 text-slate-400">
+              <input id="tpl-fav-only" type="checkbox" class="accent-indigo-500" />
+              Favorites
+            </label>
+            <label class="text-sm px-3 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-400 cursor-pointer">
+              Upload template
+              <input id="tpl-upload" type="file" accept="image/*" class="hidden" />
+            </label>
+          </div>
+        </header>
+        <div id="tpl-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+        <p id="tpl-empty" class="text-sm text-slate-500 hidden">No templates yet.</p>
+      </section>
       <section data-section="generate" class="hidden"><div class="text-slate-500">Generate section — coming up.</div></section>
       <section data-section="history" class="hidden"><div class="text-slate-500">History section — coming up.</div></section>
       <section data-section="intel" class="hidden"><div class="text-slate-500">Brand Intelligence section — coming up.</div></section>

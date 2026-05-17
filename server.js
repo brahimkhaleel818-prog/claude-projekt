@@ -7,6 +7,7 @@ const resolveClient = require('./middleware/resolveClient');
 const clientsRouter = require('./routes/clients');
 const brandKitsRouter = require('./routes/brandKits');
 const assetsRouter = require('./routes/assets');
+const templatesRouter = require('./routes/templates');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -34,6 +35,7 @@ app.use('/api', resolveClient);
 app.use('/api/clients', clientsRouter);
 app.use('/api/brand-kits', brandKitsRouter);
 app.use('/api/assets', assetsRouter);
+app.use('/api/templates', templatesRouter);
 
 // JSON error handler for /api routes so the UI never gets HTML stack traces.
 app.use('/api', (err, req, res, next) => {

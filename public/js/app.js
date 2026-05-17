@@ -427,6 +427,84 @@ registerSection('assets', async () => { wireAssetSection(); await loadAssets(); 
 window.assetState = assetState;
 window.loadAssets = loadAssets;
 
+// ---------- templates ----------
+const tplState = { items: [], q: '', favOnly: false };
+async function loadTemplates() {
+  const params = new URLSearchParams();
+  if (tplState.q) params.set('q', tplState.q);
+  if (tplState.favOnly) params.set('favorite', 'true');
+  const { templates } = await api('GET', `/api/templates?${params}`);
+  tplState.items = templates;
+  renderTplGrid();
+}
+function renderTplGrid() {
+  const grid = document.getElementById('tpl-grid');
+  const empty = document.getElementById('tpl-empty');
+  empty.classList.toggle('hidden', tplState.items.length > 0);
+  grid.innerHTML = tplState.items.map(t => `
+    <div class="group rounded-xl overflow-hidden border border-slate-800 bg-slate-900">
+      <div class="aspect-square bg-slate-950">
+        ${t.image_url ? `<img src="${escapeHtml(t.image_url)}" class="w-full h-full object-cover" loading="lazy" />` : ''}
+      </div>
+      <div class="p-3 space-y-1">
+        <div class="flex items-center justify-between gap-2">
+          <div class="font-medium text-sm truncate">${escapeHtml(t.name)}</div>
+          <button data-tpl-fav="${t.id}" data-current="${t.favorite}" class="text-xs ${t.favorite ? 'text-amber-400' : 'text-slate-500 hover:text-amber-400'}">★</button>
+        </div>
+        <div class="flex items-center justify-between gap-2 text-xs text-slate-500">
+          <span class="truncate">${escapeHtml(t.category || '—')}</span>
+          <div class="flex gap-1 opacity-0 group-hover:opacity-100">
+            <button data-tpl-rename="${t.id}" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700">edit</button>
+            <button data-tpl-delete="${t.id}" class="px-1.5 py-0.5 rounded bg-rose-500/30 hover:bg-rose-500/50">del</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+  grid.querySelectorAll('[data-tpl-fav]').forEach(b => b.addEventListener('click', async () => {
+    try { await api('PATCH', `/api/templates/${b.dataset.tplFav}`, { favorite: b.dataset.current !== 'true' }); await loadTemplates(); }
+    catch (err) { showToast(err.message, 'err'); }
+  }));
+  grid.querySelectorAll('[data-tpl-rename]').forEach(b => b.addEventListener('click', async () => {
+    const t = tplState.items.find(x => x.id === Number(b.dataset.tplRename));
+    const name = prompt('Rename', t?.name || '');
+    if (name == null) return;
+    const category = prompt('Category', t?.category || '') || '';
+    try { await api('PATCH', `/api/templates/${b.dataset.tplRename}`, { name, category: category || null }); await loadTemplates(); }
+    catch (err) { showToast(err.message, 'err'); }
+  }));
+  grid.querySelectorAll('[data-tpl-delete]').forEach(b => b.addEventListener('click', async () => {
+    if (!confirm('Delete template?')) return;
+    try { await api('DELETE', `/api/templates/${b.dataset.tplDelete}`); await loadTemplates(); }
+    catch (err) { showToast(err.message, 'err'); }
+  }));
+}
+function wireTemplatesSection() {
+  const up = document.getElementById('tpl-upload');
+  if (up.dataset.wired) return;
+  up.dataset.wired = '1';
+  up.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const fd = new FormData();
+    fd.append('image', file);
+    fd.append('name', file.name);
+    try { await api('POST', '/api/templates', fd, { formData: true }); await loadTemplates(); showToast('uploaded'); }
+    catch (err) { showToast(err.message, 'err'); }
+    e.target.value = '';
+  });
+  let t;
+  document.getElementById('tpl-search').addEventListener('input', e => {
+    clearTimeout(t); t = setTimeout(() => { tplState.q = e.target.value; loadTemplates(); }, 250);
+  });
+  document.getElementById('tpl-fav-only').addEventListener('change', e => {
+    tplState.favOnly = e.target.checked; loadTemplates();
+  });
+}
+registerSection('templates', async () => { wireTemplatesSection(); await loadTemplates(); });
+window.tplState = tplState;
+window.loadTemplates = loadTemplates;
+
 registerSection('brand', async () => {
   wireBrandForm();
   wireLogoInputs();
