@@ -493,6 +493,41 @@ function wireHistorySection() {
 }
 registerSection('history', async () => { wireHistorySection(); await loadHistory(); });
 window.loadHistory = loadHistory;
+window.openRepromptModal = function (parentId) {
+  document.getElementById('reprompt-parent-id').textContent = parentId;
+  document.getElementById('reprompt-instruction').value = '';
+  document.getElementById('reprompt-modal').classList.remove('hidden');
+  document.getElementById('reprompt-modal').dataset.parent = parentId;
+};
+function wireRepromptModal() {
+  const modal = document.getElementById('reprompt-modal');
+  if (modal.dataset.wired) return;
+  modal.dataset.wired = '1';
+  document.getElementById('reprompt-cancel').addEventListener('click', () => modal.classList.add('hidden'));
+  document.getElementById('reprompt-submit').addEventListener('click', async () => {
+    const parentId = Number(modal.dataset.parent);
+    const instruction = document.getElementById('reprompt-instruction').value.trim();
+    if (!instruction) return showToast('instruction required', 'err');
+    const payload = {
+      parent_generation_id: parentId,
+      instruction,
+      aspect_ratio: document.getElementById('reprompt-aspect').value,
+      num_images: Number(document.getElementById('reprompt-num').value) || 1,
+      reuse_image: document.getElementById('reprompt-reuse').checked
+    };
+    try {
+      await api('POST', '/api/generate/edit', payload);
+      modal.classList.add('hidden');
+      showToast('variant generated');
+      if (window.loadHistory) window.loadHistory();
+    } catch (err) {
+      showToast(err.message, 'err');
+      if (window.loadHistory) window.loadHistory();
+    }
+  });
+}
+document.addEventListener('DOMContentLoaded', wireRepromptModal);
+
 window.saveGenerationAsTemplate = async function (id) {
   const name = prompt('Template name', `Template from gen #${id}`);
   if (name == null) return;
