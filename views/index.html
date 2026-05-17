@@ -189,8 +189,54 @@
         </div>
       </section>
 
-      <!-- Placeholders filled in by later phases -->
-      <section data-section="assets" class="hidden"><div class="text-slate-500">Assets section — coming up.</div></section>
+      <!-- Assets -->
+      <section data-section="assets" class="space-y-6 hidden">
+        <header class="flex items-center justify-between gap-4">
+          <div>
+            <h2 class="text-2xl font-bold">Assets</h2>
+            <p class="text-sm text-slate-400">Product, packaging, lifestyle, and reference images.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <input id="asset-search" type="text" placeholder="Search filename..."
+              class="text-sm px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:border-indigo-500 focus:outline-none" />
+            <select id="asset-filter"
+              class="text-sm px-3 py-2 rounded-lg bg-slate-900 border border-slate-800">
+              <option value="">All categories</option>
+              <option value="product">Product</option>
+              <option value="packaging">Packaging</option>
+              <option value="lifestyle">Lifestyle</option>
+              <option value="logo">Logo</option>
+              <option value="other">Other</option>
+            </select>
+            <label class="text-sm px-3 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-400 cursor-pointer">
+              Upload
+              <input id="asset-upload" type="file" accept="image/*" class="hidden" multiple />
+            </label>
+          </div>
+        </header>
+        <div id="asset-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3"></div>
+        <p id="asset-empty" class="text-sm text-slate-500 hidden">No assets yet. Upload to get started.</p>
+      </section>
+
+      <!-- Categorize modal -->
+      <div id="asset-categorize-modal" class="hidden fixed inset-0 z-40 bg-slate-950/80 flex items-center justify-center p-6">
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 w-full max-w-md space-y-4">
+          <div>
+            <h3 class="font-semibold">Categorize uploads</h3>
+            <p class="text-sm text-slate-400"><span id="categorize-count">0</span> file(s) just uploaded.</p>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <button data-categorize="product" class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-indigo-500/30 text-sm">Product image</button>
+            <button data-categorize="packaging" class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-indigo-500/30 text-sm">Packaging</button>
+            <button data-categorize="lifestyle" class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-indigo-500/30 text-sm">Lifestyle</button>
+            <button data-categorize="logo" class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-indigo-500/30 text-sm">Logo</button>
+            <button data-categorize="other" class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-indigo-500/30 text-sm col-span-2">Other</button>
+          </div>
+          <div class="flex justify-end">
+            <button id="categorize-skip" class="text-sm px-3 py-2 rounded-lg hover:bg-slate-800">Skip</button>
+          </div>
+        </div>
+      </div>
       <section data-section="templates" class="hidden"><div class="text-slate-500">Templates section — coming up.</div></section>
       <section data-section="generate" class="hidden"><div class="text-slate-500">Generate section — coming up.</div></section>
       <section data-section="history" class="hidden"><div class="text-slate-500">History section — coming up.</div></section>

@@ -336,6 +336,97 @@ function wireBrandForm() {
     });
   });
 }
+// ---------- assets ----------
+const assetState = { items: [], filter: '', q: '', recentlyUploaded: [] };
+
+async function loadAssets() {
+  const params = new URLSearchParams();
+  if (assetState.filter) params.set('category', assetState.filter);
+  if (assetState.q) params.set('q', assetState.q);
+  const { assets } = await api('GET', `/api/assets?${params}`);
+  assetState.items = assets;
+  renderAssetGrid();
+}
+function renderAssetGrid() {
+  const grid = document.getElementById('asset-grid');
+  const empty = document.getElementById('asset-empty');
+  empty.classList.toggle('hidden', assetState.items.length > 0);
+  grid.innerHTML = assetState.items.map(a => `
+    <div class="group relative rounded-lg overflow-hidden border border-slate-800 bg-slate-900 aspect-square">
+      <img src="${escapeHtml(a.url)}" class="w-full h-full object-cover" loading="lazy" />
+      <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/95 to-transparent p-2 text-xs">
+        <div class="truncate" title="${escapeHtml(a.original_name || a.filename)}">${escapeHtml(a.original_name || a.filename)}</div>
+        <div class="flex items-center justify-between mt-1">
+          <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">${escapeHtml(a.category)}</span>
+          <div class="flex gap-1 opacity-0 group-hover:opacity-100">
+            <button data-asset-recategorize="${a.id}" class="px-1.5 py-0.5 rounded bg-slate-700 hover:bg-slate-600">tag</button>
+            <button data-asset-delete="${a.id}" class="px-1.5 py-0.5 rounded bg-rose-500/30 hover:bg-rose-500/50">del</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+  grid.querySelectorAll('[data-asset-delete]').forEach(b => b.addEventListener('click', async () => {
+    if (!confirm('Delete asset?')) return;
+    try { await api('DELETE', `/api/assets/${b.dataset.assetDelete}`); await loadAssets(); }
+    catch (err) { showToast(err.message, 'err'); }
+  }));
+  grid.querySelectorAll('[data-asset-recategorize]').forEach(b => b.addEventListener('click', () => {
+    assetState.recentlyUploaded = [Number(b.dataset.assetRecategorize)];
+    openCategorizeModal(1);
+  }));
+}
+function openCategorizeModal(count) {
+  document.getElementById('categorize-count').textContent = count;
+  document.getElementById('asset-categorize-modal').classList.remove('hidden');
+}
+function closeCategorizeModal() {
+  document.getElementById('asset-categorize-modal').classList.add('hidden');
+  assetState.recentlyUploaded = [];
+}
+async function applyCategoryToRecent(category) {
+  if (!assetState.recentlyUploaded.length) { closeCategorizeModal(); return; }
+  try {
+    await api('POST', '/api/assets/bulk', { ids: assetState.recentlyUploaded, category });
+    showToast(`tagged as ${category}`);
+    closeCategorizeModal();
+    await loadAssets();
+  } catch (err) { showToast(err.message, 'err'); }
+}
+function wireAssetSection() {
+  const input = document.getElementById('asset-upload');
+  if (input.dataset.wired) return;
+  input.dataset.wired = '1';
+  input.addEventListener('change', async (e) => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+    const fd = new FormData();
+    files.forEach(f => fd.append('files', f));
+    try {
+      const { assets } = await api('POST', '/api/assets', fd, { formData: true });
+      assetState.recentlyUploaded = assets.map(a => a.id);
+      await loadAssets();
+      openCategorizeModal(assets.length);
+    } catch (err) { showToast(err.message, 'err'); }
+    e.target.value = '';
+  });
+  document.getElementById('asset-filter').addEventListener('change', (e) => {
+    assetState.filter = e.target.value; loadAssets();
+  });
+  let qTimer;
+  document.getElementById('asset-search').addEventListener('input', (e) => {
+    clearTimeout(qTimer);
+    qTimer = setTimeout(() => { assetState.q = e.target.value; loadAssets(); }, 250);
+  });
+  document.querySelectorAll('[data-categorize]').forEach(b => {
+    b.addEventListener('click', () => applyCategoryToRecent(b.dataset.categorize));
+  });
+  document.getElementById('categorize-skip').addEventListener('click', closeCategorizeModal);
+}
+registerSection('assets', async () => { wireAssetSection(); await loadAssets(); });
+window.assetState = assetState;
+window.loadAssets = loadAssets;
+
 registerSection('brand', async () => {
   wireBrandForm();
   wireLogoInputs();
