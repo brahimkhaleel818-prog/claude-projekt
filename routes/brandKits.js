@@ -1,5 +1,7 @@
+const fs = require('fs');
 const express = require('express');
 const { pool } = require('../database/init');
+const { logoUpload, publicPathFor } = require('../middleware/upload');
 
 const router = express.Router();
 
@@ -81,6 +83,60 @@ router.patch('/', async (req, res, next) => {
       values
     );
     res.json({ kit: rows[0] });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// POST /api/brand-kits/logo?variant=light|dark
+function handleLogoUpload(req, res, next) {
+  logoUpload.single('logo')(req, res, (err) => {
+    if (err) return res.status(400).json({ error: 'upload_failed', message: err.message });
+    next();
+  });
+}
+
+router.post('/logo', handleLogoUpload, async (req, res, next) => {
+  try {
+    if (!req.file) return res.status(400).json({ error: 'no_file' });
+    const variant = req.query.variant === 'dark' ? 'dark' : 'light';
+    const column = variant === 'dark' ? 'logo_url_dark' : 'logo_url_light';
+    const publicPath = publicPathFor(req.file);
+
+    const kit = await getOrCreateKit(req.clientId);
+
+    // best-effort cleanup of any prior file for this variant
+    const prior = kit[column];
+    if (prior && prior.startsWith('/uploads/')) {
+      const abs = require('path').join(__dirname, '..', prior.replace(/^\/+/, ''));
+      fs.promises.unlink(abs).catch(() => {});
+    }
+
+    const { rows } = await pool.query(
+      `UPDATE brand_kits SET ${column} = $1 WHERE id = $2 RETURNING *`,
+      [publicPath, kit.id]
+    );
+    res.json({ kit: rows[0], variant, url: publicPath });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.delete('/logo', async (req, res, next) => {
+  try {
+    const variant = req.query.variant === 'dark' ? 'dark' : 'light';
+    const column = variant === 'dark' ? 'logo_url_dark' : 'logo_url_light';
+    const kit = await getOrCreateKit(req.clientId);
+    const prior = kit[column];
+    if (prior && prior.startsWith('/uploads/')) {
+      const abs = require('path').join(__dirname, '..', prior.replace(/^\/+/, ''));
+      fs.promises.unlink(abs).catch(() => {});
+    }
+    const { rows } = await pool.query(
+      `UPDATE brand_kits SET ${column} = NULL WHERE id = $1 RETURNING *`,
+      [kit.id]
+    );
+    res.json({ kit: rows[0], variant });
   } catch (err) {
     next(err);
   }

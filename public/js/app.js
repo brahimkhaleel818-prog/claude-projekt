@@ -272,6 +272,53 @@ async function saveBrandKit() {
     showToast('saved');
   } catch (err) { showToast(err.message, 'err'); }
 }
+function renderLogoPreviews(kit) {
+  for (const v of ['light', 'dark']) {
+    const el = document.getElementById(`logo-${v}-preview`);
+    const url = v === 'dark' ? kit.logo_url_dark : kit.logo_url_light;
+    if (url) {
+      el.innerHTML = `<img src="${escapeHtml(url)}" class="max-h-full max-w-full object-contain" />`;
+    } else {
+      el.textContent = 'no logo';
+    }
+  }
+}
+async function uploadLogo(variant, file) {
+  const fd = new FormData();
+  fd.append('logo', file);
+  const data = await api('POST', `/api/brand-kits/logo?variant=${variant}`, fd, { formData: true });
+  state.brandKit = data.kit;
+  renderLogoPreviews(data.kit);
+  showToast(`${variant} logo uploaded`);
+}
+async function clearLogo(variant) {
+  const data = await api('DELETE', `/api/brand-kits/logo?variant=${variant}`);
+  state.brandKit = data.kit;
+  renderLogoPreviews(data.kit);
+  showToast(`${variant} logo removed`);
+}
+function wireLogoInputs() {
+  document.querySelectorAll('input[data-logo-variant]').forEach(input => {
+    if (input.dataset.wired) return;
+    input.dataset.wired = '1';
+    input.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      try { await uploadLogo(input.dataset.logoVariant, file); }
+      catch (err) { showToast(err.message, 'err'); }
+      e.target.value = '';
+    });
+  });
+  document.querySelectorAll('button[data-logo-clear]').forEach(btn => {
+    if (btn.dataset.wired) return;
+    btn.dataset.wired = '1';
+    btn.addEventListener('click', async () => {
+      try { await clearLogo(btn.dataset.logoClear); }
+      catch (err) { showToast(err.message, 'err'); }
+    });
+  });
+}
+
 function wireBrandForm() {
   const f = document.getElementById('brand-kit-form');
   if (!f || f.dataset.wired) return;
@@ -289,7 +336,12 @@ function wireBrandForm() {
     });
   });
 }
-registerSection('brand', async () => { wireBrandForm(); await loadBrandKit(); });
+registerSection('brand', async () => {
+  wireBrandForm();
+  wireLogoInputs();
+  await loadBrandKit();
+  if (state.brandKit) renderLogoPreviews(state.brandKit);
+});
 
 // ---------- wiring ----------
 function wireSwitcher() {

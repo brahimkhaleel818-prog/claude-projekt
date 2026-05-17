@@ -133,9 +133,39 @@
           </aside>
         </div>
 
-        <div data-brand-tab="assets" class="hidden">
-          <div id="brand-assets-mount" class="rounded-xl border border-slate-800 bg-slate-900/40 p-6 text-sm text-slate-400">
-            Brand assets (logos + media library) will appear here in upcoming phases.
+        <div data-brand-tab="assets" class="hidden space-y-6">
+          <div class="grid md:grid-cols-2 gap-6">
+            <div class="rounded-xl border border-slate-800 bg-slate-900/40 p-6 space-y-3">
+              <div class="flex items-center justify-between">
+                <h3 class="font-semibold">Logo on light backgrounds</h3>
+                <span class="text-xs text-slate-500">PNG / JPG / SVG / WebP · 5 MB max</span>
+              </div>
+              <div id="logo-light-preview" class="h-32 rounded-lg bg-white flex items-center justify-center text-slate-400 text-xs">no logo</div>
+              <div class="flex gap-2">
+                <label class="text-sm px-3 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-400 cursor-pointer">
+                  Upload
+                  <input type="file" accept="image/*" class="hidden" data-logo-variant="light" />
+                </label>
+                <button data-logo-clear="light" class="text-sm px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700">Remove</button>
+              </div>
+            </div>
+            <div class="rounded-xl border border-slate-800 bg-slate-900/40 p-6 space-y-3">
+              <div class="flex items-center justify-between">
+                <h3 class="font-semibold">Logo on dark backgrounds</h3>
+                <span class="text-xs text-slate-500">used over dark imagery</span>
+              </div>
+              <div id="logo-dark-preview" class="h-32 rounded-lg bg-slate-900 flex items-center justify-center text-slate-500 text-xs">no logo</div>
+              <div class="flex gap-2">
+                <label class="text-sm px-3 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-400 cursor-pointer">
+                  Upload
+                  <input type="file" accept="image/*" class="hidden" data-logo-variant="dark" />
+                </label>
+                <button data-logo-clear="dark" class="text-sm px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700">Remove</button>
+              </div>
+            </div>
+          </div>
+          <div id="brand-asset-library-mount" class="rounded-xl border border-slate-800 bg-slate-900/40 p-6 text-sm text-slate-400">
+            Full media library appears in a later phase.
           </div>
         </div>
       </section>
