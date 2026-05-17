@@ -3,6 +3,8 @@ require('dotenv').config();
 const path = require('path');
 const express = require('express');
 const { initDatabase } = require('./database/init');
+const resolveClient = require('./middleware/resolveClient');
+const clientsRouter = require('./routes/clients');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -24,6 +26,16 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Every /api route below this point has access to req.client / req.clientId.
+app.use('/api', resolveClient);
+app.use('/api/clients', clientsRouter);
+
+// JSON error handler for /api routes so the UI never gets HTML stack traces.
+app.use('/api', (err, req, res, next) => {
+  console.error('[api] unhandled error:', err);
+  res.status(500).json({ error: 'internal_error', message: err.message });
+});
+
 async function start() {
   try {
     await initDatabase();
@@ -39,6 +51,7 @@ async function start() {
     console.log(`  Server running on http://localhost:${PORT}`);
     console.log(`  UI:      http://localhost:${PORT}/`);
     console.log(`  Health:  http://localhost:${PORT}/api/health`);
+    console.log(`  Clients: http://localhost:${PORT}/api/clients`);
     console.log(`  Env:     ${process.env.NODE_ENV || 'development'}`);
     console.log('========================================');
   });
