@@ -536,6 +536,92 @@ window.saveGenerationAsTemplate = async function (id) {
   showToast('saved as template');
 };
 
+// ---------- brand intelligence ----------
+const intelState = { items: [] };
+const INTEL_FIELDS = [
+  ['persona', 'Persona'], ['pain_point', 'Pain point'], ['angle', 'Angle'],
+  ['visual_direction', 'Visual direction'], ['emotion', 'Emotion'], ['copy_hook', 'Copy hook'],
+  ['summary', 'Summary']
+];
+async function loadIntel() {
+  const { profiles } = await api('GET', '/api/brand-intelligence');
+  intelState.items = profiles;
+  renderIntel();
+}
+function renderIntel() {
+  const list = document.getElementById('intel-list');
+  document.getElementById('intel-empty').classList.toggle('hidden', intelState.items.length > 0);
+  list.innerHTML = intelState.items.map(p => `
+    <article data-intel-id="${p.id}" class="rounded-xl border border-slate-800 bg-slate-900/40 p-4 space-y-2">
+      <div class="flex items-center justify-between gap-2">
+        <span class="text-[10px] uppercase tracking-wide px-2 py-0.5 rounded-full ${p.source === 'ai' ? 'bg-indigo-500/20 text-indigo-300' : 'bg-slate-800 text-slate-400'}">${escapeHtml(p.source || 'manual')}</span>
+        <button data-intel-del="${p.id}" class="text-xs text-rose-300 hover:underline">delete</button>
+      </div>
+      <div class="grid md:grid-cols-2 gap-3">
+        ${INTEL_FIELDS.map(([k, label]) => `
+          <label class="block">
+            <span class="text-[10px] uppercase tracking-wide text-slate-500">${label}</span>
+            <textarea data-intel-field="${k}" rows="${k === 'summary' ? 2 : 1}"
+              class="w-full mt-1 px-2 py-1.5 rounded-lg bg-slate-950 border border-slate-800 focus:border-indigo-500 focus:outline-none text-sm">${escapeHtml(p[k] || '')}</textarea>
+          </label>
+        `).join('')}
+      </div>
+    </article>
+  `).join('');
+  list.querySelectorAll('[data-intel-del]').forEach(b => b.addEventListener('click', async () => {
+    if (!confirm('Delete profile?')) return;
+    try { await api('DELETE', `/api/brand-intelligence/${b.dataset.intelDel}`); await loadIntel(); }
+    catch (err) { showToast(err.message, 'err'); }
+  }));
+  // inline-edit autosave
+  list.querySelectorAll('article[data-intel-id]').forEach(art => {
+    const id = Number(art.dataset.intelId);
+    let timer;
+    art.addEventListener('input', () => {
+      clearTimeout(timer);
+      timer = setTimeout(async () => {
+        const payload = {};
+        art.querySelectorAll('[data-intel-field]').forEach(el => { payload[el.dataset.intelField] = el.value; });
+        try { await api('PATCH', `/api/brand-intelligence/${id}`, payload); showToast('saved'); }
+        catch (err) { showToast(err.message, 'err'); }
+      }, 600);
+    });
+  });
+}
+async function addBlankProfile() {
+  try {
+    await api('POST', '/api/brand-intelligence', { source: 'manual', persona: '' });
+    await loadIntel();
+  } catch (err) { showToast(err.message, 'err'); }
+}
+function wireIntelSection() {
+  if (document.getElementById('intel-add').dataset.wired) return;
+  document.getElementById('intel-add').dataset.wired = '1';
+  document.getElementById('intel-add').addEventListener('click', addBlankProfile);
+  document.getElementById('intel-generate').addEventListener('click', () => {
+    document.getElementById('intel-modal').classList.remove('hidden');
+  });
+  document.getElementById('intel-cancel').addEventListener('click', () => {
+    document.getElementById('intel-modal').classList.add('hidden');
+  });
+  document.getElementById('intel-go').addEventListener('click', async () => {
+    const research = document.getElementById('intel-research').value;
+    const count = Number(document.getElementById('intel-count').value) || 3;
+    const btn = document.getElementById('intel-go');
+    btn.disabled = true; btn.textContent = 'Generating...';
+    try {
+      await api('POST', '/api/brand-intelligence/generate', { research, count });
+      showToast('profiles generated');
+      document.getElementById('intel-modal').classList.add('hidden');
+      await loadIntel();
+    } catch (err) { showToast(err.message, 'err'); }
+    finally { btn.disabled = false; btn.textContent = 'Generate'; }
+  });
+}
+registerSection('intel', async () => { wireIntelSection(); await loadIntel(); });
+window.intelState = intelState;
+window.loadIntel = loadIntel;
+
 // ---------- generate ----------
 async function populateGenerateSelects() {
   try {
