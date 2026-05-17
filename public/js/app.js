@@ -594,6 +594,173 @@ function wireReverseModal() {
 }
 document.addEventListener('DOMContentLoaded', wireReverseModal);
 
+// ---------- campaigns / builder ----------
+const builderState = {
+  reference: '', product: '',
+  profiles: new Set(),
+  name: '', goal: '', adsPerProfile: 2, aspect: '1:1',
+  plannedCampaign: null,
+  list: []
+};
+const BUILDER_STEPS = [
+  ['reference', 'Reference'], ['product', 'Product'],
+  ['profiles', 'Profiles'], ['brief', 'Brief'], ['run', 'Generate']
+];
+function builderStepDone(step) {
+  if (step === 'reference' || step === 'product') return true;
+  if (step === 'profiles') return builderState.profiles.size > 0;
+  if (step === 'brief') return builderState.name.trim() && builderState.goal.trim();
+  if (step === 'run') return Boolean(builderState.plannedCampaign);
+  return false;
+}
+function renderBuilderSteps() {
+  const ol = document.getElementById('builder-steps');
+  ol.innerHTML = BUILDER_STEPS.map(([k, label], i) => {
+    const done = builderStepDone(k);
+    return `<li class="px-3 py-2 rounded-lg border ${done ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-300' : 'border-slate-800 bg-slate-900 text-slate-400'}">
+      <span class="font-mono">${i + 1}.</span> ${label}
+    </li>`;
+  }).join('');
+  for (const [k] of BUILDER_STEPS) {
+    const el = document.querySelector(`[data-step-status="${k}"]`);
+    if (el) {
+      if (k === 'profiles') el.textContent = builderState.profiles.size ? `${builderState.profiles.size} selected` : 'required';
+      else if (k === 'brief') el.textContent = builderStepDone('brief') ? 'set' : 'required';
+      else if (k === 'run') el.textContent = builderState.plannedCampaign ? `planned · ${builderState.plannedCampaign.plan.length} items` : 'last step';
+      else el.textContent = (k === 'reference' && builderState.reference) || (k === 'product' && builderState.product) ? 'set' : 'optional';
+    }
+  }
+  document.getElementById('builder-run').disabled = !builderState.plannedCampaign;
+}
+async function populateBuilderSelects() {
+  const { assets } = await api('GET', '/api/assets');
+  for (const which of ['reference', 'product']) {
+    const sel = document.getElementById(`builder-${which}`);
+    sel.innerHTML = '<option value="">— none —</option>' +
+      assets.map(a => `<option value="${a.id}">${escapeHtml(a.original_name || a.filename)} (${escapeHtml(a.category)})</option>`).join('');
+    sel.value = builderState[which];
+  }
+  const { profiles } = await api('GET', '/api/brand-intelligence');
+  const list = document.getElementById('builder-profiles');
+  if (!profiles.length) {
+    list.innerHTML = '<p class="text-xs text-slate-500">No profiles yet. Create some in Brand Intelligence.</p>';
+  } else {
+    list.innerHTML = profiles.map(p => `
+      <label class="flex items-start gap-2 text-sm p-2 rounded-lg hover:bg-slate-800/50 cursor-pointer">
+        <input type="checkbox" value="${p.id}" ${builderState.profiles.has(p.id) ? 'checked' : ''} class="mt-1 accent-indigo-500" data-builder-profile />
+        <span>
+          <span class="font-medium">${escapeHtml(p.persona || '(unnamed)')}</span>
+          <span class="text-slate-500 text-xs"> — ${escapeHtml(p.angle || '')}</span>
+        </span>
+      </label>
+    `).join('');
+    list.querySelectorAll('[data-builder-profile]').forEach(cb => {
+      cb.addEventListener('change', () => {
+        const id = Number(cb.value);
+        if (cb.checked) builderState.profiles.add(id); else builderState.profiles.delete(id);
+        builderState.plannedCampaign = null;
+        renderBuilderSteps();
+      });
+    });
+  }
+  renderBuilderSteps();
+}
+async function loadCampaigns() {
+  const { campaigns } = await api('GET', '/api/campaigns');
+  builderState.list = campaigns;
+  const list = document.getElementById('campaign-list');
+  document.getElementById('campaign-empty').classList.toggle('hidden', campaigns.length > 0);
+  list.innerHTML = campaigns.map(c => {
+    const status = c.status;
+    const cls = status === 'completed' ? 'text-emerald-300'
+      : status === 'partial' ? 'text-amber-300'
+      : status === 'failed' ? 'text-rose-300'
+      : 'text-slate-400';
+    return `<div class="flex items-center justify-between gap-3 rounded-lg border border-slate-800 bg-slate-900/40 p-3 text-sm">
+      <div>
+        <div class="font-medium">${escapeHtml(c.name)}</div>
+        <div class="text-xs text-slate-500">${escapeHtml(c.goal || '')} · ${(Array.isArray(c.plan) ? c.plan.length : 0)} items · <span class="${cls}">${escapeHtml(status)}</span></div>
+      </div>
+      <div class="flex gap-2">
+        <button data-camp-run="${c.id}" class="text-xs px-2 py-1 rounded bg-indigo-500 hover:bg-indigo-400">Run</button>
+        <button data-camp-del="${c.id}" class="text-xs px-2 py-1 rounded bg-rose-500/30 hover:bg-rose-500/50">del</button>
+      </div>
+    </div>`;
+  }).join('');
+  list.querySelectorAll('[data-camp-run]').forEach(b => b.addEventListener('click', async () => {
+    b.disabled = true; b.textContent = '...';
+    try { await api('POST', `/api/campaigns/${b.dataset.campRun}/generate`); showToast('campaign run'); await loadCampaigns(); if (window.loadHistory) window.loadHistory(); }
+    catch (err) { showToast(err.message, 'err'); }
+    finally { b.disabled = false; b.textContent = 'Run'; }
+  }));
+  list.querySelectorAll('[data-camp-del]').forEach(b => b.addEventListener('click', async () => {
+    if (!confirm('Delete campaign?')) return;
+    try { await api('DELETE', `/api/campaigns/${b.dataset.campDel}`); await loadCampaigns(); }
+    catch (err) { showToast(err.message, 'err'); }
+  }));
+}
+function wireBuilder() {
+  if (document.getElementById('builder-plan').dataset.wired) return;
+  document.getElementById('builder-plan').dataset.wired = '1';
+
+  document.getElementById('builder-reference').addEventListener('change', e => {
+    builderState.reference = e.target.value; builderState.plannedCampaign = null; renderBuilderSteps();
+  });
+  document.getElementById('builder-product').addEventListener('change', e => {
+    builderState.product = e.target.value; builderState.plannedCampaign = null; renderBuilderSteps();
+  });
+  for (const [k, prop] of [['name', 'name'], ['goal', 'goal']]) {
+    document.getElementById(`builder-${k}`).addEventListener('input', e => {
+      builderState[prop] = e.target.value; builderState.plannedCampaign = null; renderBuilderSteps();
+    });
+  }
+  document.getElementById('builder-ads').addEventListener('change', e => { builderState.adsPerProfile = Number(e.target.value) || 1; });
+  document.getElementById('builder-aspect').addEventListener('change', e => { builderState.aspect = e.target.value; });
+
+  document.getElementById('builder-plan').addEventListener('click', async () => {
+    if (!builderState.profiles.size) return showToast('select at least one profile', 'err');
+    const btn = document.getElementById('builder-plan');
+    btn.disabled = true; btn.textContent = 'Planning...';
+    try {
+      const data = await api('POST', '/api/campaign/plan', {
+        name: builderState.name || 'Untitled campaign',
+        goal: builderState.goal,
+        intelligence_ids: [...builderState.profiles],
+        reference_asset_id: builderState.reference || null,
+        product_asset_id: builderState.product || null,
+        ads_per_profile: builderState.adsPerProfile,
+        aspect_ratio: builderState.aspect
+      });
+      builderState.plannedCampaign = data.campaign;
+      document.getElementById('builder-output').innerHTML =
+        `<div class="text-emerald-300">Planned ${data.campaign.plan.length} ad items.</div>`;
+      renderBuilderSteps();
+      await loadCampaigns();
+    } catch (err) { showToast(err.message, 'err'); }
+    finally { btn.disabled = false; btn.textContent = 'Plan campaign'; }
+  });
+  document.getElementById('builder-run').addEventListener('click', async () => {
+    if (!builderState.plannedCampaign) return;
+    const btn = document.getElementById('builder-run');
+    btn.disabled = true; btn.textContent = 'Generating...';
+    try {
+      const data = await api('POST', `/api/campaigns/${builderState.plannedCampaign.id}/generate`);
+      const ok = data.results.filter(r => r.status === 'succeeded').length;
+      document.getElementById('builder-output').innerHTML =
+        `<div>${ok}/${data.results.length} succeeded · campaign ${escapeHtml(data.campaign.status)}</div>`;
+      showToast('batch run');
+      await loadCampaigns();
+      if (window.loadHistory) window.loadHistory();
+    } catch (err) { showToast(err.message, 'err'); }
+    finally { btn.disabled = false; btn.textContent = 'Generate batch'; }
+  });
+}
+registerSection('campaigns', async () => {
+  wireBuilder();
+  renderBuilderSteps();
+  await Promise.all([populateBuilderSelects(), loadCampaigns()]);
+});
+
 // ---------- brand intelligence ----------
 const intelState = { items: [] };
 const INTEL_FIELDS = [

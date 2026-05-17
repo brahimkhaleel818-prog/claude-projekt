@@ -429,7 +429,99 @@
           </div>
         </div>
       </div>
-      <section data-section="campaigns" class="hidden"><div class="text-slate-500">Campaigns section — coming up.</div></section>
+      <section data-section="campaigns" class="space-y-6 hidden">
+        <header class="flex items-center justify-between gap-4">
+          <div>
+            <h2 class="text-2xl font-bold">Campaigns</h2>
+            <p class="text-sm text-slate-400">Plan profile-driven campaigns and run the whole matrix in one batch.</p>
+          </div>
+        </header>
+
+        <ol id="builder-steps" class="grid grid-cols-5 gap-2 text-xs"></ol>
+
+        <details class="rounded-xl border border-slate-800 bg-slate-900/40 open:bg-slate-900/60" open data-builder-step="reference">
+          <summary class="cursor-pointer px-5 py-4 font-medium flex items-center justify-between">
+            <span><span class="text-slate-500 mr-2">1.</span>Style reference</span>
+            <span class="text-xs text-slate-500" data-step-status="reference">optional</span>
+          </summary>
+          <div class="p-5 pt-0">
+            <select id="builder-reference" class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800">
+              <option value="">— none —</option>
+            </select>
+          </div>
+        </details>
+
+        <details class="rounded-xl border border-slate-800 bg-slate-900/40" data-builder-step="product">
+          <summary class="cursor-pointer px-5 py-4 font-medium flex items-center justify-between">
+            <span><span class="text-slate-500 mr-2">2.</span>Product image</span>
+            <span class="text-xs text-slate-500" data-step-status="product">optional</span>
+          </summary>
+          <div class="p-5 pt-0">
+            <select id="builder-product" class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800">
+              <option value="">— none —</option>
+            </select>
+          </div>
+        </details>
+
+        <details class="rounded-xl border border-slate-800 bg-slate-900/40" data-builder-step="profiles">
+          <summary class="cursor-pointer px-5 py-4 font-medium flex items-center justify-between">
+            <span><span class="text-slate-500 mr-2">3.</span>Import profiles</span>
+            <span class="text-xs text-slate-500" data-step-status="profiles">required</span>
+          </summary>
+          <div class="p-5 pt-0">
+            <p class="text-xs text-slate-500 mb-2">Pick the persona/angle profiles to drive this campaign.</p>
+            <div id="builder-profiles" class="space-y-1 max-h-64 overflow-auto"></div>
+          </div>
+        </details>
+
+        <details class="rounded-xl border border-slate-800 bg-slate-900/40" data-builder-step="brief">
+          <summary class="cursor-pointer px-5 py-4 font-medium flex items-center justify-between">
+            <span><span class="text-slate-500 mr-2">4.</span>Brief</span>
+            <span class="text-xs text-slate-500" data-step-status="brief">required</span>
+          </summary>
+          <div class="p-5 pt-0 grid md:grid-cols-2 gap-3">
+            <label class="block">
+              <span class="text-xs uppercase text-slate-500">Campaign name</span>
+              <input id="builder-name" type="text" class="w-full mt-1 px-3 py-2 rounded-lg bg-slate-950 border border-slate-800" />
+            </label>
+            <label class="block">
+              <span class="text-xs uppercase text-slate-500">Goal</span>
+              <input id="builder-goal" type="text" class="w-full mt-1 px-3 py-2 rounded-lg bg-slate-950 border border-slate-800" />
+            </label>
+            <label class="block">
+              <span class="text-xs uppercase text-slate-500">Ads per profile</span>
+              <input id="builder-ads" type="number" min="1" max="4" value="2" class="w-full mt-1 px-3 py-2 rounded-lg bg-slate-950 border border-slate-800" />
+            </label>
+            <label class="block">
+              <span class="text-xs uppercase text-slate-500">Aspect</span>
+              <select id="builder-aspect" class="w-full mt-1 px-3 py-2 rounded-lg bg-slate-950 border border-slate-800">
+                <option value="1:1">1:1</option><option value="4:5">4:5</option>
+                <option value="9:16">9:16</option><option value="16:9">16:9</option>
+              </select>
+            </label>
+          </div>
+        </details>
+
+        <details class="rounded-xl border border-slate-800 bg-slate-900/40" data-builder-step="run">
+          <summary class="cursor-pointer px-5 py-4 font-medium flex items-center justify-between">
+            <span><span class="text-slate-500 mr-2">5.</span>Plan &amp; generate</span>
+            <span class="text-xs text-slate-500" data-step-status="run">last step</span>
+          </summary>
+          <div class="p-5 pt-0 space-y-3">
+            <div class="flex gap-2">
+              <button id="builder-plan" class="text-sm px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700">Plan campaign</button>
+              <button id="builder-run" class="text-sm px-4 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-400" disabled>Generate batch</button>
+            </div>
+            <div id="builder-output" class="text-xs text-slate-400"></div>
+          </div>
+        </details>
+
+        <div>
+          <h3 class="font-semibold mb-2 mt-8">Past campaigns</h3>
+          <div id="campaign-list" class="space-y-2"></div>
+          <p id="campaign-empty" class="text-sm text-slate-500 hidden">No campaigns yet.</p>
+        </div>
+      </section>
     </main>
   </div>
 
