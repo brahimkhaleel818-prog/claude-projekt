@@ -1,0 +1,29 @@
+function doPost(e) {
+  var lock = LockService.getScriptLock();
+  lock.tryLock(5000);
+  try {
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow(["Datum", "Uhrzeit", "Besucher-ID", "Event", "Frage", "Antwort",
+                       "Kampagne", "Quelle (utm_source)", "Zeitzone", "Sprache", "Geraet", "Seite"]);
+      sheet.getRange(1, 1, 1, 12).setFontWeight("bold");
+      sheet.setFrozenRows(1);
+    }
+    var d = JSON.parse(e.postData.contents);
+    var now = new Date();
+    sheet.appendRow([
+      Utilities.formatDate(now, "America/New_York", "yyyy-MM-dd"),
+      Utilities.formatDate(now, "America/New_York", "HH:mm:ss"),
+      d.visitor || "", d.event || "", d.question || "", d.answer || "",
+      d.utm_campaign || "", d.utm_source || "", d.timezone || "", d.language || "",
+      d.device || "", d.page || ""
+    ]);
+  } finally {
+    lock.releaseLock();
+  }
+  return ContentService.createTextOutput("ok");
+}
+
+function doGet() {
+  return ContentService.createTextOutput("NiteLab Quiz Logger aktiv");
+}
