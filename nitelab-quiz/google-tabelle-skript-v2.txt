@@ -1,0 +1,102 @@
+/* NiteLab Quiz Logger v2
+   Blatt 1 ("Tabellenblatt1"): jeder Klick als einzelne Zeile (wie bisher)
+   Blatt "Besucher": EINE Zeile pro Besucher mit allen Antworten in Spalten */
+
+var QUESTIONS = [
+  "this year im",
+  "what do you want the most",
+  "when did you notice your snoring became a problem",
+  "how has your life changed because of snoring",
+  "what happens when you go to sleep",
+  "how would you describe your snoring level",
+  "whats the 1 reason why you havent fixed your snoring",
+  "how does your family or partner feel about your snoring",
+  "have you tried other snoring solutions",
+  "what are you most worried about",
+  "what is most important in a snoring solution"
+];
+var QHEAD = [
+  "F1: Alter", "F2: Groesster Wunsch", "F3: Seit wann", "F4: Auswirkung",
+  "F5: Nachts", "F6: Schnarch-Level", "F7: Grund nicht gefixt",
+  "F8: Partner/Familie", "F9: Schon versucht", "F10: Groesste Sorge", "F11: Wichtigstes"
+];
+
+function norm(t) {
+  return String(t || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
+function doPost(e) {
+  var lock = LockService.getScriptLock();
+  lock.tryLock(10000);
+  try {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var d = JSON.parse(e.postData.contents);
+    var now = new Date();
+    var datum = Utilities.formatDate(now, "America/New_York", "yyyy-MM-dd");
+    var zeit = Utilities.formatDate(now, "America/New_York", "HH:mm:ss");
+
+    /* ---- Blatt 1: Roh-Log (jede Aktion einzeln) ---- */
+    var log = ss.getSheets()[0];
+    if (log.getLastRow() === 0) {
+      log.appendRow(["Datum", "Uhrzeit", "Besucher-ID", "Event", "Frage", "Antwort",
+                     "Kampagne", "Quelle (utm_source)", "Zeitzone", "Sprache", "Geraet", "Seite"]);
+      log.getRange(1, 1, 1, 12).setFontWeight("bold");
+      log.setFrozenRows(1);
+    }
+    log.appendRow([datum, zeit, d.visitor || "", d.event || "", d.question || "", d.answer || "",
+                   d.utm_campaign || "", d.utm_source || "", d.timezone || "", d.language || "",
+                   d.device || "", d.page || ""]);
+
+    /* ---- Blatt "Besucher": eine Zeile pro Person ---- */
+    var ov = ss.getSheetByName("Besucher");
+    if (!ov) {
+      ov = ss.insertSheet("Besucher", 0);
+      var head = ["Datum", "Start-Uhrzeit", "Besucher-ID", "Kampagne", "Quelle", "Geraet", "Sprache", "Zeitzone"]
+                 .concat(QHEAD)
+                 .concat(["Quiz beendet?", "Rabatt geklickt?", "Zuletzt aktiv"]);
+      ov.appendRow(head);
+      ov.getRange(1, 1, 1, head.length).setFontWeight("bold").setBackground("#E8EAF6");
+      ov.setFrozenRows(1);
+      ov.setFrozenColumns(3);
+      ov.getRange(1, 1, 1, head.length).createFilter();
+    }
+
+    var visitor = d.visitor || "unbekannt";
+    var row = -1;
+    var last = ov.getLastRow();
+    if (last > 1) {
+      var ids = ov.getRange(2, 3, last - 1, 1).getValues();
+      for (var i = 0; i < ids.length; i++) {
+        if (ids[i][0] === visitor) { row = i + 2; break; }
+      }
+    }
+    if (row === -1) {
+      ov.appendRow([datum, zeit, visitor, d.utm_campaign || "", d.utm_source || "",
+                    d.device || "", d.language || "", d.timezone || "",
+                    "", "", "", "", "", "", "", "", "", "", "", "", "", zeit]);
+      row = ov.getLastRow();
+    }
+
+    if (d.event === "question_answered") {
+      var qn = norm(d.question);
+      for (var q = 0; q < QUESTIONS.length; q++) {
+        if (qn.indexOf(QUESTIONS[q]) === 0 || QUESTIONS[q].indexOf(qn) === 0) {
+          ov.getRange(row, 9 + q).setValue(d.answer || "");
+          break;
+        }
+      }
+    }
+    if (d.event === "quiz_complete") ov.getRange(row, 20).setValue("JA");
+    if (d.event === "claim_click") ov.getRange(row, 21).setValue("JA");
+    ov.getRange(row, 22).setValue(zeit);
+    if (d.utm_campaign) ov.getRange(row, 4).setValue(d.utm_campaign);
+
+  } finally {
+    lock.releaseLock();
+  }
+  return ContentService.createTextOutput("ok");
+}
+
+function doGet() {
+  return ContentService.createTextOutput("NiteLab Quiz Logger v2 aktiv");
+}
