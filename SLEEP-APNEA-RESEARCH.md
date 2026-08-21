@@ -14,12 +14,13 @@ Read-only customer research into people who have sleep apnea, and the partners w
 | `04-FREQUENCY-BASELINE.md` | How often each theme actually appears, from an unbiased sample |
 | `05-RAW-EVIDENCE-cpaptalk.md` | Independent second source used to check the Reddit findings |
 | `06-RAW-EVIDENCE-addendum-high-engagement.md` | The highest-engagement posts, and four pains the automatic tagger missed |
+| `07-RAW-EVIDENCE-comments-peer-dynamics.md` | What sufferers tell each other — the advice that has already shaped every objection you'll meet |
 | `raw/` | The datasets themselves, plus the tagger and collection scripts. Never overwrite |
 
 ### `CUSTOMER-MODEL/` — interpretation
 | File | What's in it |
 |---|---|
-| `01-CORE-AVATAR-AND-SUBAVATARS.md` | Core avatar, 9 sub-avatars, pattern-strength table, awareness map |
+| `01-CORE-AVATAR-AND-SUBAVATARS.md` | Core avatar, 10 sub-avatars, pattern-strength table, awareness map |
 | `02-PAINS-DESIRES-BELIEFS-OBJECTIONS.md` | Consolidated pains, desires, failed solutions, objections, beliefs, triggers, fears, and the market's internal contradictions |
 
 ### `ANGLES/` — hypotheses
@@ -40,7 +41,7 @@ Read-only customer research into people who have sleep apnea, and the partners w
 
 - **No Facebook data.** No groups were named or made accessible, and group content is login-walled. Methodology §5 explains how to add that layer.
 - Reddit blocks direct automated access from this environment; content came from a public Reddit archive with every original permalink preserved.
-- The comment dataset is partial (rate limits) and is used for language only, never for frequency claims.
+- Comments were collected thread-by-thread from the 163 most-discussed posts (11,528 of them), so they represent the market's busiest conversations rather than a random slice. No post-level frequency claim uses comment data.
 - Everything here reflects English-language, online, help-seeking patients. People who quietly quit treatment stop posting — this corpus systematically under-counts them.
 
 ## Account safety

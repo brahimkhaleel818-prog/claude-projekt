@@ -7,7 +7,7 @@
 | File | Records | Contents |
 |---|---:|---|
 | `reddit-posts.jsonl` | 3,313 | Posts from r/SleepApnea and r/CPAP, deduplicated by post id |
-| `reddit-comments.jsonl` | 300 | Comments from the same subreddits (partial — see note below) |
+| `reddit-comments.jsonl` | 11,828 | Comments from the same subreddits: 11,528 retrieved thread-by-thread from 163 high-discussion posts, plus 300 from keyword searches |
 | `cpaptalk-threads.jsonl` | 150 | Full threads from CPAPtalk.com, with all posts in each thread |
 | `theme-tagger.py` | — | The regex theme classifier used for every frequency figure |
 | `harvest-scripts/` | — | The collection scripts, so any number here can be reproduced |
@@ -30,7 +30,7 @@ One JSON object per line:
 
 `id`, `body`, `author`, `subreddit`, `score`, `created_utc`, `link_id` (parent post, `t3_<id>`), `parent_id`, `_url`, `_src`.
 
-**Note on completeness:** the comment collection is partial. The archive API rate-limits the comment-search endpoint aggressively, and several keyword queries were refused during collection. The comments present are genuine and usable for language and quotes; the set is **not** a representative sample and no frequency claim in this research is based on it. Re-running `harvest-scripts/comments_harvest.py` later (it resumes and de-duplicates) will extend it.
+**Note on how comments were sampled.** The archive's keyword comment-search endpoint rate-limited aggressively, so most comments were collected a different way: for the 260 highest-comment posts in the corpus, every available comment was pulled by thread (163 threads returned data). That means the comment set is **complete within the threads it covers**, but those threads were chosen for high engagement — so it represents *the market's most-discussed conversations*, not a random slice of all comments. Percentages computed on it (see `07-RAW-EVIDENCE-comments-peer-dynamics.md`) describe what is said inside busy threads, and are reported that way. No post-level frequency claim in this research uses comment data.
 
 ## Reproducing the frequency numbers
 

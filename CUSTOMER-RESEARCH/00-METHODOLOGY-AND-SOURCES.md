@@ -25,9 +25,9 @@ Honesty about sourcing matters more than a long source list. Here is exactly wha
 
 | Dataset | Size | What it is |
 |---|---|---|
-| `raw/reddit-posts.jsonl` | see file header | Posts from **r/SleepApnea** and **r/CPAP** |
-| `raw/reddit-comments.jsonl` | see file header | Comments from the same subreddits |
-| `raw/cpaptalk-threads.jsonl` | see file header | Full threads from CPAPtalk.com |
+| `raw/reddit-posts.jsonl` | 3,313 | Posts from **r/SleepApnea** and **r/CPAP** |
+| `raw/reddit-comments.jsonl` | 11,828 | Comments: 11,528 pulled thread-by-thread from the 163 most-discussed posts, plus 300 from keyword search |
+| `raw/cpaptalk-threads.jsonl` | 150 | Full threads from CPAPtalk.com |
 
 Every record keeps: original text, author handle, score, comment count, timestamp, and a reconstructed source URL.
 
@@ -38,6 +38,8 @@ All posts published on **34 calendar days spread evenly across ~18 months** (one
 
 **Track B — targeted depth sample.**
 ~50 keyword searches (emotional and treatment-specific language: "gave up on cpap", "claustrophobic", "afraid of dying", "my wife", "aerophagia", "ozempic", "inspire implant", …) against post bodies and comment bodies. This surfaces the strongest first-person accounts. **Track B is used for quotes and nuance only — never for frequency claims**, because searching for a phrase guarantees you find it.
+
+**Comments — a third collection method.** The archive's keyword comment-search rate-limited too hard to use at scale, so comments were instead pulled exhaustively from the 260 highest-comment threads (163 returned data, 11,528 comments). Complete within those threads, but skewed toward busy conversations by construction — treated accordingly, and never used for post-level frequencies.
 
 **Track C — triangulation.**
 CPAPtalk.com threads, to check whether Reddit-specific dynamics were being mistaken for market-wide patterns. (They partly were — see the note on the "data tinkerer" segment.)
