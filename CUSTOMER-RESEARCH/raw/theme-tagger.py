@@ -1,0 +1,36 @@
+import re
+T={
+"fatigue_energy":r"\b(exhaust\w*|so tired|dead tired|no energy|fatigue\w*|drained|zombie|falling asleep|nap\w*|sleepy)\b",
+"brain_fog":r"\b(brain fog|foggy|can'?t concentrate|memory|forgetful|focus)\b",
+"mood_depression":r"\b(depress\w*|anxiet\w*|anxious|irritab\w*|mood|snap at|miserable|hopeless)\b",
+"fear_health":r"\b(heart attack|stroke|a-?fib|afib|blood pressure|die in my sleep|dying|death|kill me|shorten\w* my life|long.?term damage|dementia)\b",
+"partner_relationship":r"\b(my (wife|husband|partner|girlfriend|boyfriend|spouse)|separate (bed|room)|marriage|divorce|she can'?t sleep|he can'?t sleep|kicked out of the bed)\b",
+"snoring_embarrass":r"\b(snor\w*|embarrass\w*|ashamed|humiliat\w*|self.?conscious)\b",
+"mask_leak":r"\b(leak\w*|leaking|blowing (in|into) my eyes?|whistl\w*)\b",
+"mask_comfort":r"\b(sore|red mark|pressure sore|straps?|too tight|hurts?|uncomfortable|irritat\w*|bruis\w*|skin)\b",
+"claustrophobia":r"\b(claustrophob\w*|panic|suffocat\w*|can'?t stand (it|the mask)|rip(ped|ping)? (it|the mask) off|tear(ing)? (it|the mask) off)\b",
+"dry_mouth_nose":r"\b(dry mouth|dry nose|dried out|humidif\w*|congest\w*|stuffy|nosebleed|rainout)\b",
+"aerophagia":r"\b(aerophag\w*|swallow\w* air|bloat\w*|gas\b|burp\w*|stomach)\b",
+"adherence_quit":r"\b(gave up|give up|quit|stopped using|can'?t tolerate|noncompliant|non.?compliant|only last\w* (an? )?(hour|few)|take it off in my sleep|throw(ing)? it (off|across))\b",
+"data_tinkering":r"\b(AHI|OSCAR|SleepyHead|EPR|pressure setting|titrat\w*|myair|central\w*|clear ?airway|flow limit\w*)\b",
+"cost_insurance":r"\b(insurance|deductible|out of pocket|\$\d|cost\w*|expensive|afford|copay|DME|supplier)\b",
+"diagnosis_journey":r"\b(sleep study|newly diagnos\w*|just (got )?diagnos\w*|home test|WatchPAT|titration study|waiting (for|on) (my|the) (results|appointment)|referral)\b",
+"alt_oral_appliance":r"\b(oral appliance|mouth ?piece|mouth ?guard|mandibular|MAD\b|dentist|Vivos|SomnoDent|eXciteOSA)\b",
+"alt_surgery":r"\b(surgery|surgical|UPPP|septoplasty|turbinate|MMA\b|jaw surgery|tonsil\w*|adenoid|Inspire|hypoglossal|implant)\b",
+"alt_weight":r"\b(lost weight|lose weight|weight loss|ozempic|semaglutide|wegovy|GLP-?1|bariatric|BMI|gained weight)\b",
+"alt_positional":r"\b(side sleep\w*|back sleep\w*|positional|tennis ball|wedge pillow|elevat\w* (my|the) (head|bed))\b",
+"alt_mouthtape_misc":r"\b(mouth ?tap\w*|chin ?strap|nasal strips?|breathe right|myofunctional|didgeridoo|throat exercise)\b",
+"travel_practical":r"\b(travel\w*|flight|flying|camping|hotel|power bank|battery|carry.?on)\b",
+"cleaning_maint":r"\b(clean\w*|wash\w*|SoClean|distilled water|mold|replace\w* (the )?(cushion|filter|tubing)|supplies)\b",
+"work_driving_risk":r"\b(at work|my job|productiv\w*|meetings?|DOT|CDL|driver'?s licen[cs]e|driving|behind the wheel|crash\w*|accident)\b",
+"success_relief":r"\b(life.?chang\w*|changed my life|best sleep|so much better|new person|miracle|game.?changer|finally (feel|sleep))\b",
+"skeptic_doubt":r"\b(scam|snake oil|placebo|waste of money|don'?t believe|skeptic\w*|doesn'?t work for me|tried everything)\b",
+"uars_mild":r"\b(UARS|upper airway resistance|mild apnea|AHI (of )?[0-4]\b|borderline)\b",
+"weight_stigma_thin":r"\b(i'?m (not|thin|skinny|fit|athletic)|not overweight|normal BMI|skinny (guy|girl|person)|thin and)\b",
+"sex_libido":r"\b(libido|sex drive|erectile|ED\b|intimacy)\b",
+"nocturia":r"\b(bathroom|pee|urinat\w*|nocturia|wake up to go)\b",
+"morning":r"\b(morning headache|wake up (with|feeling)|groggy|hungover|dry throat in the morning|not refreshed|unrefresh\w*)\b",
+}
+C={k:re.compile(v,re.I) for k,v in T.items()}
+def tag(text):
+    return [k for k,r in C.items() if r.search(text or "")]
