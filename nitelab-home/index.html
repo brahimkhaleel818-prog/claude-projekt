@@ -33,6 +33,25 @@ a{color:var(--blue)}
 .announce{background:var(--red);color:#fff;text-align:center;font-weight:700;font-size:15px;padding:11px 16px;letter-spacing:.01em}
 .announce b{font-weight:900}
 
+
+.announce{background:var(--red);color:#fff;padding:9px 14px}
+.announce-in{max-width:680px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
+.announce-txt{text-align:center;line-height:1.2}
+.announce-txt .a1{display:block;font-size:17px;font-weight:900;letter-spacing:.02em}
+.announce-txt .a2{display:block;font-size:14px;font-weight:700;opacity:.97}
+.cd{display:flex;align-items:flex-start;gap:5px;font-variant-numeric:tabular-nums}
+.cd b{font-size:19px;font-weight:800;line-height:1.15;color:#fff}
+.cd-b{background:#fff;border-radius:7px;min-width:42px;padding:3px 5px 4px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.16)}
+.cd-b span{display:block;font-size:19px;font-weight:900;color:var(--navy);line-height:1.15}
+.cd-b i{display:block;font-size:9px;font-weight:800;font-style:normal;letter-spacing:.08em;color:#6b7280;margin-top:1px}
+@media(max-width:420px){
+  .announce-in{gap:11px}
+  .announce-txt .a1{font-size:15px}.announce-txt .a2{font-size:12.5px}
+  .cd-b{min-width:36px}.cd-b span{font-size:17px}
+}
+/* Bild-Platzhalter dezent kennzeichnen */
+img[data-ph]{background:#EAF0FF}
+
 /* Header */
 .header{background:var(--navy);padding:14px 0;text-align:center}
 .logo{font-family:'Playfair Display',Georgia,serif;font-size:30px;font-weight:700;color:#fff;letter-spacing:.5px;margin:0;line-height:1.1}
@@ -46,7 +65,7 @@ a{color:var(--blue)}
 .hero .sub em{font-style:normal;color:var(--red)}
 .hero .lead{font-size:17px;color:#2a3350;max-width:520px;margin:0 auto 24px}
 .hero .lead b{font-weight:800}
-.hero-img{margin:0 auto;max-width:560px}
+.hero-img{margin:0 auto;width:100%;max-width:560px;height:auto}
 
 /* Trust bar */
 .trust{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:26px 0;background:#fff}
@@ -140,11 +159,43 @@ body{padding-bottom:86px}
   .trust{grid-template-columns:repeat(2,1fr);gap:18px}
 }
 </style>
+<script>
+/* ====== NITELAB BILDER — hier die 8 URLs eintragen, sonst nichts ändern ====== */
+window.NL_IMAGES = {
+  hero:      "",  // Hero: 2 Beutel + Produkt + 90-Tage-Siegel
+  lineup:    "",  // 3 Beutel mit Produkten
+  airway:    "",  // Airway-Vergleich blockiert vs. frei
+  bundle:    "",  // Bundle: Produkt + Zubehör + eBook
+  doctor:    "",  // Sleep Doctor Approved (Dr. Breus)
+  review1:   "",  // Foto Bewertung 1 (Chris)
+  review2:   "",  // Foto Bewertung 2 (Ben)
+  review3:   "",  // Foto Bewertung 3 (Megan K.)
+  review4:   ""   // Foto Bewertung 4 (David A.)
+};
+document.addEventListener("DOMContentLoaded", function () {
+  Object.keys(window.NL_IMAGES).forEach(function (k) {
+    var url = window.NL_IMAGES[k];
+    if (!url) return;
+    document.querySelectorAll('[data-img="' + k + '"]').forEach(function (el) {
+      el.src = url; el.removeAttribute("data-ph");
+    });
+  });
+});
+</script>
 </head>
 <body>
 
 <!-- ANNOUNCEMENT (ROT) -->
-<div class="announce">🔥 LIMITED TIME: <b>60% OFF</b> + FREE Shipping &amp; <b>90-Day Money-Back Guarantee</b></div>
+<div class="announce">
+  <div class="announce-in">
+    <div class="announce-txt"><span class="a1">LIMITED TIME SALE</span><span class="a2">60% OFF + 3 FREE GIFTS</span></div>
+    <div class="cd" id="cd">
+      <div class="cd-b"><span id="cdH">05</span><i>HRS</i></div><b>:</b>
+      <div class="cd-b"><span id="cdM">00</span><i>MIN</i></div><b>:</b>
+      <div class="cd-b"><span id="cdS">00</span><i>SEC</i></div>
+    </div>
+  </div>
+</div>
 
 <!-- HEADER -->
 <header class="header"><p class="logo">Nite<span>Lab</span></p></header>
@@ -156,7 +207,7 @@ body{padding-bottom:86px}
     <p class="sub">without changing your sleeping habits<em>!</em></p>
     <p class="lead">NiteLab is a comfortable, instantly effective, and <b>fully adjustable</b> mouthpiece that stops snoring at the source by gently positioning your lower jaw forward to keep your airway open, without you noticing.</p>
   </div>
-  <img class="hero-img" src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20200%20200%22%3E%0A%3Cdefs%3E%0A%3Cpath%20id%3D%22arcTop%22%20d%3D%22M%2028%2C100%20A%2072%2C72%200%200%201%20172%2C100%22%20fill%3D%22none%22/%3E%0A%3Cpath%20id%3D%22arcBot%22%20d%3D%22M%2021%2C100%20A%2079%2C79%200%200%200%20179%2C100%22%20fill%3D%22none%22/%3E%0A%3C/defs%3E%0A%3Ccircle%20cx%3D%22100%22%20cy%3D%22100%22%20r%3D%2297%22%20fill%3D%22%23174EDB%22/%3E%0A%3Ccircle%20cx%3D%22100%22%20cy%3D%22100%22%20r%3D%2288%22%20fill%3D%22none%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%222.5%22/%3E%0A%3Ccircle%20cx%3D%22100%22%20cy%3D%22100%22%20r%3D%2263%22%20fill%3D%22%23ffffff%22/%3E%0A%3Ctext%20font-family%3D%22Arial%2CHelvetica%2Csans-serif%22%20font-size%3D%2216%22%20font-weight%3D%22bold%22%20fill%3D%22%23ffffff%22%20letter-spacing%3D%222.4%22%3E%0A%20%20%3CtextPath%20href%3D%22%23arcTop%22%20startOffset%3D%2250%25%22%20text-anchor%3D%22middle%22%3EMONEY%20BACK%3C/textPath%3E%0A%3C/text%3E%0A%3Ctext%20font-family%3D%22Arial%2CHelvetica%2Csans-serif%22%20font-size%3D%2215%22%20font-weight%3D%22bold%22%20fill%3D%22%23ffffff%22%20letter-spacing%3D%222.2%22%3E%0A%20%20%3CtextPath%20href%3D%22%23arcBot%22%20startOffset%3D%2250%25%22%20text-anchor%3D%22middle%22%3EGUARANTEE%3C/textPath%3E%0A%3C/text%3E%0A%3Ctext%20x%3D%22100%22%20y%3D%2299%22%20font-family%3D%22Arial%2CHelvetica%2Csans-serif%22%20font-size%3D%2242%22%20font-weight%3D%22bold%22%20fill%3D%22%23174EDB%22%20text-anchor%3D%22middle%22%3E90%3C/text%3E%0A%3Ctext%20x%3D%22100%22%20y%3D%22127%22%20font-family%3D%22Arial%2CHelvetica%2Csans-serif%22%20font-size%3D%2220%22%20font-weight%3D%22bold%22%20fill%3D%22%23174EDB%22%20text-anchor%3D%22middle%22%20letter-spacing%3D%221.5%22%3EDAYS%3C/text%3E%0A%3Ccircle%20cx%3D%2217%22%20cy%3D%22100%22%20r%3D%223.4%22%20fill%3D%22%23ffffff%22/%3E%3Ccircle%20cx%3D%22183%22%20cy%3D%22100%22%20r%3D%223.4%22%20fill%3D%22%23ffffff%22/%3E%0A%3C/svg%3E" alt="NiteLab Pro Anti-Snoring Mouthpiece" fetchpriority="high">
+  <img class="hero-img" data-img="hero" data-ph="1" src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20800%20500%22%3E%3Crect%20width%3D%22800%22%20height%3D%22500%22%20fill%3D%22%23EAF0FF%22/%3E%3Crect%20x%3D%2212%22%20y%3D%2212%22%20width%3D%22776%22%20height%3D%22476%22%20fill%3D%22none%22%20stroke%3D%22%23174EDB%22%20stroke-width%3D%223%22%20stroke-dasharray%3D%2214%2010%22%20rx%3D%2216%22/%3E%3Ctext%20x%3D%22400%22%20y%3D%22240%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2228%22%20font-weight%3D%22bold%22%20fill%3D%22%23174EDB%22%20text-anchor%3D%22middle%22%3EPRODUKTBILD%3C/text%3E%3Ctext%20x%3D%22400%22%20y%3D%22278%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2220%22%20fill%3D%22%235b6270%22%20text-anchor%3D%22middle%22%3EHero%3A%20Beutel%20%2B%20Produkt%20%2B%2090-Tage-Siegel%3C/text%3E%3C/svg%3E" alt="NiteLab Pro Anti-Snoring Mouthpiece" width="800" height="500" fetchpriority="high">
 </section>
 
 <!-- TRUST BAR -->
@@ -176,7 +227,7 @@ body{padding-bottom:86px}
     <p style="font-size:17px;color:#2a3350">Achieving restful, healthy sleep has never been easier or more affordable!</p>
   </div>
   <div class="wrap" style="margin-top:22px">
-    <img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20800%20430%22%3E%3Crect%20width%3D%22800%22%20height%3D%22430%22%20fill%3D%22%23EAF0FF%22/%3E%3Crect%20x%3D%2212%22%20y%3D%2212%22%20width%3D%22776%22%20height%3D%22406%22%20fill%3D%22none%22%20stroke%3D%22%23174EDB%22%20stroke-width%3D%223%22%20stroke-dasharray%3D%2214%2010%22%20rx%3D%2216%22/%3E%3Ctext%20x%3D%22400%22%20y%3D%22207%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2227%22%20font-weight%3D%22bold%22%20fill%3D%22%23174EDB%22%20text-anchor%3D%22middle%22%3EPRODUKTBILD%3C/text%3E%3Ctext%20x%3D%22400%22%20y%3D%22243%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2220%22%20fill%3D%22%235b6270%22%20text-anchor%3D%22middle%22%3EProdukt-Lineup%20%283x%20Verpackung%29%3C/text%3E%3C/svg%3E" alt="NiteLab Pro" style="border-radius:14px" loading="lazy">
+    <img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20800%20430%22%3E%3Crect%20width%3D%22800%22%20height%3D%22430%22%20fill%3D%22%23EAF0FF%22/%3E%3Crect%20x%3D%2212%22%20y%3D%2212%22%20width%3D%22776%22%20height%3D%22406%22%20fill%3D%22none%22%20stroke%3D%22%23174EDB%22%20stroke-width%3D%223%22%20stroke-dasharray%3D%2214%2010%22%20rx%3D%2216%22/%3E%3Ctext%20x%3D%22400%22%20y%3D%22207%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2227%22%20font-weight%3D%22bold%22%20fill%3D%22%23174EDB%22%20text-anchor%3D%22middle%22%3EPRODUKTBILD%3C/text%3E%3Ctext%20x%3D%22400%22%20y%3D%22243%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2220%22%20fill%3D%22%235b6270%22%20text-anchor%3D%22middle%22%3EProdukt-Lineup%20%283x%20Verpackung%29%3C/text%3E%3C/svg%3E" data-img="lineup" data-ph="1" alt="NiteLab Pro" style="border-radius:14px" loading="lazy">
   </div>
 </section>
 
@@ -208,7 +259,7 @@ body{padding-bottom:86px}
     <p style="font-size:16.5px;color:#C9D2F0;margin-bottom:0">By gently moving your lower jaw forward, NiteLab naturally widens your airway to stop the tissue from vibrating, <b style="color:#fff">eliminating the snoring noise that disturbs your sleep.</b></p>
   </div>
   <div class="wrap" style="margin-top:26px">
-    <img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20800%20430%22%3E%3Crect%20width%3D%22800%22%20height%3D%22430%22%20fill%3D%22%230D1440%22/%3E%3Crect%20x%3D%2212%22%20y%3D%2212%22%20width%3D%22776%22%20height%3D%22406%22%20fill%3D%22none%22%20stroke%3D%22%23174EDB%22%20stroke-width%3D%223%22%20stroke-dasharray%3D%2214%2010%22%20rx%3D%2216%22/%3E%3Ctext%20x%3D%22400%22%20y%3D%22207%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2227%22%20font-weight%3D%22bold%22%20fill%3D%22%23174EDB%22%20text-anchor%3D%22middle%22%3EBILD%3C/text%3E%3Ctext%20x%3D%22400%22%20y%3D%22243%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2220%22%20fill%3D%22%235b6270%22%20text-anchor%3D%22middle%22%3EAirway-Vergleich%3A%20blockiert%20vs.%20frei%3C/text%3E%3C/svg%3E" alt="How NiteLab works" style="border-radius:14px" loading="lazy">
+    <img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20800%20430%22%3E%3Crect%20width%3D%22800%22%20height%3D%22430%22%20fill%3D%22%230D1440%22/%3E%3Crect%20x%3D%2212%22%20y%3D%2212%22%20width%3D%22776%22%20height%3D%22406%22%20fill%3D%22none%22%20stroke%3D%22%23174EDB%22%20stroke-width%3D%223%22%20stroke-dasharray%3D%2214%2010%22%20rx%3D%2216%22/%3E%3Ctext%20x%3D%22400%22%20y%3D%22207%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2227%22%20font-weight%3D%22bold%22%20fill%3D%22%23174EDB%22%20text-anchor%3D%22middle%22%3EBILD%3C/text%3E%3Ctext%20x%3D%22400%22%20y%3D%22243%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2220%22%20fill%3D%22%235b6270%22%20text-anchor%3D%22middle%22%3EAirway-Vergleich%3A%20blockiert%20vs.%20frei%3C/text%3E%3C/svg%3E" data-img="airway" data-ph="1" alt="How NiteLab works" style="border-radius:14px" loading="lazy">
   </div>
 </section>
 
@@ -240,6 +291,7 @@ body{padding-bottom:86px}
 <section class="sec">
   <div class="wrap">
     <h2 class="center" style="font-size:24px;margin-bottom:22px">Backed by Industry Leaders</h2>
+    <img data-img="doctor" data-ph="1" src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20800%20800%22%3E%3Crect%20width%3D%22800%22%20height%3D%22800%22%20fill%3D%22%23EAF0FF%22/%3E%3Crect%20x%3D%2212%22%20y%3D%2212%22%20width%3D%22776%22%20height%3D%22776%22%20fill%3D%22none%22%20stroke%3D%22%23174EDB%22%20stroke-width%3D%223%22%20stroke-dasharray%3D%2214%2010%22%20rx%3D%2216%22/%3E%3Ctext%20x%3D%22400%22%20y%3D%22390%22%20font-family%3D%22Arial%22%20font-size%3D%2227%22%20font-weight%3D%22bold%22%20fill%3D%22%23174EDB%22%20text-anchor%3D%22middle%22%3EBILD%3C/text%3E%3Ctext%20x%3D%22400%22%20y%3D%22426%22%20font-family%3D%22Arial%22%20font-size%3D%2220%22%20fill%3D%22%235b6270%22%20text-anchor%3D%22middle%22%3ESleep%20Doctor%20Approved%3C/text%3E%3C/svg%3E" alt="Sleep Doctor Approved" style="border-radius:14px;margin-bottom:18px" loading="lazy">
     <div class="doc">
       <div class="doc-head"><div class="doc-avatar">👨‍⚕️</div><div><div class="doc-name">Dr. Peter Martone, DC</div><div class="doc-seen">Sleep &amp; posture expert</div></div></div>
       <q>NiteLab promotes optimal breathing, improves sleep quality, and helps support overall health. A game-changer for better rest!</q>
@@ -277,7 +329,7 @@ body{padding-bottom:86px}
   <div class="wrap">
     <h2 class="center" style="font-size:27px">Get your NiteLab Now and stop your snoring <u>tonight!</u></h2>
     <div class="offer" style="margin-top:22px">
-      <img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20800%20420%22%3E%3Crect%20width%3D%22800%22%20height%3D%22420%22%20fill%3D%22%23fff%22/%3E%3Crect%20x%3D%2212%22%20y%3D%2212%22%20width%3D%22776%22%20height%3D%22396%22%20fill%3D%22none%22%20stroke%3D%22%23174EDB%22%20stroke-width%3D%223%22%20stroke-dasharray%3D%2214%2010%22%20rx%3D%2216%22/%3E%3Ctext%20x%3D%22400%22%20y%3D%22202%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2227%22%20font-weight%3D%22bold%22%20fill%3D%22%23174EDB%22%20text-anchor%3D%22middle%22%3EBILD%3C/text%3E%3Ctext%20x%3D%22400%22%20y%3D%22238%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2220%22%20fill%3D%22%235b6270%22%20text-anchor%3D%22middle%22%3EBundle%3A%20Produkt%20%2B%20Zubehoer%20%2B%20eBook%3C/text%3E%3C/svg%3E" alt="NiteLab Pro bundle" style="border-radius:12px;margin-bottom:16px" loading="lazy">
+      <img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20800%20420%22%3E%3Crect%20width%3D%22800%22%20height%3D%22420%22%20fill%3D%22%23fff%22/%3E%3Crect%20x%3D%2212%22%20y%3D%2212%22%20width%3D%22776%22%20height%3D%22396%22%20fill%3D%22none%22%20stroke%3D%22%23174EDB%22%20stroke-width%3D%223%22%20stroke-dasharray%3D%2214%2010%22%20rx%3D%2216%22/%3E%3Ctext%20x%3D%22400%22%20y%3D%22202%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2227%22%20font-weight%3D%22bold%22%20fill%3D%22%23174EDB%22%20text-anchor%3D%22middle%22%3EBILD%3C/text%3E%3Ctext%20x%3D%22400%22%20y%3D%22238%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2220%22%20fill%3D%22%235b6270%22%20text-anchor%3D%22middle%22%3EBundle%3A%20Produkt%20%2B%20Zubehoer%20%2B%20eBook%3C/text%3E%3C/svg%3E" data-img="bundle" data-ph="1" alt="NiteLab Pro bundle" style="border-radius:12px;margin-bottom:16px" loading="lazy">
       <p class="center" style="font-size:16.5px;font-weight:600">Try Your NiteLab Pro Anti-Snoring Mouthpiece NOW at an All Time Low Price!</p>
       <h3>Act Now and You&rsquo;ll Get:</h3>
       <ul>
@@ -304,13 +356,13 @@ body{padding-bottom:86px}
     <h2 class="center" style="font-size:27px">See what our <span style="color:var(--blue)">former snorers say!</span></h2>
     <p class="center" style="color:var(--muted);margin-bottom:24px">Over <b style="color:var(--red)">250k+</b> verified reviews and counting</p>
     <div class="rev-grid" id="revGrid">
-<div class="rev"><img class="rev-img" src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20400%20400%22%3E%3Crect%20width%3D%22400%22%20height%3D%22400%22%20fill%3D%22%23EDF1FB%22/%3E%3Crect%20x%3D%228%22%20y%3D%228%22%20width%3D%22384%22%20height%3D%22384%22%20fill%3D%22none%22%20stroke%3D%22%23174EDB%22%20stroke-width%3D%223%22%20stroke-dasharray%3D%2212%208%22%20rx%3D%2212%22/%3E%3Ctext%20x%3D%22200%22%20y%3D%22186%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2220%22%20font-weight%3D%22bold%22%20fill%3D%22%23174EDB%22%20text-anchor%3D%22middle%22%3EFOTO%3C/text%3E%3Ctext%20x%3D%22200%22%20y%3D%22216%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2217%22%20fill%3D%22%235b6270%22%20text-anchor%3D%22middle%22%3EChris%3C/text%3E%3C/svg%3E" alt="Chris" loading="lazy"><div class="rev-stars">★★★★★</div><div class="rev-name">Chris</div>
+<div class="rev"><img class="rev-img" src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20400%20400%22%3E%3Crect%20width%3D%22400%22%20height%3D%22400%22%20fill%3D%22%23EDF1FB%22/%3E%3Crect%20x%3D%228%22%20y%3D%228%22%20width%3D%22384%22%20height%3D%22384%22%20fill%3D%22none%22%20stroke%3D%22%23174EDB%22%20stroke-width%3D%223%22%20stroke-dasharray%3D%2212%208%22%20rx%3D%2212%22/%3E%3Ctext%20x%3D%22200%22%20y%3D%22186%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2220%22%20font-weight%3D%22bold%22%20fill%3D%22%23174EDB%22%20text-anchor%3D%22middle%22%3EFOTO%3C/text%3E%3Ctext%20x%3D%22200%22%20y%3D%22216%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2217%22%20fill%3D%22%235b6270%22%20text-anchor%3D%22middle%22%3EChris%3C/text%3E%3C/svg%3E" data-img="review1" data-ph="1" alt="Chris" loading="lazy"><div class="rev-stars">★★★★★</div><div class="rev-name">Chris</div>
 <div class="rev-ver">✓ Verified Purchase</div><p>I received this mouthpiece from NiteLab three days ago to reduce my snoring. I had tried various things in the past, including an anti-snoring mouthpiece. But that one wasn't very comfortable to use, so I stopped using it. What I love about this one is that the upper and lower jaw positions can be adjusted.</p></div>
-<div class="rev"><img class="rev-img" src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20400%20400%22%3E%3Crect%20width%3D%22400%22%20height%3D%22400%22%20fill%3D%22%23EDF1FB%22/%3E%3Crect%20x%3D%228%22%20y%3D%228%22%20width%3D%22384%22%20height%3D%22384%22%20fill%3D%22none%22%20stroke%3D%22%23174EDB%22%20stroke-width%3D%223%22%20stroke-dasharray%3D%2212%208%22%20rx%3D%2212%22/%3E%3Ctext%20x%3D%22200%22%20y%3D%22186%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2220%22%20font-weight%3D%22bold%22%20fill%3D%22%23174EDB%22%20text-anchor%3D%22middle%22%3EFOTO%3C/text%3E%3Ctext%20x%3D%22200%22%20y%3D%22216%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2217%22%20fill%3D%22%235b6270%22%20text-anchor%3D%22middle%22%3EBen%3C/text%3E%3C/svg%3E" alt="Ben" loading="lazy"><div class="rev-stars">★★★★★</div><div class="rev-name">Ben</div>
+<div class="rev"><img class="rev-img" src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20400%20400%22%3E%3Crect%20width%3D%22400%22%20height%3D%22400%22%20fill%3D%22%23EDF1FB%22/%3E%3Crect%20x%3D%228%22%20y%3D%228%22%20width%3D%22384%22%20height%3D%22384%22%20fill%3D%22none%22%20stroke%3D%22%23174EDB%22%20stroke-width%3D%223%22%20stroke-dasharray%3D%2212%208%22%20rx%3D%2212%22/%3E%3Ctext%20x%3D%22200%22%20y%3D%22186%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2220%22%20font-weight%3D%22bold%22%20fill%3D%22%23174EDB%22%20text-anchor%3D%22middle%22%3EFOTO%3C/text%3E%3Ctext%20x%3D%22200%22%20y%3D%22216%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2217%22%20fill%3D%22%235b6270%22%20text-anchor%3D%22middle%22%3EBen%3C/text%3E%3C/svg%3E" data-img="review2" data-ph="1" alt="Ben" loading="lazy"><div class="rev-stars">★★★★★</div><div class="rev-name">Ben</div>
 <div class="rev-ver">✓ Verified Purchase</div><p>The mouthpiece is really good and I use it every evening and it has helped me a lot. My wife also said that it is great and I can really recommend it to everyone. So do it, the money is definitely well invested.</p></div>
-<div class="rev"><img class="rev-img" src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20400%20400%22%3E%3Crect%20width%3D%22400%22%20height%3D%22400%22%20fill%3D%22%23EDF1FB%22/%3E%3Crect%20x%3D%228%22%20y%3D%228%22%20width%3D%22384%22%20height%3D%22384%22%20fill%3D%22none%22%20stroke%3D%22%23174EDB%22%20stroke-width%3D%223%22%20stroke-dasharray%3D%2212%208%22%20rx%3D%2212%22/%3E%3Ctext%20x%3D%22200%22%20y%3D%22186%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2220%22%20font-weight%3D%22bold%22%20fill%3D%22%23174EDB%22%20text-anchor%3D%22middle%22%3EFOTO%3C/text%3E%3Ctext%20x%3D%22200%22%20y%3D%22216%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2217%22%20fill%3D%22%235b6270%22%20text-anchor%3D%22middle%22%3EMegan%20K.%3C/text%3E%3C/svg%3E" alt="Megan K." loading="lazy"><div class="rev-stars">★★★★★</div><div class="rev-name">Megan K.</div>
+<div class="rev"><img class="rev-img" src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20400%20400%22%3E%3Crect%20width%3D%22400%22%20height%3D%22400%22%20fill%3D%22%23EDF1FB%22/%3E%3Crect%20x%3D%228%22%20y%3D%228%22%20width%3D%22384%22%20height%3D%22384%22%20fill%3D%22none%22%20stroke%3D%22%23174EDB%22%20stroke-width%3D%223%22%20stroke-dasharray%3D%2212%208%22%20rx%3D%2212%22/%3E%3Ctext%20x%3D%22200%22%20y%3D%22186%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2220%22%20font-weight%3D%22bold%22%20fill%3D%22%23174EDB%22%20text-anchor%3D%22middle%22%3EFOTO%3C/text%3E%3Ctext%20x%3D%22200%22%20y%3D%22216%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2217%22%20fill%3D%22%235b6270%22%20text-anchor%3D%22middle%22%3EMegan%20K.%3C/text%3E%3C/svg%3E" data-img="review3" data-ph="1" alt="Megan K." loading="lazy"><div class="rev-stars">★★★★★</div><div class="rev-name">Megan K.</div>
 <div class="rev-ver">✓ Verified Purchase</div><p>The real test was my wife's reaction. She's the one who suffers the most from my snoring. The morning after I used this for the first time, she told me she slept through the whole night.</p></div>
-<div class="rev"><img class="rev-img" src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20400%20400%22%3E%3Crect%20width%3D%22400%22%20height%3D%22400%22%20fill%3D%22%23EDF1FB%22/%3E%3Crect%20x%3D%228%22%20y%3D%228%22%20width%3D%22384%22%20height%3D%22384%22%20fill%3D%22none%22%20stroke%3D%22%23174EDB%22%20stroke-width%3D%223%22%20stroke-dasharray%3D%2212%208%22%20rx%3D%2212%22/%3E%3Ctext%20x%3D%22200%22%20y%3D%22186%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2220%22%20font-weight%3D%22bold%22%20fill%3D%22%23174EDB%22%20text-anchor%3D%22middle%22%3EFOTO%3C/text%3E%3Ctext%20x%3D%22200%22%20y%3D%22216%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2217%22%20fill%3D%22%235b6270%22%20text-anchor%3D%22middle%22%3EDavid%20A.%3C/text%3E%3C/svg%3E" alt="David A." loading="lazy"><div class="rev-stars">★★★★★</div><div class="rev-name">David A.</div>
+<div class="rev"><img class="rev-img" src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20400%20400%22%3E%3Crect%20width%3D%22400%22%20height%3D%22400%22%20fill%3D%22%23EDF1FB%22/%3E%3Crect%20x%3D%228%22%20y%3D%228%22%20width%3D%22384%22%20height%3D%22384%22%20fill%3D%22none%22%20stroke%3D%22%23174EDB%22%20stroke-width%3D%223%22%20stroke-dasharray%3D%2212%208%22%20rx%3D%2212%22/%3E%3Ctext%20x%3D%22200%22%20y%3D%22186%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2220%22%20font-weight%3D%22bold%22%20fill%3D%22%23174EDB%22%20text-anchor%3D%22middle%22%3EFOTO%3C/text%3E%3Ctext%20x%3D%22200%22%20y%3D%22216%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2217%22%20fill%3D%22%235b6270%22%20text-anchor%3D%22middle%22%3EDavid%20A.%3C/text%3E%3C/svg%3E" data-img="review4" data-ph="1" alt="David A." loading="lazy"><div class="rev-stars">★★★★★</div><div class="rev-name">David A.</div>
 <div class="rev-ver">✓ Verified Purchase</div><p>I was skeptical but thought I would give it a try. Wow! I wake up in the morning refreshed and clear-headed again like I haven't in over a decade.</p></div>
 <div class="rev"><div class="rev-stars">★★★★★</div><div class="rev-name">Jessica D.</div>
 <div class="rev-ver">✓ Verified Purchase</div><p>I have experimented with pretty much everything, saw the strange ad on Facebook and I said: why not! Best decision ever.</p></div>
@@ -386,5 +438,32 @@ body{padding-bottom:86px}
 <!-- STICKY CTA -->
 <div class="sticky"><a class="btn btn-red" href="https://trynitelab.com/products/nitelab%C2%AE-anti-snoring-mouthpiece">Claim 60% Discount</a></div>
 
+<script>
+(function () {
+  var TOTAL = 5 * 60 * 60 * 1000; // 5 Stunden
+  var key = "nl_cd_end";
+  function pad(n) { return n < 10 ? "0" + n : "" + n; }
+  function start() {
+    var end;
+    try { end = parseInt(sessionStorage.getItem(key), 10); } catch (e) {}
+    if (!end || isNaN(end) || end < Date.now()) {
+      end = Date.now() + TOTAL;
+      try { sessionStorage.setItem(key, String(end)); } catch (e) {}
+    }
+    var H = document.getElementById("cdH"), M = document.getElementById("cdM"), S = document.getElementById("cdS");
+    if (!H) return;
+    function tick() {
+      var left = end - Date.now();
+      if (left <= 0) { left = 0; }
+      var h = Math.floor(left / 3600000), m = Math.floor(left % 3600000 / 60000), s = Math.floor(left % 60000 / 1000);
+      H.textContent = pad(h); M.textContent = pad(m); S.textContent = pad(s);
+    }
+    tick();
+    setInterval(tick, 1000);
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);
+  else start();
+})();
+</script>
 </body>
 </html>
