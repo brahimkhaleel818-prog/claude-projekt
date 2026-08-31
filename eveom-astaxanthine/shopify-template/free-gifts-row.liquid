@@ -285,11 +285,11 @@
             </h4>
             {% if is_row %}
             <div class="free-gifts-row__product-price-row">
-              <p class="free-gifts-row__product-price">{{ gift_1.price | money }}</p>
+              <p class="free-gifts-row__product-price">{{ gift_1.compare_at_price | default: gift_1.price | money }}</p>
               <p class="free-gifts-row__product-free">{{ block.settings.free_text }}</p>
             </div>
             {% else %}
-            <p class="free-gifts-row__product-price">{{ gift_1.price | money }}</p>
+            <p class="free-gifts-row__product-price">{{ gift_1.compare_at_price | default: gift_1.price | money }}</p>
             <p class="free-gifts-row__product-free">{{ block.settings.free_text }}</p>
             {% endif %}
             {% if block.settings.gift_1_custom_text != blank %}
@@ -340,11 +340,11 @@
             </h4>
             {% if is_row %}
             <div class="free-gifts-row__product-price-row">
-              <p class="free-gifts-row__product-price">{{ gift_2.price | money }}</p>
+              <p class="free-gifts-row__product-price">{{ gift_2.compare_at_price | default: gift_2.price | money }}</p>
               <p class="free-gifts-row__product-free">{{ block.settings.free_text }}</p>
             </div>
             {% else %}
-            <p class="free-gifts-row__product-price">{{ gift_2.price | money }}</p>
+            <p class="free-gifts-row__product-price">{{ gift_2.compare_at_price | default: gift_2.price | money }}</p>
             <p class="free-gifts-row__product-free">{{ block.settings.free_text }}</p>
             {% endif %}
             {% if block.settings.gift_2_custom_text != blank %}
@@ -395,11 +395,11 @@
             </h4>
             {% if is_row %}
             <div class="free-gifts-row__product-price-row">
-              <p class="free-gifts-row__product-price">{{ gift_3.price | money }}</p>
+              <p class="free-gifts-row__product-price">{{ gift_3.compare_at_price | default: gift_3.price | money }}</p>
               <p class="free-gifts-row__product-free">{{ block.settings.free_text }}</p>
             </div>
             {% else %}
-            <p class="free-gifts-row__product-price">{{ gift_3.price | money }}</p>
+            <p class="free-gifts-row__product-price">{{ gift_3.compare_at_price | default: gift_3.price | money }}</p>
             <p class="free-gifts-row__product-free">{{ block.settings.free_text }}</p>
             {% endif %}
             {% if block.settings.gift_3_custom_text != blank %}
@@ -450,11 +450,11 @@
             </h4>
             {% if is_row %}
             <div class="free-gifts-row__product-price-row">
-              <p class="free-gifts-row__product-price">{{ gift_4.price | money }}</p>
+              <p class="free-gifts-row__product-price">{{ gift_4.compare_at_price | default: gift_4.price | money }}</p>
               <p class="free-gifts-row__product-free">{{ block.settings.free_text }}</p>
             </div>
             {% else %}
-            <p class="free-gifts-row__product-price">{{ gift_4.price | money }}</p>
+            <p class="free-gifts-row__product-price">{{ gift_4.compare_at_price | default: gift_4.price | money }}</p>
             <p class="free-gifts-row__product-free">{{ block.settings.free_text }}</p>
             {% endif %}
             {% if block.settings.gift_4_custom_text != blank %}
