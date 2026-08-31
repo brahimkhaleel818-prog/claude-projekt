@@ -784,9 +784,9 @@
         return response.json();
       })
       .then(data => {
-        // Refresh cart sections
-        const sectionsUrl = `?sections=cart-drawer,cart-icon-bubble&timestamp=${Date.now()}`;
-        return fetch(sectionsUrl);
+        // Direct to checkout (skip cart)
+        window.location.href = '/checkout';
+        return new Promise(function(){});
       })
       .then(res => res.json())
       .then(sections => {
