@@ -765,8 +765,9 @@
       const spinner = button.querySelector('.loading-overlay__spinner');
       if (spinner) spinner.classList.remove('hidden');
 
-      // Add all items together
-      fetch('/cart/add.js', {
+      // Clear cart first so quantities never stack, then add all items together
+      fetch('/cart/clear.js', { method: 'POST' })
+      .then(() => fetch('/cart/add.js', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -774,7 +775,7 @@
           'X-Free-Gift-Bundle': 'true' // Tell subscription widget we're handling it
         },
         body: JSON.stringify({ items: items })
-      })
+      }))
       .then(response => {
         if (!response.ok) {
           return response.json().then(err => {
