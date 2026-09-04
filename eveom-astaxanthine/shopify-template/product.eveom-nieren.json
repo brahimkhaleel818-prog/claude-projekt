@@ -240,7 +240,7 @@
         "custom_liquid_mq3XU6": {
           "type": "custom_liquid",
           "settings": {
-            "custom_liquid": "<style>\n.ev-benefits{\n  display:grid !important;\n  grid-template-columns:1fr 1fr !important;\n  gap:16px 24px !important;\n  padding:8px 0 !important;\n  margin:0 !important;\n}\n.ev-benefit{\n  display:flex !important;\n  align-items:center !important;\n  gap:12px !important;\n}\n.ev-benefit img{\n  width:44px !important;\n  height:44px !important;\n  flex:0 0 44px !important;\n  object-fit:contain !important;\n  display:block !important;\n  mix-blend-mode:multiply !important;\n}\n.ev-benefit span{\n  font-size:16px !important;\n  font-weight:500 !important;\n  color:#1a1a1a !important;\n  line-height:1.35 !important;\n  text-align:left !important;\n}\n@media (max-width:600px){\n  .ev-benefits{grid-template-columns:1fr 1fr !important;gap:10px 10px !important;}\n  .ev-benefit{gap:8px !important;align-items:center !important;}\n  .ev-benefit img{width:28px !important;height:28px !important;flex:0 0 28px !important;}\n  .ev-benefit span{font-size:12px !important;line-height:1.25 !important;}\n}\n</style>\n\n<div class=\"ev-benefits\">\n  <div class=\"ev-benefit\">\n    <img src=\"https://cdn.shopify.com/s/files/1/0814/9155/8732/files/eveom-icon-nieren.png?width=96\" alt=\"\" loading=\"lazy\">\n    <span>Nieren & Antioxidant Bescherming*</span>\n  </div>\n  <div class=\"ev-benefit\">\n    <img src=\"https://cdn.shopify.com/s/files/1/0814/9155/8732/files/eveom-icon-ontsteking.jpg?width=96\" alt=\"\" loading=\"lazy\">\n    <span>Ontstekingsondersteuning*</span>\n  </div>\n  <div class=\"ev-benefit\">\n    <img src=\"https://cdn.shopify.com/s/files/1/0814/9155/8732/files/eveom-icon-oxidatief.jpg?width=96\" alt=\"\" loading=\"lazy\">\n    <span>Oxidatieve Stress Ondersteuning*</span>\n  </div>\n  <div class=\"ev-benefit\">\n    <img src=\"https://cdn.shopify.com/s/files/1/0814/9155/8732/files/eveom-icon-cardio.jpg?width=96\" alt=\"\" loading=\"lazy\">\n    <span>Cardiovasculaire Ondersteuning*</span>\n  </div>\n  <div class=\"ev-benefit\">\n    <img src=\"https://cdn.shopify.com/s/files/1/0814/9155/8732/files/eveom-icon-energie.jpg?width=96\" alt=\"\" loading=\"lazy\">\n    <span>Dagelijkse Energie & Vitaliteit*</span>\n  </div>\n  <div class=\"ev-benefit\">\n    <img src=\"https://cdn.shopify.com/s/files/1/0814/9155/8732/files/eveom-icon-huid.jpg?width=96\" alt=\"\" loading=\"lazy\">\n    <span>Gezond Verouderen*</span>\n  </div>\n</div>"
+            "custom_liquid": "<style>\n.ev-benefits{\n  display:grid !important;\n  grid-template-columns:1fr 1fr !important;\n  gap:16px 24px !important;\n  padding:8px 0 !important;\n  margin:0 !important;\n}\n.ev-benefit{\n  display:flex !important;\n  align-items:center !important;\n  gap:12px !important;\n}\n.ev-benefit img{\n  width:44px !important;\n  height:44px !important;\n  flex:0 0 44px !important;\n  object-fit:contain !important;\n  display:block !important;\n  mix-blend-mode:multiply !important;\n}\n.ev-benefit span{\n  font-size:16px !important;\n  font-weight:500 !important;\n  color:#1a1a1a !important;\n  line-height:1.35 !important;\n  text-align:left !important;\n}\n@media (max-width:600px){\n  .ev-benefits{grid-template-columns:1fr 1fr !important;gap:10px 10px !important;}\n  .ev-benefit{gap:8px !important;align-items:center !important;}\n  .ev-benefit img{width:28px !important;height:28px !important;flex:0 0 28px !important;}\n  .ev-benefit span{font-size:12px !important;line-height:1.25 !important;}\n}\n</style>\n\n<div class=\"ev-benefits\">\n  <div class=\"ev-benefit\">\n    <img src=\"https://cdn.shopify.com/s/files/1/0814/9155/8732/files/eveom-icon-nieren.png?width=96\" alt=\"\" loading=\"lazy\">\n    <span>Nieren & Antioxidant Bescherming*</span>\n  </div>\n  <div class=\"ev-benefit\">\n    <img src=\"https://cdn.shopify.com/s/files/1/0814/9155/8732/files/eveom-icon-ontsteking.jpg?width=96\" alt=\"\" loading=\"lazy\">\n    <span>Ontstekingsondersteuning*</span>\n  </div>\n  <div class=\"ev-benefit\">\n    <img src=\"https://cdn.shopify.com/s/files/1/0814/9155/8732/files/eveom-icon-oxidatief.jpg?width=96\" alt=\"\" loading=\"lazy\">\n    <span>Oxidatieve Stress Ondersteuning*</span>\n  </div>\n  <div class=\"ev-benefit\">\n    <img src=\"https://cdn.shopify.com/s/files/1/0814/9155/8732/files/eveom-icon-energie.jpg?width=96\" alt=\"\" loading=\"lazy\">\n    <span>Dagelijkse Energie & Vitaliteit*</span>\n  </div>\n  <div class=\"ev-benefit\">\n    <img src=\"https://cdn.shopify.com/s/files/1/0814/9155/8732/files/eveom-icon-huid.jpg?width=96\" alt=\"\" loading=\"lazy\">\n    <span>Gezond Verouderen*</span>\n  </div>\n</div>"
           }
         },
         "benefit_list_aR4y4e": {
@@ -873,6 +873,7 @@
         },
         "benefit_pills_UTVaPp": {
           "type": "benefit_pills",
+          "disabled": true,
           "settings": {
             "pill_1_icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewbox=\"0 0 24 24\" fill=\"currentColor\"><path fill-rule=\"evenodd\" d=\"M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z\" clip-rule=\"evenodd\"></path></svg>",
             "pill_1_text": "Snelle Verzending",
@@ -1563,9 +1564,9 @@
             "icon_svg": "",
             "icon_google_name": "shield",
             "description": "Astaxanthine is de enige antioxidant die zowel water- als vetoplosbaar is. Het verankert zich over het gehele celmembraan voor uitgebreide cellulaire bescherming tegen oxidatieve stress.*",
-            "reviewer_name": "Sophie V.",
+            "reviewer_name": "Henk v.D.",
             "star_rating": 5,
-            "review_text": "\"Mijn huid ziet er stralender uit en ik voel me energieker sinds ik dit neem.\"",
+            "review_text": "\"Ik let bewust op mijn nieren — dit past perfect in mijn dagelijkse routine.\"",
             "hide_review_box": false,
             "block_image_position": "above_review",
             "block_image_aspect_ratio": "custom",
@@ -1579,14 +1580,14 @@
         "benefit_item_keLT63": {
           "type": "benefit_item",
           "settings": {
-            "label": "Huid & Veroudering",
+            "label": "Nieren & Antioxidanten",
             "icon_type": "google",
             "icon_svg": "",
             "icon_google_name": "hub",
-            "description": "Astaxanthine beschermt de huidcellen van binnenuit tegen UV-schade en oxidatieve stress, wat bijdraagt aan een gezondere, jongere uitstraling na verloop van tijd.*",
-            "reviewer_name": "Marieke D.",
+            "description": "Astaxanthine is een krachtige natuurlijke antioxidant die helpt bij het neutraliseren van vrije radicalen — de bewuste keuze voor wie extra op zijn nieren let.*",
+            "reviewer_name": "Corrie W.",
             "star_rating": 5,
-            "review_text": "\"Na 6 weken merkte ik een duidelijk verschil in mijn huid. Gladder en stralender.\"",
+            "review_text": "\"Ik wil mijn lichaam en mijn nieren goed ondersteunen. Dit is een vaste gewoonte geworden.\"",
             "hide_review_box": false,
             "block_image_position": "above_review",
             "block_image_aspect_ratio": "16/9",
@@ -1782,8 +1783,7 @@
         "disable_timer": false,
         "timer_duration": 6,
         "timer_bar_color": "#ffffff"
-      },
-      "disabled": true
+      }
     },
     "icon_text_grid_dKXBGq": {
       "type": "icon-text-grid",
@@ -2682,7 +2682,7 @@
         "stat_RRDmNL": {
           "type": "stat",
           "settings": {
-            "stat_label": "Verbeterd Huidbeeld",
+            "stat_label": "Voelt Zich Fitter & Vitaler",
             "stat_percentage": 94,
             "stat_number_color": "#000000",
             "enable_gradient": false,
@@ -2783,8 +2783,7 @@
         "number_padding_left": 20,
         "animation_duration": 2000,
         "animation_delay": 200
-      },
-      "disabled": true
+      }
     },
     "custom_liquid_qahWhh": {
       "type": "custom-liquid",
@@ -2796,8 +2795,7 @@
         "color_scheme": "background-1",
         "padding_top": 0,
         "padding_bottom": 0
-      },
-      "disabled": true
+      }
     },
     "interactive_hotspot_image_N4LeKT": {
       "type": "interactive-hotspot-image",
@@ -3158,8 +3156,7 @@
         "image_subtitle_weight": "400",
         "image_subtitle_color": "#ffffff",
         "title_subtitle_spacing": 3
-      },
-      "disabled": true
+      }
     },
     "faq_accordion_4_xrF4JJ": {
       "type": "faq-accordion-4",
