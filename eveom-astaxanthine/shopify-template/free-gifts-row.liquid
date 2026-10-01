@@ -299,11 +299,11 @@
           <div class="free-gifts-row__product-overlay">
             <span class="free-gifts-row__lock-icon material-symbols-outlined">lock</span>
             {% if block.settings.unlock_type == 'none' %}
-              <span class="free-gifts-row__unlock-text">Gratis geschenk inbegrepen</span>
+              <span class="free-gifts-row__unlock-text">{% if product.template_suffix == 'eveom-de' %}Gratis Geschenk inklusive{% else %}Gratis geschenk inbegrepen{% endif %}</span>
             {% elsif block.settings.unlock_type == 'quantity' %}
-              <span class="free-gifts-row__unlock-text">Gratis vanaf {{ block.settings.gift_1_quantity_to_unlock }} zakjes</span>
+              <span class="free-gifts-row__unlock-text">{% if product.template_suffix == 'eveom-de' %}Gratis ab {{ block.settings.gift_1_quantity_to_unlock }} Beutel{% else %}Gratis vanaf {{ block.settings.gift_1_quantity_to_unlock }} zakjes{% endif %}</span>
             {% else %}
-              <span class="free-gifts-row__unlock-text">Abonneer om te ontgrendelen</span>
+              <span class="free-gifts-row__unlock-text">{% if product.template_suffix == 'eveom-de' %}Abonnieren zum Freischalten{% else %}Abonneer om te ontgrendelen{% endif %}</span>
             {% endif %}
           </div>
         </div>
@@ -354,11 +354,11 @@
           <div class="free-gifts-row__product-overlay">
             <span class="free-gifts-row__lock-icon material-symbols-outlined">lock</span>
             {% if block.settings.unlock_type == 'none' %}
-              <span class="free-gifts-row__unlock-text">Gratis geschenk inbegrepen</span>
+              <span class="free-gifts-row__unlock-text">{% if product.template_suffix == 'eveom-de' %}Gratis Geschenk inklusive{% else %}Gratis geschenk inbegrepen{% endif %}</span>
             {% elsif block.settings.unlock_type == 'quantity' %}
-              <span class="free-gifts-row__unlock-text">Gratis vanaf {{ block.settings.gift_2_quantity_to_unlock }} zakjes</span>
+              <span class="free-gifts-row__unlock-text">{% if product.template_suffix == 'eveom-de' %}Gratis ab {{ block.settings.gift_2_quantity_to_unlock }} Beutel{% else %}Gratis vanaf {{ block.settings.gift_2_quantity_to_unlock }} zakjes{% endif %}</span>
             {% else %}
-              <span class="free-gifts-row__unlock-text">Abonneer om te ontgrendelen</span>
+              <span class="free-gifts-row__unlock-text">{% if product.template_suffix == 'eveom-de' %}Abonnieren zum Freischalten{% else %}Abonneer om te ontgrendelen{% endif %}</span>
             {% endif %}
           </div>
         </div>
@@ -409,11 +409,11 @@
           <div class="free-gifts-row__product-overlay">
             <span class="free-gifts-row__lock-icon material-symbols-outlined">lock</span>
             {% if block.settings.unlock_type == 'none' %}
-              <span class="free-gifts-row__unlock-text">Gratis geschenk inbegrepen</span>
+              <span class="free-gifts-row__unlock-text">{% if product.template_suffix == 'eveom-de' %}Gratis Geschenk inklusive{% else %}Gratis geschenk inbegrepen{% endif %}</span>
             {% elsif block.settings.unlock_type == 'quantity' %}
-              <span class="free-gifts-row__unlock-text">Gratis vanaf {{ block.settings.gift_3_quantity_to_unlock }} zakjes</span>
+              <span class="free-gifts-row__unlock-text">{% if product.template_suffix == 'eveom-de' %}Gratis ab {{ block.settings.gift_3_quantity_to_unlock }} Beutel{% else %}Gratis vanaf {{ block.settings.gift_3_quantity_to_unlock }} zakjes{% endif %}</span>
             {% else %}
-              <span class="free-gifts-row__unlock-text">Abonneer om te ontgrendelen</span>
+              <span class="free-gifts-row__unlock-text">{% if product.template_suffix == 'eveom-de' %}Abonnieren zum Freischalten{% else %}Abonneer om te ontgrendelen{% endif %}</span>
             {% endif %}
           </div>
         </div>
@@ -464,11 +464,11 @@
           <div class="free-gifts-row__product-overlay">
             <span class="free-gifts-row__lock-icon material-symbols-outlined">lock</span>
             {% if block.settings.unlock_type == 'none' %}
-              <span class="free-gifts-row__unlock-text">Gratis geschenk inbegrepen</span>
+              <span class="free-gifts-row__unlock-text">{% if product.template_suffix == 'eveom-de' %}Gratis Geschenk inklusive{% else %}Gratis geschenk inbegrepen{% endif %}</span>
             {% elsif block.settings.unlock_type == 'quantity' %}
-              <span class="free-gifts-row__unlock-text">Gratis vanaf {{ block.settings.gift_4_quantity_to_unlock }} zakjes</span>
+              <span class="free-gifts-row__unlock-text">{% if product.template_suffix == 'eveom-de' %}Gratis ab {{ block.settings.gift_4_quantity_to_unlock }} Beutel{% else %}Gratis vanaf {{ block.settings.gift_4_quantity_to_unlock }} zakjes{% endif %}</span>
             {% else %}
-              <span class="free-gifts-row__unlock-text">Abonneer om te ontgrendelen</span>
+              <span class="free-gifts-row__unlock-text">{% if product.template_suffix == 'eveom-de' %}Abonnieren zum Freischalten{% else %}Abonneer om te ontgrendelen{% endif %}</span>
             {% endif %}
           </div>
         </div>
