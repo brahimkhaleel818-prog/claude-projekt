@@ -910,45 +910,6 @@
             "margin_bottom": 0
           }
         },
-        "product_flag_qn3MLq": {
-          "type": "product_flag",
-          "settings": {
-            "show_two_items": true,
-            "layout": "horizontal",
-            "alignment": "center",
-            "gap": 12,
-            "icon_text_gap": 4,
-            "icon_1_svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"900\" height=\"600\" viewbox=\"0 0 9 6\">\n<rect fill=\"#21468B\" width=\"9\" height=\"6\"></rect>\n<rect fill=\"#FFF\" width=\"9\" height=\"4\"></rect>\n<rect fill=\"#AE1C28\" width=\"9\" height=\"2\"></rect>\n</svg>",
-            "icon_1": "",
-            "icon_1_filled": false,
-            "icon_1_size": 22,
-            "icon_1_color": "#000000",
-            "text_1": "<p>Versand aus den <strong>Niederlanden</strong></p>",
-            "text_1_size": 10,
-            "text_1_weight": "400",
-            "text_1_color": "#000000",
-            "item_1_bg_color": "rgba(0,0,0,0)",
-            "icon_2_svg": "",
-            "icon_2": "trophy",
-            "icon_2_filled": true,
-            "icon_2_size": 20,
-            "icon_2_color": "#fcbe26",
-            "text_2": "<p><strong>Von Dritten</strong> Getestet</p>",
-            "text_2_size": 10,
-            "text_2_weight": "400",
-            "text_2_color": "#000000",
-            "item_2_bg_color": "rgba(0,0,0,0)",
-            "item_padding_vertical": 0,
-            "item_padding_horizontal": 0,
-            "item_border_radius": 50,
-            "show_separator": true,
-            "separator_color": "#000000",
-            "separator_width": 1,
-            "separator_length": 10,
-            "margin_top": 4,
-            "margin_bottom": 4
-          }
-        },
         "delivery_date_wiADyG": {
           "type": "delivery_date",
           "settings": {
@@ -1326,7 +1287,6 @@
         "buy_buttons",
         "custom_liquid_K4qwFf",
         "benefit_pills_UTVaPp",
-        "product_flag_qn3MLq",
         "delivery_date_wiADyG",
         "custom_liquid_4mRaHK",
         "product_upsell_b3wizw",
