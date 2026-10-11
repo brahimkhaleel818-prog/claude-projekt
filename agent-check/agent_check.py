@@ -237,6 +237,8 @@ def main():
     ap.add_argument("--basis", choices=["created", "fulfilled"], default="created",
                     help="Datum fuer den Zeitraum: Bestelldatum (created) oder Versanddatum (fulfilled)")
     ap.add_argument("--orders", help="Kommagetrennte Bestellnummern, z.B. '#213039,#212999'")
+    ap.add_argument("--from-order", help="Erste Bestellnummer, z.B. #211059")
+    ap.add_argument("--to-order", help="Letzte Bestellnummer, z.B. #211809")
     ap.add_argument("--countries", help="Nur diese Laender, z.B. NL,BE")
     ap.add_argument("--input", nargs="*", help="Gespeicherte GraphQL-JSON-Dateien (Glob erlaubt)")
     ap.add_argument("--prices", default=os.path.join(HERE, "prices.json"))
@@ -258,6 +260,12 @@ def main():
     wanted = {n.strip() if n.strip().startswith("#") else "#" + n.strip()
               for n in args.orders.split(",")} if args.orders else None
 
+    num = lambda name: int("".join(ch for ch in name if ch.isdigit()) or 0)
+    o_from = num(args.from_order) if args.from_order else None
+    o_to = num(args.to_order) if args.to_order else None
+    if (o_from or o_to) and wanted is None and not date_from:
+        date_from = date(2000, 1, 1)  # Zeitraumfilter aus, Nummernfilter an
+
     if args.input:
         orders = load_files(args.input)
     else:
@@ -276,6 +284,9 @@ def main():
         r = cost_for_order(o, prices, product_kind)
         key = r["Bestelldatum"] if args.basis == "created" else r["Versanddatum"]
         if wanted is not None and r["Bestellung"] not in wanted: continue
+        n = num(r["Bestellung"])
+        if o_from and n < o_from: continue
+        if o_to and n > o_to: continue
         if wanted is None:
             if key is None and args.basis == "fulfilled": continue
             if date_from and key < date_from: continue
@@ -287,9 +298,20 @@ def main():
         rows.append(r)
     rows.sort(key=lambda r: (r["Bestelldatum"], r["Bestellung"]))
 
-    # Zusammenfassung je Land
-    agg = defaultdict(lambda: [0, 0, 0, 0.0, 0.0, 0.0])
+    # Gruppen: Hauptgruppe = bezahlt; getrennt = nicht bezahlt
+    def group(r):
+        if r["Hinweis"].startswith("STORNIERT"): return "storniert"
+        if r["Zahlung"] != "PAID" and r["Zahlung"] != "PARTIALLY_REFUNDED": return "NICHT BEZAHLT"
+        return "bezahlt"
+    for r in rows: r["Gruppe"] = group(r)
+    main_rows = [r for r in rows if r["Gruppe"] == "bezahlt"]
+    other = defaultdict(list)
     for r in rows:
+        if r["Gruppe"] != "bezahlt": other[r["Gruppe"]].append(r)
+
+    # Zusammenfassung je Land (nur bezahlte)
+    agg = defaultdict(lambda: [0, 0, 0, 0.0, 0.0, 0.0])
+    for r in main_rows:
         a = agg[r["Land"]]; a[0] += 1; a[1] += r["Flaschen"]; a[2] += r["Pillendoos"]
         a[3] += r["Ware EUR"]; a[4] += r["Versand EUR"]; a[5] += r["Kosten EUR"]
     summary = [[cc, a[0], a[1], a[2], round(a[3], 2), round(a[4], 2), round(a[5], 2), round(a[5] * usd_per_eur, 2)]
@@ -298,14 +320,17 @@ def main():
     total_eur = round(tot[5], 2); total_usd = round(total_eur * usd_per_eur, 2)
     summary.append(["GESAMT", tot[0], tot[1], tot[2], round(tot[3], 2), round(tot[4], 2), total_eur, total_usd])
 
-    period = f"{args.basis}: {date_from or '...'} bis {date_to or '...'}" if not wanted else f"{len(wanted)} Bestellnummern"
+    if wanted: period = f"{len(wanted)} Bestellnummern"
+    elif o_from or o_to: period = f"Bestellnummern {args.from_order or '...'} bis {args.to_order or '...'}"
+    else: period = f"{args.basis}: {date_from or '...'} bis {date_to or '...'}"
     meta = [["Agent-Check Eveom / YLFulfilment"],
             ["Zeitraum", period],
             ["Erstellt", datetime.now().strftime("%Y-%m-%d %H:%M")],
             ["Wechselkurs", f"1 USD = {rate_eur_per_usd:.4f} EUR  (1 EUR = {usd_per_eur:.4f} USD)", f"Stand {rate_date}", rate_src]]
 
-    cols = ["Bestellung", "Bestelldatum", "Versanddatum", "Land", "Flaschen", "Pillendoos", "Kosten EUR", "Kosten USD", "Hinweis"]
-    print(fmt_table(rows, cols) if rows else "Keine Bestellungen im Zeitraum.")
+    cols = ["Bestellung", "Bestelldatum", "Versanddatum", "Land", "Flaschen", "Pillendoos", "Status", "Kosten EUR", "Kosten USD", "Hinweis"]
+    print(f"=== BEZAHLTE BESTELLUNGEN ({len(main_rows)}) ===")
+    print(fmt_table(main_rows, cols) if main_rows else "Keine Bestellungen im Zeitraum.")
     print()
     print(fmt_table([dict(zip(["Land", "Bestellungen", "Flaschen", "Pillendoos", "Ware EUR", "Versand EUR", "Kosten EUR", "Kosten USD"], s)) for s in summary],
                     ["Land", "Bestellungen", "Flaschen", "Pillendoos", "Ware EUR", "Versand EUR", "Kosten EUR", "Kosten USD"]))
@@ -314,6 +339,14 @@ def main():
     flagged = [r for r in rows if r["Hinweis"]]
     if flagged:
         print(f"{len(flagged)} Bestellung(en) mit Hinweis, bitte oben pruefen.")
+
+    for g, rs in other.items():
+        g_eur = round(sum(r["Kosten EUR"] for r in rs), 2)
+        print(f"\n=== {g.upper()} ({len(rs)}) - SEPARAT, NICHT IN DER SUMME OBEN ===")
+        print(fmt_table(rs, cols))
+        print(f"Summe {g}: {g_eur:,.2f} EUR = {g_eur*usd_per_eur:,.2f} USD")
+        summary.append([f"separat: {g}", len(rs), sum(r["Flaschen"] for r in rs), sum(r["Pillendoos"] for r in rs),
+                        round(sum(r["Ware EUR"] for r in rs), 2), round(sum(r["Versand EUR"] for r in rs), 2), g_eur, round(g_eur*usd_per_eur, 2)])
 
     if args.invoice is not None:
         inv_eur = args.invoice if args.invoice_currency == "EUR" else args.invoice * rate_eur_per_usd
