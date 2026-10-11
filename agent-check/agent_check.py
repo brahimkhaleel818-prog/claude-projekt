@@ -144,8 +144,11 @@ def cost_for_order(o, prices, product_kind):
                 ship_eur += base["total"] - base["product"]
                 flags.append(f"{bottles} Flaschen: keine Staffel, Versand geschaetzt")
     if pillbox:
-        a = prices["addons"]["pillbox"]
-        product_eur += a["product"] * pillbox; ship_eur += (a["total"] - a["product"]) * pillbox
+        a = (prices.get("addons") or {}).get("pillbox")
+        if a:
+            product_eur += a["product"] * pillbox; ship_eur += (a["total"] - a["product"]) * pillbox
+        else:
+            flags.append(f"{pillbox}x Pillendoos: Preis fehlt")
     if mito:
         flags.append(f"{mito}x Mitochondrial: Preis fehlt")
     if unknown:
@@ -171,9 +174,9 @@ def cost_for_order(o, prices, product_kind):
         "Status": o["displayFulfillmentStatus"],
         "Zahlung": o["displayFinancialStatus"],
         "Umsatz EUR": float(o["totalPriceSet"]["shopMoney"]["amount"]),
-        "Ware EUR": round(product_eur, 2),
-        "Versand EUR": round(ship_eur, 2),
-        "Kosten EUR": total_eur,
+        "Ware": round(product_eur, 2),
+        "Versand": round(ship_eur, 2),
+        "Kosten": total_eur,
         "Tracking": tracking,
         "Hinweis": "; ".join(flags),
     }
@@ -187,7 +190,7 @@ def fmt_table(rows, cols):
         out.append("  ".join((str(r[c]) if r[c] is not None else "").ljust(widths[c]) for c in cols))
     return "\n".join(out)
 
-def write_xlsx(path, rows, summary, prices, meta):
+def write_xlsx(path, rows, summary, prices, meta, cur="EUR"):
     from openpyxl import Workbook
     from openpyxl.styles import Font, PatternFill, Alignment
     from openpyxl.utils import get_column_letter
@@ -196,7 +199,7 @@ def write_xlsx(path, rows, summary, prices, meta):
 
     ws = wb.active; ws.title = "Bestellungen"
     cols = list(rows[0].keys()) if rows else []
-    ws.append(cols)
+    ws.append([f"{c} {cur}" if c in ("Ware", "Versand", "Kosten") else c for c in cols])
     for c in ws[1]: c.font = bold; c.fill = head_fill
     for r in rows:
         ws.append([r[c] for c in cols])
@@ -210,7 +213,7 @@ def write_xlsx(path, rows, summary, prices, meta):
     ws2 = wb.create_sheet("Zusammenfassung")
     for line in meta: ws2.append(line)
     ws2.append([])
-    ws2.append(["Land", "Bestellungen", "Flaschen", "Pillendoos", "Ware EUR", "Versand EUR", "Kosten EUR", "Kosten USD"])
+    ws2.append(["Land", "Bestellungen", "Flaschen", "Pillendoos", f"Ware {cur}", f"Versand {cur}", "Kosten EUR", "Kosten USD"])
     for c in ws2[ws2.max_row]: c.font = bold; c.fill = head_fill
     for s in summary: ws2.append(s)
     for c in ws2[ws2.max_row]: c.font = bold
@@ -218,14 +221,15 @@ def write_xlsx(path, rows, summary, prices, meta):
     for col in "BCDEFGH": ws2.column_dimensions[col].width = 14
 
     ws3 = wb.create_sheet("Preisliste")
-    ws3.append(["Land", "Logistik", "Lieferzeit", "Staffel", "Ware EUR", "Versand EUR", "Gesamt EUR"])
+    ws3.append(["Land", "Logistik", "Lieferzeit", "Staffel", f"Ware {cur}", f"Versand {cur}", f"Gesamt {cur}"])
     for c in ws3[1]: c.font = bold; c.fill = head_fill
     for cc, v in prices["countries"].items():
         for t, x in (v.get("astaxanthin") or {}).items():
             if x: ws3.append([cc, v.get("logistics"), v.get("delivery"), f"{t} Flasche(n)", x["product"], x["total"] - x["product"], x["total"]])
             else: ws3.append([cc, v.get("logistics"), v.get("delivery"), f"{t} Flasche(n)", None, None, "FEHLT"])
-    a = prices["addons"]["pillbox"]
-    ws3.append(["alle", "", "", "Pillendoos (je Stueck)", a["product"], a["total"] - a["product"], a["total"]])
+    a = (prices.get("addons") or {}).get("pillbox")
+    if a: ws3.append(["alle", "", "", "Pillendoos (je Stueck)", a["product"], a["total"] - a["product"], a["total"]])
+    else: ws3.append(["alle", "", "", "Pillendoos (je Stueck)", None, None, "FEHLT"])
     for col in "ABCDEFG": ws3.column_dimensions[col].width = 16
     wb.save(path)
 
@@ -249,7 +253,12 @@ def main():
     ap.add_argument("--all", action="store_true", help="Auch Zeilen ohne Ware/stornierte anzeigen")
     args = ap.parse_args()
 
+    rate_eur_per_usd, rate_date, rate_src = (args.rate, "manuell", "manuell") if args.rate else fetch_rate()
+    usd_per_eur = 1 / rate_eur_per_usd
     with open(args.prices) as fh: prices = json.load(fh)
+    cur = prices.get("currency", "EUR").upper()
+    to_eur = (lambda x: x) if cur == "EUR" else (lambda x: round(x * rate_eur_per_usd, 2))
+    to_usd = (lambda x: round(x * usd_per_eur, 2)) if cur == "EUR" else (lambda x: x)
     product_kind = {}
     for kind, p in prices["products"].items():
         for pid in p["product_ids"]: product_kind[pid] = kind
@@ -276,9 +285,6 @@ def main():
             q = [f"created_at:>={(date_from.replace(day=1)).isoformat()}"] if date_from else []
         orders = fetch_live(" AND ".join(q) if q else None)
 
-    rate_eur_per_usd, rate_date, rate_src = (args.rate, "manuell", "manuell") if args.rate else fetch_rate()
-    usd_per_eur = 1 / rate_eur_per_usd
-
     rows = []
     for o in orders:
         r = cost_for_order(o, prices, product_kind)
@@ -292,9 +298,12 @@ def main():
             if date_from and key < date_from: continue
             if date_to and key > date_to: continue
         if args.countries and r["Land"] not in args.countries.upper().split(","): continue
-        if not args.all and r["Kosten EUR"] == 0 and not r["Hinweis"].startswith(("STORNIERT",)) and "fehlt" not in r["Hinweis"]:
+        if not args.all and r["Kosten"] == 0 and not r["Hinweis"].startswith(("STORNIERT",)) and "fehlt" not in r["Hinweis"]:
             continue
-        r["Kosten USD"] = round(r["Kosten EUR"] * usd_per_eur, 2)
+        if cur == "USD":
+            r["Kosten USD"] = r["Kosten"]; r["Kosten EUR"] = round(r["Kosten"] * rate_eur_per_usd, 2)
+        else:
+            r["Kosten EUR"] = r["Kosten"]; r["Kosten USD"] = round(r["Kosten"] * usd_per_eur, 2)
         rows.append(r)
     rows.sort(key=lambda r: (r["Bestelldatum"], r["Bestellung"]))
 
@@ -313,17 +322,18 @@ def main():
     agg = defaultdict(lambda: [0, 0, 0, 0.0, 0.0, 0.0])
     for r in main_rows:
         a = agg[r["Land"]]; a[0] += 1; a[1] += r["Flaschen"]; a[2] += r["Pillendoos"]
-        a[3] += r["Ware EUR"]; a[4] += r["Versand EUR"]; a[5] += r["Kosten EUR"]
-    summary = [[cc, a[0], a[1], a[2], round(a[3], 2), round(a[4], 2), round(a[5], 2), round(a[5] * usd_per_eur, 2)]
+        a[3] += r["Ware"]; a[4] += r["Versand"]; a[5] += r["Kosten"]
+    summary = [[cc, a[0], a[1], a[2], round(a[3], 2), round(a[4], 2), to_eur(round(a[5], 2)), to_usd(round(a[5], 2))]
                for cc, a in sorted(agg.items())]
-    tot = [sum(s[i] for s in summary) for i in range(1, 7)]
-    total_eur = round(tot[5], 2); total_usd = round(total_eur * usd_per_eur, 2)
-    summary.append(["GESAMT", tot[0], tot[1], tot[2], round(tot[3], 2), round(tot[4], 2), total_eur, total_usd])
+    tot_native = round(sum(a[5] for a in agg.values()), 2)
+    total_eur = to_eur(tot_native); total_usd = to_usd(tot_native)
+    summary.append(["GESAMT", sum(a[0] for a in agg.values()), sum(a[1] for a in agg.values()), sum(a[2] for a in agg.values()),
+                    round(sum(a[3] for a in agg.values()), 2), round(sum(a[4] for a in agg.values()), 2), total_eur, total_usd])
 
     if wanted: period = f"{len(wanted)} Bestellnummern"
     elif o_from or o_to: period = f"Bestellnummern {args.from_order or '...'} bis {args.to_order or '...'}"
     else: period = f"{args.basis}: {date_from or '...'} bis {date_to or '...'}"
-    meta = [["Agent-Check Eveom / YLFulfilment"],
+    meta = [[f"Agent-Check Eveom / {prices.get('agent', '')} (Preise in {cur})"],
             ["Zeitraum", period],
             ["Erstellt", datetime.now().strftime("%Y-%m-%d %H:%M")],
             ["Wechselkurs", f"1 USD = {rate_eur_per_usd:.4f} EUR  (1 EUR = {usd_per_eur:.4f} USD)", f"Stand {rate_date}", rate_src]]
@@ -332,8 +342,8 @@ def main():
     print(f"=== BEZAHLTE BESTELLUNGEN ({len(main_rows)}) ===")
     print(fmt_table(main_rows, cols) if main_rows else "Keine Bestellungen im Zeitraum.")
     print()
-    print(fmt_table([dict(zip(["Land", "Bestellungen", "Flaschen", "Pillendoos", "Ware EUR", "Versand EUR", "Kosten EUR", "Kosten USD"], s)) for s in summary],
-                    ["Land", "Bestellungen", "Flaschen", "Pillendoos", "Ware EUR", "Versand EUR", "Kosten EUR", "Kosten USD"]))
+    sum_cols = ["Land", "Bestellungen", "Flaschen", "Pillendoos", f"Ware {cur}", f"Versand {cur}", "Kosten EUR", "Kosten USD"]
+    print(fmt_table([dict(zip(sum_cols, s)) for s in summary], sum_cols))
     print(f"\nWechselkurs: 1 USD = {rate_eur_per_usd:.4f} EUR (Stand {rate_date}, {rate_src})")
     print(f"ERWARTETE AGENTEN-RECHNUNG: {total_eur:,.2f} EUR  =  {total_usd:,.2f} USD")
     flagged = [r for r in rows if r["Hinweis"]]
@@ -341,12 +351,12 @@ def main():
         print(f"{len(flagged)} Bestellung(en) mit Hinweis, bitte oben pruefen.")
 
     for g, rs in other.items():
-        g_eur = round(sum(r["Kosten EUR"] for r in rs), 2)
+        g_nat = round(sum(r["Kosten"] for r in rs), 2)
         print(f"\n=== {g.upper()} ({len(rs)}) - SEPARAT, NICHT IN DER SUMME OBEN ===")
         print(fmt_table(rs, cols))
-        print(f"Summe {g}: {g_eur:,.2f} EUR = {g_eur*usd_per_eur:,.2f} USD")
+        print(f"Summe {g}: {to_eur(g_nat):,.2f} EUR = {to_usd(g_nat):,.2f} USD")
         summary.append([f"separat: {g}", len(rs), sum(r["Flaschen"] for r in rs), sum(r["Pillendoos"] for r in rs),
-                        round(sum(r["Ware EUR"] for r in rs), 2), round(sum(r["Versand EUR"] for r in rs), 2), g_eur, round(g_eur*usd_per_eur, 2)])
+                        round(sum(r["Ware"] for r in rs), 2), round(sum(r["Versand"] for r in rs), 2), to_eur(g_nat), to_usd(g_nat)])
 
     if args.invoice is not None:
         inv_eur = args.invoice if args.invoice_currency == "EUR" else args.invoice * rate_eur_per_usd
@@ -361,7 +371,7 @@ def main():
         meta.append(["Rechnung Agent", f"{args.invoice:,.2f} {args.invoice_currency}", f"Differenz {diff:+,.2f} EUR"])
 
     if args.xlsx:
-        write_xlsx(args.xlsx, rows, summary, prices, meta)
+        write_xlsx(args.xlsx, rows, summary, prices, meta, cur)
         print(f"\nExcel geschrieben: {args.xlsx}")
 
 if __name__ == "__main__":
