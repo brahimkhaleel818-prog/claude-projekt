@@ -1,0 +1,150 @@
+{
+  "_hinweis": "Einkaufspreise des China-Agenten (YLFulfilment) in EUR. Staffel = Anzahl Flaschen pro Bestellung. product = Warenpreis, shipping = Versand pro Paket. null = Preis fehlt noch.",
+  "agent": "YLFulfilment",
+  "currency": "EUR",
+  "products": {
+    "astaxanthin": {
+      "label": "Eveom Astaxanthin 12 MG (30 Softgels)",
+      "product_ids": [
+        "gid://shopify/Product/16054795567436",
+        "gid://shopify/Product/16067369959756",
+        "gid://shopify/Product/16070589972812",
+        "gid://shopify/Product/16155138294092"
+      ]
+    },
+    "pillbox": {
+      "label": "Eveom Pillendoos (Upsell / Gratis bei 3+2)",
+      "product_ids": [
+        "gid://shopify/Product/16055470096716",
+        "gid://shopify/Product/15796593557836"
+      ]
+    },
+    "mitochondrial": {
+      "label": "Eveom Mitochondrial",
+      "product_ids": [
+        "gid://shopify/Product/15547230847308"
+      ]
+    }
+  },
+  "ignore_product_ids": {
+    "gid://shopify/Product/16055469310284": "E-Book (digital)",
+    "gid://shopify/Product/16055469670732": "Gratis Verzending (Platzhalter)",
+    "gid://shopify/Product/15602043126092": "Shipping Protection (digital)",
+    "gid://shopify/Product/15593074688332": "Eveom 2 Bottle (alter Bundle-Platzhalter)",
+    "gid://shopify/Product/15593074884940": "Eveom 3 Bottle (alter Bundle-Platzhalter)"
+  },
+  "countries": {
+    "NL": {
+      "logistics": "ZH",
+      "delivery": "6-10 Werktage",
+      "astaxanthin": {
+        "1": {
+          "product": 1.08,
+          "shipping": 6.78,
+          "total": 7.86
+        },
+        "3": {
+          "product": 3.24,
+          "shipping": 8.19,
+          "total": 11.43
+        },
+        "5": {
+          "product": 5.41,
+          "shipping": 9.59,
+          "total": 15.0
+        }
+      }
+    },
+    "BE": {
+      "logistics": "LX",
+      "delivery": "8-15 Werktage",
+      "astaxanthin": {
+        "1": {
+          "product": 1.08,
+          "shipping": 8.59,
+          "total": 9.68
+        },
+        "3": {
+          "product": 3.24,
+          "shipping": 10.19,
+          "total": 13.43
+        },
+        "5": {
+          "product": 5.41,
+          "shipping": 11.78,
+          "total": 17.19
+        }
+      }
+    },
+    "DE": {
+      "logistics": "LX",
+      "delivery": "8-15 Werktage",
+      "astaxanthin": {
+        "1": {
+          "product": 1.08,
+          "shipping": 8.35,
+          "total": 9.43
+        },
+        "3": {
+          "product": 3.24,
+          "shipping": 9.7,
+          "total": 12.95
+        },
+        "5": {
+          "product": 5.41,
+          "shipping": 11.05,
+          "total": 16.46
+        }
+      }
+    },
+    "AT": {
+      "logistics": "LX",
+      "delivery": "8-15 Werktage",
+      "astaxanthin": {
+        "1": {
+          "product": 1.08,
+          "shipping": 8.66,
+          "total": 9.74
+        },
+        "3": {
+          "product": 3.24,
+          "shipping": 10.58,
+          "total": 13.82
+        },
+        "5": {
+          "product": 5.41,
+          "shipping": 12.51,
+          "total": 17.91
+        }
+      }
+    },
+    "CH": {
+      "logistics": "ZH",
+      "delivery": "6-10 Werktage",
+      "astaxanthin": {
+        "1": {
+          "product": 1.08,
+          "shipping": 7.0,
+          "total": 8.08
+        },
+        "3": {
+          "product": 3.24,
+          "shipping": 8.62,
+          "total": 11.86
+        },
+        "5": {
+          "product": 5.41,
+          "shipping": 10.24,
+          "total": 15.65
+        }
+      }
+    }
+  },
+  "addons": {
+    "pillbox": {
+      "product": 0.41,
+      "shipping": 0.8,
+      "total": 1.2
+    }
+  }
+}
