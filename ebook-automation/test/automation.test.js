@@ -60,6 +60,7 @@ test('Jede Sprache hat eine Vorlage mit Betreff, Name, Anhang-Hinweis und eigene
     assert.ok(mail.html.includes('📎'), language);
     assert.ok(settings.attachmentName.endsWith('.pdf'), language);
     assert.ok(mail.html.includes(settings.ebookTitle), language);
+    assert.ok(mail.text.includes(`${settings.absenderin}\nTeam Eveom™`), `${language}: Unterschrift`);
     assert.ok(!/\{\{/.test(mail.html), `${language}: nicht ersetzter Platzhalter`);
     assert.ok(mail.text.includes('Zoë <b>'), language);
     links.add(settings.pdfUrl);

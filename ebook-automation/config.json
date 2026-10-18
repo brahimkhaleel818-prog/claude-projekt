@@ -40,25 +40,29 @@
       "template": "templates/de.html",
       "ebookTitle": "Nieren. Balance. Wohlbefinden.",
       "pdfUrl": "https://cdn.shopify.com/s/files/1/0814/9155/8732/files/Eveom_Nieren_Balance_Wohlbefinden_DE_mail.pdf?v=1792367626",
-      "attachmentName": "Eveom_Nieren_Balance_Wohlbefinden.pdf"
+      "attachmentName": "Eveom_Nieren_Balance_Wohlbefinden.pdf",
+      "absenderin": "Lena Hoffmann"
     },
     "nl": {
       "template": "templates/nl.html",
       "ebookTitle": "Nieren. Balans. Welzijn.",
       "pdfUrl": "https://cdn.shopify.com/s/files/1/0814/9155/8732/files/Eveom_Nieren_Balans_Welzijn_NL_BE_mail.pdf?v=1792367626",
-      "attachmentName": "Eveom_Nieren_Balans_Welzijn.pdf"
+      "attachmentName": "Eveom_Nieren_Balans_Welzijn.pdf",
+      "absenderin": "Lotte de Vries"
     },
     "fr": {
       "template": "templates/fr.html",
       "ebookTitle": "Reins. Équilibre. Bien-être.",
       "pdfUrl": "https://cdn.shopify.com/s/files/1/0814/9155/8732/files/Eveom_Reins_Equilibre_BienEtre_FR_mail.pdf?v=1792367626",
-      "attachmentName": "Eveom_Reins_Equilibre_Bien-etre.pdf"
+      "attachmentName": "Eveom_Reins_Equilibre_Bien-etre.pdf",
+      "absenderin": "Chloé Martin"
     },
     "en": {
       "template": "templates/en.html",
       "ebookTitle": "Kidneys. Balance. Wellbeing.",
       "pdfUrl": "https://cdn.shopify.com/s/files/1/0814/9155/8732/files/Eveom_Kidneys_Balance_Wellbeing_EN_mail.pdf?v=1792367626",
-      "attachmentName": "Eveom_Kidneys_Balance_Wellbeing.pdf"
+      "attachmentName": "Eveom_Kidneys_Balance_Wellbeing.pdf",
+      "absenderin": "Emily Carter"
     }
   }
 }

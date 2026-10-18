@@ -35,6 +35,7 @@ export function templateVars(order, config, language) {
     Nachname: person.lastName || '',
     Bestellnummer: order.name,
     'E-Book-Titel': settings.ebookTitle,
+    Absenderin: settings.absenderin,
     Shop: config.shopName,
   };
 }
@@ -131,7 +132,7 @@ export async function deliverEbook(order, { config, graphql, mailer, dryRun, tes
     }
     if (testMode) {
       // Jede Bestellung nur einmal als Test – der echte Versand ("live") folgt trotzdem.
-      await mailer.send({ to: config.testEmpfaenger, ...mail, subject: `[TEST ${order.name}, ${country || '?'}] ${mail.subject}` });
+      await mailer.send({ to: config.testEmpfaenger, ...mail, subject: `[TEST ${order.name}] ${mail.subject}` });
       await tagOrder(graphql, order.id, [TEST_TAG]);
       console.log(`✓ ${label}: Test-Mail an Testempfänger verschickt (Kunde bekommt nichts)`);
       return true;
