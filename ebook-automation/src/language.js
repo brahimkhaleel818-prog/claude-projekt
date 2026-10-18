@@ -4,7 +4,6 @@ export function orderCountry(order) {
   return (
     order.billingAddress?.countryCodeV2 ||
     order.shippingAddress?.countryCodeV2 ||
-    order.customer?.defaultAddress?.countryCodeV2 ||
     null
   );
 }

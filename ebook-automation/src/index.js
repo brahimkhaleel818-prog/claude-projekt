@@ -26,11 +26,11 @@ export function needsEbook(order, config) {
 }
 
 export function templateVars(order, config, language) {
-  const person = order.billingAddress || order.shippingAddress || order.customer || {};
+  const person = order.billingAddress || order.shippingAddress || {};
   const settings = config.languages[language];
   return {
-    Vorname: person.firstName || order.customer?.firstName || '',
-    Nachname: person.lastName || order.customer?.lastName || '',
+    Vorname: person.firstName || '',
+    Nachname: person.lastName || '',
     Bestellnummer: order.name,
     'Download-Link': settings.downloadUrl,
     'E-Book-Titel': settings.ebookTitle,

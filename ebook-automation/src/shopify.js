@@ -70,7 +70,6 @@ const ORDERS_QUERY = `
         tags
         billingAddress { firstName lastName countryCodeV2 }
         shippingAddress { firstName lastName countryCodeV2 }
-        customer { firstName lastName defaultAddress { countryCodeV2 } }
         lineItems(first: 50) { nodes { product { id } } }
       }
     }
