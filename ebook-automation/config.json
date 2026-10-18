@@ -7,7 +7,8 @@
     "smtpHost": "smtp.office365.com",
     "smtpPort": 587,
     "smtpUser": "info@eveom.health",
-    "msTenantId": "5d586993-3248-4c0a-9771-9b673d963fc9"
+    "msTenantId": "5d586993-3248-4c0a-9771-9b673d963fc9",
+    "msClientId": "48203263-eece-4c74-8134-cfb7829c1ba9"
   },
   "modus": "test",
   "testEmpfaenger": "ibokhatari@gmail.com",

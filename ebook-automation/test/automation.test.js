@@ -74,10 +74,12 @@ test('Einstellungen aus config.json, Secrets überschreiben, fehlende Secrets we
   assert.equal(env.SHOPIFY_STORE, config.shopifyStore);
   assert.equal(env.SMTP_USER, config.mail.smtpUser);
   assert.equal(env.SMTP_HOST, 'smtp.example.com');
-  assert.deepEqual(missingSecrets(env, false), ['SHOPIFY_CLIENT_SECRET', 'SMTP_PASS']);
+  assert.equal(env.MS_CLIENT_ID, config.mail.msClientId);
+  assert.deepEqual(missingSecrets(env, false), ['SHOPIFY_CLIENT_SECRET', 'MS_CLIENT_SECRET']);
   assert.deepEqual(missingSecrets(env, true), ['SHOPIFY_CLIENT_SECRET']);
   assert.deepEqual(missingSecrets({ ...env, SHOPIFY_CLIENT_SECRET: 's', MS_CLIENT_ID: 'm' }, false), ['MS_CLIENT_SECRET']);
-  assert.deepEqual(missingSecrets({ ...env, SHOPIFY_CLIENT_SECRET: 's', SMTP_PASS: 'p' }, false), []);
+  assert.deepEqual(missingSecrets({ ...env, SHOPIFY_CLIENT_SECRET: 's', MS_CLIENT_SECRET: 'p' }, false), []);
+  assert.deepEqual(missingSecrets({ ...env, MS_CLIENT_ID: undefined, SHOPIFY_CLIENT_SECRET: 's' }, false), ['SMTP_PASS']);
 });
 
 test('Webhook nimmt nur Aufrufe mit gültiger Shopify-Signatur an', async () => {

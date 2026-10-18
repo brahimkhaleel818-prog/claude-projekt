@@ -84,26 +84,23 @@ Noch zu tun:
 Hast du schon eine ältere Custom App mit Admin-API-Token (`shpat_…`), reicht
 stattdessen das Secret `SHOPIFY_ACCESS_TOKEN` (gleiche Scopes nötig).
 
-### B. E-Mail-Versand über Outlook (Microsoft 365 von GoDaddy)
+### B. E-Mail-Versand über Outlook (Microsoft 365)
 
-`info@eveom.health` ist ein Microsoft-365-Postfach, das über GoDaddy läuft.
-Die Mails gehen über `smtp.office365.com` (Port 587) direkt aus diesem Postfach
-raus. Server, Port, Absender und Benutzer stehen schon in `config.json` – es
-fehlt nur das Passwort.
+Weil für `info@eveom.health` die Zwei-Faktor-Anmeldung aktiv ist, wird nicht
+über SMTP mit Passwort verschickt, sondern über die Microsoft Graph API:
 
-1. Bei GoDaddy anmelden → **E-Mail & Office Dashboard** → bei
-   `info@eveom.health` auf **Verwalten**.
-2. Unter **Erweiterte Einstellungen** die **SMTP-Authentifizierung**
-   einschalten (ohne das lehnt Microsoft den Versand ab).
-3. Das Passwort von `info@eveom.health` brauchst du gleich als Secret
-   `SMTP_PASS`. Ändert sich das Passwort später, das Secret mit ändern.
+- App-Registrierung **„Eveom E-Book-Versand“** in Microsoft Entra
+  (Anwendungs-ID `48203263-eece-4c74-8134-cfb7829c1ba9`, steht in `config.json`)
+- Berechtigung `Mail.Send` (Anwendung) mit Administratorzustimmung
+- Geheimer Clientschlüssel „Vercel“ (gültig bis 18.10.2028) liegt bei Vercel
+  als `MS_CLIENT_SECRET`. **Vor Ablauf** in Entra → App-Registrierungen →
+  „Eveom E-Book-Versand“ → Zertifikate & Geheimnisse einen neuen erstellen und
+  bei Vercel und GitHub ersetzen.
+- Die Mails erscheinen in info@ unter „Gesendete Elemente“.
 
-Hinweis: Microsoft schaltet SMTP mit Passwort ab Ende 2026 standardmäßig ab,
-Admins können es aber wieder einschalten. Falls der Versand dann stoppt:
-SMTP-Authentifizierung bei GoDaddy erneut prüfen – oder auf die Microsoft-
-Graph-Variante wechseln (App-Registrierung mit `Mail.Send` und die Secrets
-`MS_CLIENT_ID` / `MS_CLIENT_SECRET`; geht nur mit vollem Microsoft-Admin-Zugang,
-den GoDaddy oft nicht gibt).
+Hinweis: `Mail.Send` erlaubt der App das Senden aus jedem Postfach der Firma.
+Wer das auf `info@eveom.health` beschränken will, kann in Exchange Online eine
+„Application Access Policy“ bzw. „RBAC for Applications“ einrichten.
 
 ### C. GitHub-Secrets eintragen
 
@@ -113,7 +110,7 @@ https://github.com/brahimkhaleel818-prog/claude-projekt/settings/secrets/actions
 | Secret | Wert |
 |---|---|
 | `SHOPIFY_CLIENT_SECRET` | Client-Secret der App „E-Book-Versand“ (Dev Dashboard → App → Einstellungen) |
-| `SMTP_PASS` | Passwort von `info@eveom.health` |
+| `MS_CLIENT_SECRET` | eigener geheimer Clientschlüssel „GitHub“ der Entra-App (siehe B) |
 
 Optional: `MAIL_BCC` (deine Adresse, wenn du eine Kopie jeder Mail willst),
 `MAIL_REPLY_TO`. Alles andere (Shop, Client-ID der App, Absender, Server) steht in `config.json`
@@ -146,7 +143,7 @@ Shopify meldet jede bezahlte Bestellung sofort (Webhook `orders/paid` der App
 - Die Funktion prüft die Shopify-Signatur, liest die Bestellung frisch aus
   Shopify und verschickt sofort – mit demselben Code wie der GitHub-Lauf.
 - Umgebungsvariablen bei Vercel (Project → Settings → Environment Variables):
-  `SHOPIFY_CLIENT_SECRET` und `SMTP_PASS`. Nach einer Änderung neu deployen.
+  `SHOPIFY_CLIENT_SECRET` und `MS_CLIENT_SECRET`. Nach einer Änderung neu deployen.
 - Code-Änderungen (Vorlagen, `config.json`) kommen zu Vercel mit
   `vercel deploy --prod` aus dem Ordner `ebook-automation`.
 

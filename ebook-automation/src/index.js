@@ -54,6 +54,7 @@ export function resolveEnv(env, config) {
     SMTP_PORT: config.mail?.smtpPort && String(config.mail.smtpPort),
     SMTP_USER: config.mail?.smtpUser,
     MS_TENANT_ID: config.mail?.msTenantId,
+    MS_CLIENT_ID: config.mail?.msClientId,
   };
   const set = Object.fromEntries(Object.entries(env).filter(([, value]) => value));
   return { ...defaults, ...set };
