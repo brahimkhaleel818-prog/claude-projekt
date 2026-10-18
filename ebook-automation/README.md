@@ -68,32 +68,50 @@ Hinweis: Die Sprache aus dem Checkout ist bei deinem Shop fast immer Englisch
 Hast du schon eine ältere Custom App mit Admin-API-Token (`shpat_…`), reicht
 stattdessen das Secret `SHOPIFY_ACCESS_TOKEN` (gleiche Scopes nötig).
 
-### B. E-Mail-Versand (SMTP)
+### B. E-Mail-Versand über Outlook / Microsoft 365
 
-Die Mails gehen über dein normales Postfach raus (z. B. `info@eveom.health`):
+`info@eveom.health` läuft über Microsoft 365. Die Mails werden über die
+Microsoft-Graph-Schnittstelle direkt aus diesem Postfach verschickt und landen
+dort auch unter „Gesendete Elemente“. (SMTP mit Passwort schaltet Microsoft ab
+Ende 2026 standardmäßig ab, deshalb nicht SMTP.)
 
-| Anbieter | `SMTP_HOST` | `SMTP_PORT` | Passwort |
-|---|---|---|---|
-| Google Workspace / Gmail | `smtp.gmail.com` | `465` | App-Passwort (2FA nötig) |
-| IONOS | `smtp.ionos.de` | `465` | Postfach-Passwort |
-| Strato | `smtp.strato.de` | `465` | Postfach-Passwort |
-| Brevo (für viele Mails) | `smtp-relay.brevo.com` | `587` | SMTP-Schlüssel |
+Einmalig im **Microsoft Entra Admin Center** (https://entra.microsoft.com,
+mit einem Admin-Konto von eveom.health anmelden):
+
+1. **Anwendungen → App-Registrierungen → Neue Registrierung**, Name z. B.
+   „Eveom E-Book-Versand“, Kontotyp „Nur Konten in diesem Organisationsverzeichnis“
+   → **Registrieren**.
+2. Auf der Übersichtsseite kopieren: **Anwendungs-ID (Client)** und
+   **Verzeichnis-ID (Mandant)**.
+3. **API-Berechtigungen → Berechtigung hinzufügen → Microsoft Graph →
+   Anwendungsberechtigungen → `Mail.Send`** → Hinzufügen → danach
+   **„Administratorzustimmung erteilen“** klicken.
+4. **Zertifikate & Geheimnisse → Neuer geheimer Clientschlüssel** (Laufzeit
+   z. B. 24 Monate) → den **Wert** sofort kopieren (wird nur einmal angezeigt).
+   Vor Ablauf einen neuen erstellen und das Secret in GitHub ersetzen.
+
+Tipp für mehr Sicherheit: `Mail.Send` erlaubt der App das Senden aus jedem
+Postfach eurer Firma. Mit einer „Application Access Policy“ in Exchange Online
+lässt sich das auf `info@eveom.health` beschränken.
+
+Andere Anbieter (Google, IONOS, Strato, Brevo …) gehen auch – dann statt der
+`MS_…`-Secrets `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` eintragen.
 
 ### C. GitHub-Secrets eintragen
 
 GitHub → Repository → **Settings → Secrets and variables → Actions → New repository secret**:
 
-| Secret | Beispiel |
+| Secret | Wert |
 |---|---|
 | `SHOPIFY_STORE` | `cd7d0a-1c.myshopify.com` |
 | `SHOPIFY_CLIENT_ID` | aus Schritt A |
 | `SHOPIFY_CLIENT_SECRET` | aus Schritt A |
-| `SMTP_HOST` / `SMTP_PORT` | aus Schritt B |
-| `SMTP_USER` | `info@eveom.health` |
-| `SMTP_PASS` | Passwort / App-Passwort |
-| `MAIL_FROM` | `Eveom <info@eveom.health>` |
+| `MS_TENANT_ID` | Verzeichnis-ID (Mandant) aus Schritt B |
+| `MS_CLIENT_ID` | Anwendungs-ID (Client) aus Schritt B |
+| `MS_CLIENT_SECRET` | geheimer Clientschlüssel (Wert) aus Schritt B |
+| `MAIL_FROM` | `info@eveom.health` |
 | `MAIL_BCC` (optional) | deine Adresse, falls du eine Kopie jeder Mail willst |
-| `MAIL_REPLY_TO` (optional) | Antwortadresse |
+| `MAIL_REPLY_TO` (optional) | Antwortadresse, falls nicht info@ |
 
 ### D. Starttermin festlegen
 
