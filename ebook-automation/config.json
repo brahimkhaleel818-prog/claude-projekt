@@ -1,0 +1,54 @@
+{
+  "shopName": "Eveom",
+
+  "triggerProductIds": [
+    "gid://shopify/Product/16055469310284"
+  ],
+
+  "sendOrdersCreatedAfter": "2026-10-19T00:00:00+02:00",
+  "lookbackDays": 3,
+
+  "sentTag": "ebook-versendet",
+
+  "defaultLanguage": "en",
+
+  "countryToLanguage": {
+    "DE": "de",
+    "AT": "de",
+    "CH": "de",
+    "LI": "de",
+    "LU": "de",
+    "NL": "nl",
+    "BE": "nl",
+    "FR": "fr",
+    "MC": "fr",
+    "US": "en",
+    "GB": "en",
+    "IE": "en",
+    "CA": "en",
+    "AU": "en"
+  },
+
+  "languages": {
+    "de": {
+      "template": "templates/de.html",
+      "ebookFile": "ebooks/de.pdf",
+      "attachmentName": "Der-Astaxanthin-Vorteil.pdf"
+    },
+    "nl": {
+      "template": "templates/nl.html",
+      "ebookFile": "ebooks/nl.pdf",
+      "attachmentName": "Het-Astaxanthine-Voordeel.pdf"
+    },
+    "fr": {
+      "template": "templates/fr.html",
+      "ebookFile": "ebooks/fr.pdf",
+      "attachmentName": "L-Avantage-Astaxanthine.pdf"
+    },
+    "en": {
+      "template": "templates/en.html",
+      "ebookFile": "ebooks/en.pdf",
+      "attachmentName": "The-Astaxanthin-Advantage.pdf"
+    }
+  }
+}
