@@ -1,0 +1,8 @@
+{
+  "functions": {
+    "api/shopify-order.js": {
+      "includeFiles": "{config.json,templates/**}",
+      "maxDuration": 60
+    }
+  }
+}

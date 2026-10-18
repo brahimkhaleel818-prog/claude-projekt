@@ -1,12 +1,9 @@
 name: E-Book-Versand
 
 on:
-  # Sicherheitsnetz: alle 10 Minuten nach neuen Bestellungen schauen
+  # Sicherheitsnetz zum Sofortversand über Vercel: alle 10 Minuten nachschauen
   schedule:
     - cron: '*/10 * * * *'
-  # Sofort-Auslöser aus Shopify Flow (optional, siehe ebook-automation/README.md)
-  repository_dispatch:
-    types: [shopify-order]
   # Manuell starten unter "Actions" → "E-Book-Versand" → "Run workflow"
   workflow_dispatch:
     inputs:

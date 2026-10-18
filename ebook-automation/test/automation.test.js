@@ -79,3 +79,14 @@ test('Einstellungen aus config.json, Secrets überschreiben, fehlende Secrets we
   assert.deepEqual(missingSecrets({ ...env, SHOPIFY_CLIENT_SECRET: 's', MS_CLIENT_ID: 'm' }, false), ['MS_CLIENT_SECRET']);
   assert.deepEqual(missingSecrets({ ...env, SHOPIFY_CLIENT_SECRET: 's', SMTP_PASS: 'p' }, false), []);
 });
+
+test('Webhook nimmt nur Aufrufe mit gültiger Shopify-Signatur an', async () => {
+  const { createHmac } = await import('node:crypto');
+  const { isValidShopifyHmac } = await import('../api/shopify-order.js');
+  const body = '{"admin_graphql_api_id":"gid://shopify/Order/1"}';
+  const sign = (secret) => createHmac('sha256', secret).update(body).digest('base64');
+  assert.equal(isValidShopifyHmac(body, sign('geheim'), 'geheim'), true);
+  assert.equal(isValidShopifyHmac(body, sign('falsch'), 'geheim'), false);
+  assert.equal(isValidShopifyHmac(body, null, 'geheim'), false);
+  assert.equal(isValidShopifyHmac(body, sign('geheim'), undefined), false);
+});

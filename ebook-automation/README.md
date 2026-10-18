@@ -1,12 +1,13 @@
 # E-Book-Versand nach Land (Shopify → E-Mail)
 
-Läuft komplett automatisch auf GitHub Actions – ohne Claude, ohne eigenen Server,
-ohne dass du irgendetwas bestätigen musst.
+Läuft komplett automatisch auf Vercel und GitHub Actions – ohne Claude, ohne
+eigenen Server, ohne dass du irgendetwas bestätigen musst.
 
 **Ablauf bei jeder Bestellung**
 
-1. Alle 10 Minuten (oder sofort, wenn Shopify Flow eingerichtet ist) holt das
-   Skript neue Bestellungen aus Shopify.
+1. Sofort nach der Zahlung meldet Shopify die Bestellung an Vercel (siehe
+   „Sofortversand“). Zusätzlich prüft GitHub alle 10 Minuten, ob etwas
+   liegen geblieben ist.
 2. Es nimmt nur Bestellungen, die **bezahlt**, **nicht storniert** und **noch
    nicht bedient** sind und das E-Book-Produkt enthalten
    („Het Astaxanthine Voordeel – E-book“).
@@ -135,19 +136,22 @@ schon manuell geschickt hast, keine zweite Mail.
    es wird aber nichts verschickt.
 3. Passt alles: fertig. Ab jetzt läuft es alle 10 Minuten von selbst.
 
-## Optional: Sofortversand mit Shopify Flow
+## Sofortversand (1–2 Minuten) über Vercel
 
-Ohne Flow kommt das E-Book innerhalb von ca. 10–20 Minuten. Für sofortigen Versand:
+Shopify meldet jede bezahlte Bestellung sofort (Webhook `orders/paid` der App
+„E-Book-Versand“) an die Vercel-Funktion `api/shopify-order.js`:
 
-1. GitHub → Settings → Developer settings → **Fine-grained token** nur für dieses
-   Repository, Berechtigung **Contents: Read and write**.
-2. Shopify **Flow** → neuer Workflow → Auslöser **„Bestellung bezahlt“** →
-   Aktion **„HTTP-Anfrage senden“**:
-   - Methode `POST`, URL `https://api.github.com/repos/brahimkhaleel818-prog/claude-projekt/dispatches`
-   - Header `Authorization: Bearer <TOKEN>`, `Accept: application/vnd.github+json`
-   - Body `{"event_type": "shopify-order"}`
+- Projekt: **eveom-ebook-versand** im Vercel-Konto infoibrahimkh-5870
+- Adresse: https://eveom-ebook-versand.vercel.app/api/shopify-order
+- Die Funktion prüft die Shopify-Signatur, liest die Bestellung frisch aus
+  Shopify und verschickt sofort – mit demselben Code wie der GitHub-Lauf.
+- Umgebungsvariablen bei Vercel (Project → Settings → Environment Variables):
+  `SHOPIFY_CLIENT_SECRET` und `SMTP_PASS`. Nach einer Änderung neu deployen.
+- Code-Änderungen (Vorlagen, `config.json`) kommen zu Vercel mit
+  `vercel deploy --prod` aus dem Ordner `ebook-automation`.
 
-Der 10-Minuten-Lauf bleibt als Sicherheitsnetz aktiv.
+Der 10-Minuten-Lauf auf GitHub bleibt als Sicherheitsnetz: Fällt Vercel einmal
+aus, holt er die Bestellung nach. Dank der Tags wird nie doppelt verschickt.
 
 ## Wichtig zu wissen
 
@@ -157,7 +161,7 @@ Der 10-Minuten-Lauf bleibt als Sicherheitsnetz aktiv.
   Bestellnummer, Land und Sprache ins Log – keine Namen oder E-Mail-Adressen.
 - GitHub pausiert geplante Workflows in öffentlichen Repos nach **60 Tagen ohne
   Commit**. Du bekommst vorher eine Mail von GitHub; ein Klick auf „Enable
-  workflow“ reicht. Mit Shopify Flow ist das egal, weil Flow den Lauf direkt startet.
+  workflow“ reicht. Der Sofortversand über Vercel ist davon nicht betroffen.
 - Bestellung soll ein E-Book nochmal bekommen? Tag `ebook-versendet` in Shopify
   entfernen – beim nächsten Lauf geht es erneut raus (innerhalb von `lookbackDays`).
 

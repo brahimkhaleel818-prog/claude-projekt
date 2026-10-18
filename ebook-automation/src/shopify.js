@@ -55,26 +55,38 @@ export function createClient(store, token) {
   };
 }
 
+const ORDER_FIELDS = `
+  id
+  name
+  email
+  createdAt
+  cancelledAt
+  test
+  displayFinancialStatus
+  tags
+  billingAddress { firstName lastName countryCodeV2 }
+  shippingAddress { firstName lastName countryCodeV2 }
+  lineItems(first: 50) { nodes { product { id } } }
+`;
+
 const ORDERS_QUERY = `
   query EbookOrders($query: String!, $after: String) {
     orders(first: 100, after: $after, query: $query, sortKey: CREATED_AT) {
       pageInfo { hasNextPage endCursor }
-      nodes {
-        id
-        name
-        email
-        createdAt
-        cancelledAt
-        test
-        displayFinancialStatus
-        tags
-        billingAddress { firstName lastName countryCodeV2 }
-        shippingAddress { firstName lastName countryCodeV2 }
-        lineItems(first: 50) { nodes { product { id } } }
-      }
+      nodes { ${ORDER_FIELDS} }
     }
   }
 `;
+
+const ORDER_QUERY = `
+  query EbookOrder($id: ID!) {
+    order(id: $id) { ${ORDER_FIELDS} }
+  }
+`;
+
+export async function fetchOrder(graphql, id) {
+  return (await graphql(ORDER_QUERY, { id })).order;
+}
 
 export async function fetchCandidateOrders(graphql, { since, sentTag }) {
   const query = `created_at:>='${since.toISOString()}' -tag:'${sentTag}'`;

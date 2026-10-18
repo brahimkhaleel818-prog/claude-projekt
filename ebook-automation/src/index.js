@@ -74,62 +74,78 @@ export function missingSecrets(env, dryRun) {
   return missing;
 }
 
-async function main() {
-  const dryRun = ['1', 'true', 'yes'].includes(String(process.env.DRY_RUN).toLowerCase());
+// Liest Einstellungen und meldet sich bei Shopify an. Gibt { message } zurück,
+// wenn (noch) nichts verschickt werden soll.
+export async function setup(processEnv, { dryRun = false } = {}) {
   const config = await loadConfig();
-  const env = resolveEnv(process.env, config);
+  const env = resolveEnv(processEnv, config);
 
   // Solange die Zugangsdaten fehlen, nur Hinweis statt Fehler (sonst schickt
   // GitHub alle 10 Minuten eine Fehler-Mail).
   const missing = missingSecrets(env, dryRun);
-  if (missing.length) {
-    console.log(`Noch nicht eingerichtet – bitte diese GitHub-Secrets anlegen: ${missing.join(', ')}`);
-    return;
-  }
+  if (missing.length) return { message: `Noch nicht eingerichtet – bitte diese Secrets anlegen: ${missing.join(', ')}` };
 
   // modus "aus": nichts tun, "test": alles nur an testEmpfaenger, "live": an Kunden
-  if (config.modus === 'aus') {
-    console.log('Versand ist ausgeschaltet (modus "aus" in config.json).');
-    return;
-  }
+  if (config.modus === 'aus') return { message: 'Versand ist ausgeschaltet (modus "aus" in config.json).' };
   const testMode = config.modus === 'test';
   if (testMode && !config.testEmpfaenger) throw new Error('modus "test" braucht "testEmpfaenger" in config.json');
 
-  const graphql = createClient(env.SHOPIFY_STORE, await getAccessToken(env));
-  const mailer = dryRun ? null : createMailer(env);
+  return {
+    config,
+    dryRun,
+    testMode,
+    graphql: createClient(env.SHOPIFY_STORE, await getAccessToken(env)),
+    mailer: dryRun ? null : createMailer(env),
+    clientSecret: env.SHOPIFY_CLIENT_SECRET,
+  };
+}
 
-  const since = new Date(Date.now() - config.lookbackDays * 24 * 60 * 60 * 1000);
-  const candidates = await fetchCandidateOrders(graphql, { since, sentTag: config.sentTag });
-  const orders = candidates.filter((order) => needsEbook(order, config));
-  console.log(`${candidates.length} neue Bestellungen geprüft, ${orders.length} brauchen ein E-Book${dryRun ? ' (Testlauf)' : ''}${testMode ? ' – TESTMODUS: Mails gehen nur an den Testempfänger' : ''}.`);
+// Verschickt das E-Book für eine Bestellung, die needsEbook() bestanden hat.
+export async function deliverEbook(order, { config, graphql, mailer, dryRun, testMode }) {
+  const { country, language } = pickLanguage(order, config);
+  const label = `${order.name} (${country || 'Land unbekannt'} → ${language})`;
+  try {
+    if (!order.email) throw new Error('Bestellung hat keine E-Mail-Adresse');
+    const template = await readFile(path.join(ROOT, config.languages[language].template), 'utf8');
+    const mail = renderTemplate(template, templateVars(order, config, language));
+
+    if (dryRun) {
+      console.log(`[Test] ${label}: würde "${mail.subject}" senden`);
+      return true;
+    }
+    if (testMode) {
+      // Jede Bestellung nur einmal als Test – der echte Versand ("live") folgt trotzdem.
+      await mailer.send({ to: config.testEmpfaenger, ...mail, subject: `[TEST ${order.name}, ${country || '?'}] ${mail.subject}` });
+      await tagOrder(graphql, order.id, [TEST_TAG]);
+      console.log(`✓ ${label}: Test-Mail an Testempfänger verschickt (Kunde bekommt nichts)`);
+      return true;
+    }
+    await mailer.send({ to: order.email, ...mail });
+    await tagOrder(graphql, order.id, [config.sentTag, `ebook-${language}`]);
+    console.log(`✓ ${label}: E-Book verschickt`);
+    return true;
+  } catch (err) {
+    console.error(`✗ ${label}: ${err.message}`);
+    return false;
+  }
+}
+
+async function main() {
+  const dryRun = ['1', 'true', 'yes'].includes(String(process.env.DRY_RUN).toLowerCase());
+  const ctx = await setup(process.env, { dryRun });
+  if (ctx.message) {
+    console.log(ctx.message);
+    return;
+  }
+
+  const since = new Date(Date.now() - ctx.config.lookbackDays * 24 * 60 * 60 * 1000);
+  const candidates = await fetchCandidateOrders(ctx.graphql, { since, sentTag: ctx.config.sentTag });
+  const orders = candidates.filter((order) => needsEbook(order, ctx.config));
+  console.log(`${candidates.length} neue Bestellungen geprüft, ${orders.length} brauchen ein E-Book${dryRun ? ' (Testlauf)' : ''}${ctx.testMode ? ' – TESTMODUS: Mails gehen nur an den Testempfänger' : ''}.`);
 
   let failures = 0;
   for (const order of orders) {
-    const { country, language } = pickLanguage(order, config);
-    const label = `${order.name} (${country || 'Land unbekannt'} → ${language})`;
-    try {
-      if (!order.email) throw new Error('Bestellung hat keine E-Mail-Adresse');
-      const template = await readFile(path.join(ROOT, config.languages[language].template), 'utf8');
-      const mail = renderTemplate(template, templateVars(order, config, language));
-
-      if (dryRun) {
-        console.log(`[Test] ${label}: würde "${mail.subject}" senden`);
-        continue;
-      }
-      if (testMode) {
-        // Jede Bestellung nur einmal als Test – der echte Versand ("live") folgt trotzdem.
-        await mailer.send({ to: config.testEmpfaenger, ...mail, subject: `[TEST ${order.name}, ${country || '?'}] ${mail.subject}` });
-        await tagOrder(graphql, order.id, [TEST_TAG]);
-        console.log(`✓ ${label}: Test-Mail an Testempfänger verschickt (Kunde bekommt nichts)`);
-        continue;
-      }
-      await mailer.send({ to: order.email, ...mail });
-      await tagOrder(graphql, order.id, [config.sentTag, `ebook-${language}`]);
-      console.log(`✓ ${label}: E-Book verschickt`);
-    } catch (err) {
-      failures++;
-      console.error(`✗ ${label}: ${err.message}`);
-    }
+    if (!(await deliverEbook(order, ctx))) failures++;
   }
 
   if (failures) {
