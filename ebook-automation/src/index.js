@@ -34,7 +34,6 @@ export function templateVars(order, config, language) {
     Vorname: person.firstName || '',
     Nachname: person.lastName || '',
     Bestellnummer: order.name,
-    'Download-Link': settings.downloadUrl,
     'E-Book-Titel': settings.ebookTitle,
     Shop: config.shopName,
   };
@@ -101,17 +100,33 @@ export async function setup(processEnv, { dryRun = false } = {}) {
   };
 }
 
+// PDFs einmal pro Lauf laden. Die Adresse (Shopify-Dateien) sieht der Kunde nie.
+const pdfCache = new Map();
+function loadPdf(url) {
+  if (!pdfCache.has(url)) {
+    const pdf = fetch(url).then(async (res) => {
+      if (!res.ok) throw new Error(`E-Book-PDF konnte nicht geladen werden (HTTP ${res.status})`);
+      return Buffer.from(await res.arrayBuffer());
+    });
+    pdf.catch(() => pdfCache.delete(url));
+    pdfCache.set(url, pdf);
+  }
+  return pdfCache.get(url);
+}
+
 // Verschickt das E-Book für eine Bestellung, die needsEbook() bestanden hat.
 export async function deliverEbook(order, { config, graphql, mailer, dryRun, testMode }) {
   const { country, language } = pickLanguage(order, config);
   const label = `${order.name} (${country || 'Land unbekannt'} → ${language})`;
   try {
     if (!order.email) throw new Error('Bestellung hat keine E-Mail-Adresse');
-    const template = await readFile(path.join(ROOT, config.languages[language].template), 'utf8');
+    const settings = config.languages[language];
+    const template = await readFile(path.join(ROOT, settings.template), 'utf8');
     const mail = renderTemplate(template, templateVars(order, config, language));
+    mail.attachments = [{ filename: settings.attachmentName, content: await loadPdf(settings.pdfUrl) }];
 
     if (dryRun) {
-      console.log(`[Test] ${label}: würde "${mail.subject}" senden`);
+      console.log(`[Test] ${label}: würde "${mail.subject}" mit ${settings.attachmentName} senden`);
       return true;
     }
     if (testMode) {

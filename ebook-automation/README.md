@@ -13,7 +13,8 @@ eigenen Server, ohne dass du irgendetwas bestätigen musst.
    („Het Astaxanthine Voordeel – E-book“).
 3. Das Land kommt aus der Rechnungsadresse (sonst Lieferadresse) → daraus die Sprache.
 4. Die E-Mail in der passenden Sprache geht raus – mit Vorname des Kunden und
-   dem Download-Link zum E-Book in seiner Sprache.
+   dem E-Book in seiner Sprache als **PDF-Anhang** (kein Link, nirgends steht
+   Shopify).
 5. Die Bestellung bekommt in Shopify die Tags `ebook-versendet` und `ebook-de`
    (bzw. `ebook-nl`, …). So wird nie doppelt verschickt, und du siehst im
    Shopify-Admin bei jeder Bestellung, welches E-Book rausging.
@@ -54,13 +55,14 @@ Hinweis: Die Sprache aus dem Checkout ist bei deinem Shop fast immer Englisch
 | `fr` | Reins. Équilibre. Bien-être. | Votre e-book Eveom est arrivé 📖 |
 | `en` | Kidneys. Balance. Wellbeing. | Your Eveom e-book is here 📖 |
 
-- Die PDFs liegen in Shopify unter **Inhalte → Dateien**, die Download-Links
-  stehen in `config.json` (`downloadUrl`). Neues PDF? In Shopify hochladen,
-  Link kopieren und in `config.json` ersetzen.
+- Die PDFs liegen in Shopify unter **Inhalte → Dateien**. Die Automation lädt
+  sie beim Versand selbst (`pdfUrl` in `config.json`) und hängt sie unter dem
+  Namen `attachmentName` an – der Kunde sieht diese Adresse nie. Neues PDF? In
+  Shopify hochladen, Link kopieren und `pdfUrl` ersetzen.
 - Die E-Mail-Texte stehen in `templates/de.html`, `nl.html`, `fr.html`, `en.html`.
   Der **Betreff** steht im `<title>…</title>`.
 - Platzhalter: `{{Vorname}}`, `{{Nachname}}`, `{{Bestellnummer}}`,
-  `{{Download-Link}}`, `{{E-Book-Titel}}`, `{{Shop}}`.
+  `{{E-Book-Titel}}`, `{{Shop}}`.
 - Neue Sprache? Vorlage anlegen, in `config.json` unter `languages` eintragen
   und Länder zuordnen.
 
@@ -152,8 +154,8 @@ aus, holt er die Bestellung nach. Dank der Tags wird nie doppelt verschickt.
 
 ## Wichtig zu wissen
 
-- Die Download-Links sind öffentliche Shopify-Links: Wer den Link hat (oder
-  ihn in `config.json` im öffentlichen Repo findet), kann das PDF laden.
+- Die PDF-Adressen in `config.json` sind öffentlich (öffentliches Repo) – wer
+  sie dort findet, kann die PDFs laden. In den E-Mails tauchen sie nicht auf.
 - **Logs sind öffentlich** (öffentliches Repo). Das Skript schreibt deshalb nur
   Bestellnummer, Land und Sprache ins Log – keine Namen oder E-Mail-Adressen.
 - GitHub pausiert geplante Workflows in öffentlichen Repos nach **60 Tagen ohne
