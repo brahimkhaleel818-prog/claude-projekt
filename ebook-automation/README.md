@@ -27,7 +27,7 @@ In `config.json` steht `"modus"`:
 | Modus | Was passiert |
 |---|---|
 | `"aus"` | Nichts wird verschickt. |
-| `"test"` (aktuell) | Jede E-Mail geht **nur an `testEmpfaenger`** (info@eveom.health), Betreff beginnt mit `[TEST #Bestellnummer, Land]`. Kunden bekommen nichts. Die Bestellung bekommt den Tag `ebook-test`, damit jede nur einmal getestet wird. |
+| `"test"` (aktuell) | Jede E-Mail geht **nur an `testEmpfaenger`** (z. B. deine Gmail-Adresse), Betreff beginnt mit `[TEST #Bestellnummer, Land]`. Kunden bekommen nichts. Die Bestellung bekommt den Tag `ebook-test`, damit jede nur einmal getestet wird. |
 | `"live"` | Die E-Mails gehen an die Kunden. |
 
 ## Länder → Sprache
