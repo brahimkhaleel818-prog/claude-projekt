@@ -60,11 +60,13 @@ function createGraphMailer(env) {
 
 function createSmtpMailer(env) {
   requireEnv(env, ['SMTP_HOST', 'SMTP_USER', 'SMTP_PASS', 'MAIL_FROM']);
+  // 465 = direkt verschlüsselt, 587 (z. B. Outlook) = STARTTLS
   const port = Number(env.SMTP_PORT || 465);
   const transport = nodemailer.createTransport({
     host: env.SMTP_HOST,
     port,
     secure: port === 465,
+    requireTLS: port !== 465,
     auth: { user: env.SMTP_USER, pass: env.SMTP_PASS },
   });
 

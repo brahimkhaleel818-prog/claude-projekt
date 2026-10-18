@@ -42,10 +42,47 @@ export function loadConfig() {
   return readFile(path.join(ROOT, 'config.json'), 'utf8').then(JSON.parse);
 }
 
-async function main(env = process.env) {
-  const dryRun = ['1', 'true', 'yes'].includes(String(env.DRY_RUN).toLowerCase());
+// Nicht geheime Einstellungen stehen in config.json, GitHub-Secrets überschreiben sie.
+export function resolveEnv(env, config) {
+  const defaults = {
+    SHOPIFY_STORE: config.shopifyStore,
+    MAIL_FROM: config.mail?.from,
+    SMTP_HOST: config.mail?.smtpHost,
+    SMTP_PORT: config.mail?.smtpPort && String(config.mail.smtpPort),
+    SMTP_USER: config.mail?.smtpUser,
+    MS_TENANT_ID: config.mail?.msTenantId,
+  };
+  const set = Object.fromEntries(Object.entries(env).filter(([, value]) => value));
+  return { ...defaults, ...set };
+}
+
+export function missingSecrets(env, dryRun) {
+  const missing = [];
+  if (!env.SHOPIFY_ACCESS_TOKEN) {
+    for (const key of ['SHOPIFY_CLIENT_ID', 'SHOPIFY_CLIENT_SECRET']) if (!env[key]) missing.push(key);
+  }
+  if (!dryRun) {
+    if (env.MS_CLIENT_ID) {
+      if (!env.MS_CLIENT_SECRET) missing.push('MS_CLIENT_SECRET');
+    } else if (!env.SMTP_PASS) {
+      missing.push('SMTP_PASS');
+    }
+  }
+  return missing;
+}
+
+async function main() {
+  const dryRun = ['1', 'true', 'yes'].includes(String(process.env.DRY_RUN).toLowerCase());
   const config = await loadConfig();
-  if (!env.SHOPIFY_STORE) throw new Error('SHOPIFY_STORE fehlt (z. B. mein-shop.myshopify.com)');
+  const env = resolveEnv(process.env, config);
+
+  // Solange die Zugangsdaten fehlen, nur Hinweis statt Fehler (sonst schickt
+  // GitHub alle 10 Minuten eine Fehler-Mail).
+  const missing = missingSecrets(env, dryRun);
+  if (missing.length) {
+    console.log(`Noch nicht eingerichtet – bitte diese GitHub-Secrets anlegen: ${missing.join(', ')}`);
+    return;
+  }
 
   const graphql = createClient(env.SHOPIFY_STORE, await getAccessToken(env));
   const mailer = dryRun ? null : createMailer(env);

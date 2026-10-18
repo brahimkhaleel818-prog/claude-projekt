@@ -68,50 +68,44 @@ Hinweis: Die Sprache aus dem Checkout ist bei deinem Shop fast immer Englisch
 Hast du schon eine ältere Custom App mit Admin-API-Token (`shpat_…`), reicht
 stattdessen das Secret `SHOPIFY_ACCESS_TOKEN` (gleiche Scopes nötig).
 
-### B. E-Mail-Versand über Outlook / Microsoft 365
+### B. E-Mail-Versand über Outlook (Microsoft 365 von GoDaddy)
 
-`info@eveom.health` läuft über Microsoft 365. Die Mails werden über die
-Microsoft-Graph-Schnittstelle direkt aus diesem Postfach verschickt und landen
-dort auch unter „Gesendete Elemente“. (SMTP mit Passwort schaltet Microsoft ab
-Ende 2026 standardmäßig ab, deshalb nicht SMTP.)
+`info@eveom.health` ist ein Microsoft-365-Postfach, das über GoDaddy läuft.
+Die Mails gehen über `smtp.office365.com` (Port 587) direkt aus diesem Postfach
+raus. Server, Port, Absender und Benutzer stehen schon in `config.json` – es
+fehlt nur das Passwort.
 
-Einmalig im **Microsoft Entra Admin Center** (https://entra.microsoft.com,
-mit einem Admin-Konto von eveom.health anmelden):
+1. Bei GoDaddy anmelden → **E-Mail & Office Dashboard** → bei
+   `info@eveom.health` auf **Verwalten**.
+2. Unter **Erweiterte Einstellungen** die **SMTP-Authentifizierung**
+   einschalten (ohne das lehnt Microsoft den Versand ab).
+3. Das Passwort von `info@eveom.health` brauchst du gleich als Secret
+   `SMTP_PASS`. Ändert sich das Passwort später, das Secret mit ändern.
 
-1. **Anwendungen → App-Registrierungen → Neue Registrierung**, Name z. B.
-   „Eveom E-Book-Versand“, Kontotyp „Nur Konten in diesem Organisationsverzeichnis“
-   → **Registrieren**.
-2. Auf der Übersichtsseite kopieren: **Anwendungs-ID (Client)** und
-   **Verzeichnis-ID (Mandant)**.
-3. **API-Berechtigungen → Berechtigung hinzufügen → Microsoft Graph →
-   Anwendungsberechtigungen → `Mail.Send`** → Hinzufügen → danach
-   **„Administratorzustimmung erteilen“** klicken.
-4. **Zertifikate & Geheimnisse → Neuer geheimer Clientschlüssel** (Laufzeit
-   z. B. 24 Monate) → den **Wert** sofort kopieren (wird nur einmal angezeigt).
-   Vor Ablauf einen neuen erstellen und das Secret in GitHub ersetzen.
-
-Tipp für mehr Sicherheit: `Mail.Send` erlaubt der App das Senden aus jedem
-Postfach eurer Firma. Mit einer „Application Access Policy“ in Exchange Online
-lässt sich das auf `info@eveom.health` beschränken.
-
-Andere Anbieter (Google, IONOS, Strato, Brevo …) gehen auch – dann statt der
-`MS_…`-Secrets `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` eintragen.
+Hinweis: Microsoft schaltet SMTP mit Passwort ab Ende 2026 standardmäßig ab,
+Admins können es aber wieder einschalten. Falls der Versand dann stoppt:
+SMTP-Authentifizierung bei GoDaddy erneut prüfen – oder auf die Microsoft-
+Graph-Variante wechseln (App-Registrierung mit `Mail.Send` und die Secrets
+`MS_CLIENT_ID` / `MS_CLIENT_SECRET`; geht nur mit vollem Microsoft-Admin-Zugang,
+den GoDaddy oft nicht gibt).
 
 ### C. GitHub-Secrets eintragen
 
-GitHub → Repository → **Settings → Secrets and variables → Actions → New repository secret**:
+https://github.com/brahimkhaleel818-prog/claude-projekt/settings/secrets/actions
+→ **New repository secret** – nur diese drei:
 
 | Secret | Wert |
 |---|---|
-| `SHOPIFY_STORE` | `cd7d0a-1c.myshopify.com` |
 | `SHOPIFY_CLIENT_ID` | aus Schritt A |
 | `SHOPIFY_CLIENT_SECRET` | aus Schritt A |
-| `MS_TENANT_ID` | Verzeichnis-ID (Mandant) aus Schritt B |
-| `MS_CLIENT_ID` | Anwendungs-ID (Client) aus Schritt B |
-| `MS_CLIENT_SECRET` | geheimer Clientschlüssel (Wert) aus Schritt B |
-| `MAIL_FROM` | `info@eveom.health` |
-| `MAIL_BCC` (optional) | deine Adresse, falls du eine Kopie jeder Mail willst |
-| `MAIL_REPLY_TO` (optional) | Antwortadresse, falls nicht info@ |
+| `SMTP_PASS` | Passwort von `info@eveom.health` |
+
+Optional: `MAIL_BCC` (deine Adresse, wenn du eine Kopie jeder Mail willst),
+`MAIL_REPLY_TO`. Alles andere (Shop, Absender, Server) steht in `config.json`
+und kann dort geändert werden.
+
+Solange Secrets fehlen, schreibt der Lauf nur „Noch nicht eingerichtet …“ ins
+Log und schlägt nicht fehl – du bekommst also keine Fehler-Mails.
 
 ### D. Starttermin festlegen
 
@@ -159,5 +153,5 @@ Der 10-Minuten-Lauf bleibt als Sicherheitsnetz aktiv.
 cd ebook-automation
 npm ci
 npm test                                   # Tests
-SHOPIFY_STORE=… SHOPIFY_CLIENT_ID=… SHOPIFY_CLIENT_SECRET=… npm run dry-run
+SHOPIFY_CLIENT_ID=… SHOPIFY_CLIENT_SECRET=… npm run dry-run
 ```

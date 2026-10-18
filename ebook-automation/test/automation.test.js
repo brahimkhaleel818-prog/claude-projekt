@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { pickLanguage } from '../src/language.js';
 import { renderTemplate } from '../src/template.js';
-import { needsEbook, templateVars, loadConfig } from '../src/index.js';
+import { needsEbook, templateVars, loadConfig, resolveEnv, missingSecrets } from '../src/index.js';
 
 const config = await loadConfig();
 const EBOOK = config.triggerProductIds[0];
@@ -64,4 +64,15 @@ test('Jede Sprache hat eine Vorlage mit Betreff, Name und eigenem Download-Link'
   for (const language of Object.values(config.countryToLanguage)) {
     assert.ok(config.languages[language], `Sprache ${language} fehlt in "languages"`);
   }
+});
+
+test('Einstellungen aus config.json, Secrets überschreiben, fehlende Secrets werden gemeldet', () => {
+  const env = resolveEnv({ SMTP_PASS: '', SHOPIFY_CLIENT_ID: 'id', SMTP_HOST: 'smtp.example.com' }, config);
+  assert.equal(env.SHOPIFY_STORE, config.shopifyStore);
+  assert.equal(env.SMTP_USER, config.mail.smtpUser);
+  assert.equal(env.SMTP_HOST, 'smtp.example.com');
+  assert.deepEqual(missingSecrets(env, false), ['SHOPIFY_CLIENT_SECRET', 'SMTP_PASS']);
+  assert.deepEqual(missingSecrets(env, true), ['SHOPIFY_CLIENT_SECRET']);
+  assert.deepEqual(missingSecrets({ ...env, SHOPIFY_CLIENT_SECRET: 's', MS_CLIENT_ID: 'm' }, false), ['MS_CLIENT_SECRET']);
+  assert.deepEqual(missingSecrets({ ...env, SHOPIFY_CLIENT_SECRET: 's', SMTP_PASS: 'p' }, false), []);
 });
