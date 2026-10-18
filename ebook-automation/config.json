@@ -9,6 +9,8 @@
     "smtpUser": "info@eveom.health",
     "msTenantId": "5d586993-3248-4c0a-9771-9b673d963fc9"
   },
+  "modus": "test",
+  "testEmpfaenger": "info@eveom.health",
   "triggerProductIds": [
     "gid://shopify/Product/16055469310284"
   ],

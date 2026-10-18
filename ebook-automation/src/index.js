@@ -15,11 +15,13 @@ import { createMailer } from './mailer.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SENDABLE_STATUSES = new Set(['PAID', 'PARTIALLY_REFUNDED']);
+const TEST_TAG = 'ebook-test';
 
 export function needsEbook(order, config) {
   if (order.cancelledAt) return false;
   if (!SENDABLE_STATUSES.has(order.displayFinancialStatus)) return false;
   if (order.tags.includes(config.sentTag)) return false;
+  if (config.modus === 'test' && order.tags.includes(TEST_TAG)) return false;
   if (new Date(order.createdAt) < new Date(config.sendOrdersCreatedAfter)) return false;
   if (!config.triggerProductIds.length) return true;
   return order.lineItems.nodes.some((item) => config.triggerProductIds.includes(item.product?.id));
@@ -85,13 +87,21 @@ async function main() {
     return;
   }
 
+  // modus "aus": nichts tun, "test": alles nur an testEmpfaenger, "live": an Kunden
+  if (config.modus === 'aus') {
+    console.log('Versand ist ausgeschaltet (modus "aus" in config.json).');
+    return;
+  }
+  const testMode = config.modus === 'test';
+  if (testMode && !config.testEmpfaenger) throw new Error('modus "test" braucht "testEmpfaenger" in config.json');
+
   const graphql = createClient(env.SHOPIFY_STORE, await getAccessToken(env));
   const mailer = dryRun ? null : createMailer(env);
 
   const since = new Date(Date.now() - config.lookbackDays * 24 * 60 * 60 * 1000);
   const candidates = await fetchCandidateOrders(graphql, { since, sentTag: config.sentTag });
   const orders = candidates.filter((order) => needsEbook(order, config));
-  console.log(`${candidates.length} neue Bestellungen geprüft, ${orders.length} brauchen ein E-Book${dryRun ? ' (Testlauf)' : ''}.`);
+  console.log(`${candidates.length} neue Bestellungen geprüft, ${orders.length} brauchen ein E-Book${dryRun ? ' (Testlauf)' : ''}${testMode ? ' – TESTMODUS: Mails gehen nur an den Testempfänger' : ''}.`);
 
   let failures = 0;
   for (const order of orders) {
@@ -104,6 +114,13 @@ async function main() {
 
       if (dryRun) {
         console.log(`[Test] ${label}: würde "${mail.subject}" senden`);
+        continue;
+      }
+      if (testMode) {
+        // Jede Bestellung nur einmal als Test – der echte Versand ("live") folgt trotzdem.
+        await mailer.send({ to: config.testEmpfaenger, ...mail, subject: `[TEST ${order.name}, ${country || '?'}] ${mail.subject}` });
+        await tagOrder(graphql, order.id, [TEST_TAG]);
+        console.log(`✓ ${label}: Test-Mail an Testempfänger verschickt (Kunde bekommt nichts)`);
         continue;
       }
       await mailer.send({ to: order.email, ...mail });
