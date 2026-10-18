@@ -1,0 +1,57 @@
+name: E-Book-Versand
+
+on:
+  # Sicherheitsnetz: alle 10 Minuten nach neuen Bestellungen schauen
+  schedule:
+    - cron: '*/10 * * * *'
+  # Sofort-Auslöser aus Shopify Flow (optional, siehe ebook-automation/README.md)
+  repository_dispatch:
+    types: [shopify-order]
+  # Manuell starten unter "Actions" → "E-Book-Versand" → "Run workflow"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Nur testen, keine E-Mails senden'
+        type: boolean
+        default: true
+
+# Nie zwei Läufe gleichzeitig – sonst könnte eine Bestellung doppelt bedient werden
+concurrency:
+  group: ebook-versand
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  versand:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: ebook-automation
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ebook-automation/package-lock.json
+      - run: npm ci --omit=dev
+      - run: node src/index.js
+        env:
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
+          SHOPIFY_STORE: ${{ secrets.SHOPIFY_STORE }}
+          SHOPIFY_ACCESS_TOKEN: ${{ secrets.SHOPIFY_ACCESS_TOKEN }}
+          SHOPIFY_CLIENT_ID: ${{ secrets.SHOPIFY_CLIENT_ID }}
+          SHOPIFY_CLIENT_SECRET: ${{ secrets.SHOPIFY_CLIENT_SECRET }}
+          MS_TENANT_ID: ${{ secrets.MS_TENANT_ID }}
+          MS_CLIENT_ID: ${{ secrets.MS_CLIENT_ID }}
+          MS_CLIENT_SECRET: ${{ secrets.MS_CLIENT_SECRET }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          MAIL_FROM: ${{ secrets.MAIL_FROM }}
+          MAIL_REPLY_TO: ${{ secrets.MAIL_REPLY_TO }}
+          MAIL_BCC: ${{ secrets.MAIL_BCC }}

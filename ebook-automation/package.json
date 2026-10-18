@@ -1,0 +1,17 @@
+{
+  "name": "ebook-automation",
+  "private": true,
+  "type": "module",
+  "description": "Verschickt nach jeder Shopify-Bestellung automatisch das E-Book in der Sprache des Kundenlandes",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "dry-run": "DRY_RUN=1 node src/index.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "nodemailer": "10.0.14"
+  }
+}
