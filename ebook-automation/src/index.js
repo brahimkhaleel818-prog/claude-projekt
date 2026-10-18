@@ -1,6 +1,6 @@
-// Verschickt für jede neue, bezahlte Shopify-Bestellung mit E-Book den
-// Download-Link zum E-Book in der Sprache des Landes der Bestellung. Bereits
-// bediente Bestellungen bekommen einen Tag und werden nie wieder angefasst.
+// Verschickt für jede neue, bezahlte Shopify-Bestellung mit E-Book das E-Book
+// (PDF-Anhang) in der Sprache des Landes der Bestellung. Bereits bediente
+// Bestellungen bekommen einen Tag und werden nie wieder angefasst.
 //
 // Aufruf:  node src/index.js            (verschickt wirklich)
 //          DRY_RUN=1 node src/index.js  (zeigt nur an, was passieren würde)

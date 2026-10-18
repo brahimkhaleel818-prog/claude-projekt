@@ -58,7 +58,9 @@ Hinweis: Die Sprache aus dem Checkout ist bei deinem Shop fast immer Englisch
 - Die PDFs liegen in Shopify unter **Inhalte → Dateien**. Die Automation lädt
   sie beim Versand selbst (`pdfUrl` in `config.json`) und hängt sie unter dem
   Namen `attachmentName` an – der Kunde sieht diese Adresse nie. Neues PDF? In
-  Shopify hochladen, Link kopieren und `pdfUrl` ersetzen.
+  Shopify hochladen, Link kopieren und `pdfUrl` ersetzen. **Wichtig: unter 3 MB
+  halten** (die aktuellen Mail-Versionen `…_mail.pdf` haben ca. 1,3 MB) – größere
+  Anhänge bräuchten in Microsoft zusätzlich die Berechtigung `Mail.ReadWrite`.
 - Die E-Mail-Texte stehen in `templates/de.html`, `nl.html`, `fr.html`, `en.html`.
   Der **Betreff** steht im `<title>…</title>`.
 - Platzhalter: `{{Vorname}}`, `{{Nachname}}`, `{{Bestellnummer}}`,
