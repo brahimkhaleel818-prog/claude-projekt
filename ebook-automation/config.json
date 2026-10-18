@@ -1,17 +1,12 @@
 {
-  "shopName": "Eveom",
-
+  "shopName": "Eveom™",
   "triggerProductIds": [
     "gid://shopify/Product/16055469310284"
   ],
-
   "sendOrdersCreatedAfter": "2026-10-19T00:00:00+02:00",
   "lookbackDays": 3,
-
   "sentTag": "ebook-versendet",
-
   "defaultLanguage": "en",
-
   "countryToLanguage": {
     "DE": "de",
     "AT": "de",
@@ -28,27 +23,26 @@
     "CA": "en",
     "AU": "en"
   },
-
   "languages": {
     "de": {
       "template": "templates/de.html",
-      "ebookFile": "ebooks/de.pdf",
-      "attachmentName": "Der-Astaxanthin-Vorteil.pdf"
+      "ebookTitle": "Nieren. Balance. Wohlbefinden.",
+      "downloadUrl": "https://cdn.shopify.com/s/files/1/0814/9155/8732/files/Eveom_Nieren_Balance_Wohlbefinden_DE.pdf?v=1792362817"
     },
     "nl": {
       "template": "templates/nl.html",
-      "ebookFile": "ebooks/nl.pdf",
-      "attachmentName": "Het-Astaxanthine-Voordeel.pdf"
+      "ebookTitle": "Nieren. Balans. Welzijn.",
+      "downloadUrl": "https://cdn.shopify.com/s/files/1/0814/9155/8732/files/Eveom_Nieren_Balans_Welzijn_NL_BE.pdf?v=1792362817"
     },
     "fr": {
       "template": "templates/fr.html",
-      "ebookFile": "ebooks/fr.pdf",
-      "attachmentName": "L-Avantage-Astaxanthine.pdf"
+      "ebookTitle": "Reins. Équilibre. Bien-être.",
+      "downloadUrl": "https://cdn.shopify.com/s/files/1/0814/9155/8732/files/Eveom_Reins_Equilibre_BienEtre_FR.pdf?v=1792362817"
     },
     "en": {
       "template": "templates/en.html",
-      "ebookFile": "ebooks/en.pdf",
-      "attachmentName": "The-Astaxanthin-Advantage.pdf"
+      "ebookTitle": "Kidneys. Balance. Wellbeing.",
+      "downloadUrl": "https://cdn.shopify.com/s/files/1/0814/9155/8732/files/Eveom_Kidneys_Balance_Wellbeing_EN.pdf?v=1792362817"
     }
   }
 }

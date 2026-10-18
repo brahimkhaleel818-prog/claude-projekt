@@ -14,7 +14,7 @@ export function createMailer(env) {
 
   return {
     verify: () => transport.verify(),
-    send: ({ to, subject, html, text, attachment }) =>
+    send: ({ to, subject, html, text }) =>
       transport.sendMail({
         from: env.MAIL_FROM,
         replyTo: env.MAIL_REPLY_TO || undefined,
@@ -23,7 +23,6 @@ export function createMailer(env) {
         subject,
         html,
         text,
-        attachments: [{ filename: attachment.name, content: attachment.content, contentType: 'application/pdf' }],
       }),
   };
 }

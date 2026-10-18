@@ -11,7 +11,8 @@ ohne dass du irgendetwas bestätigen musst.
    nicht bedient** sind und das E-Book-Produkt enthalten
    („Het Astaxanthine Voordeel – E-book“).
 3. Das Land kommt aus der Rechnungsadresse (sonst Lieferadresse) → daraus die Sprache.
-4. Die passende E-Mail-Vorlage wird gefüllt und das passende PDF angehängt.
+4. Die E-Mail in der passenden Sprache geht raus – mit Vorname des Kunden und
+   dem Download-Link zum E-Book in seiner Sprache.
 5. Die Bestellung bekommt in Shopify die Tags `ebook-versendet` und `ebook-de`
    (bzw. `ebook-nl`, …). So wird nie doppelt verschickt, und du siehst im
    Shopify-Admin bei jeder Bestellung, welches E-Book rausging.
@@ -33,30 +34,24 @@ GitHub schickt dir eine Fehler-Mail.
 Hinweis: Die Sprache aus dem Checkout ist bei deinem Shop fast immer Englisch
 (`en-DE`, `en-BE` …), deshalb geht die Automation nach dem **Land**.
 
-## Was du mir / dem Repo noch geben musst
+## E-Books und E-Mail-Vorlagen
 
-### 1. E-Mail-Vorlagen
+| Sprache | E-Book | Betreff |
+|---|---|---|
+| `de` | Nieren. Balance. Wohlbefinden. | Ihr Eveom E-Book ist da 📖 |
+| `nl` | Nieren. Balans. Welzijn. (NL & BE) | Uw Eveom e-book is er 📖 |
+| `fr` | Reins. Équilibre. Bien-être. | Votre e-book Eveom est arrivé 📖 |
+| `en` | Kidneys. Balance. Wellbeing. | Your Eveom e-book is here 📖 |
 
-`templates/de.html`, `nl.html`, `fr.html`, `en.html` – dort liegen schon
-Beispielvorlagen, die du durch deine eigenen ersetzen kannst.
-
-- Der **Betreff** steht im `<title>…</title>` der Vorlage.
-- Platzhalter: `{{first_name}}`, `{{last_name}}`, `{{order_number}}`, `{{shop_name}}`.
+- Die PDFs liegen in Shopify unter **Inhalte → Dateien**, die Download-Links
+  stehen in `config.json` (`downloadUrl`). Neues PDF? In Shopify hochladen,
+  Link kopieren und in `config.json` ersetzen.
+- Die E-Mail-Texte stehen in `templates/de.html`, `nl.html`, `fr.html`, `en.html`.
+  Der **Betreff** steht im `<title>…</title>`.
+- Platzhalter: `{{Vorname}}`, `{{Nachname}}`, `{{Bestellnummer}}`,
+  `{{Download-Link}}`, `{{E-Book-Titel}}`, `{{Shop}}`.
 - Neue Sprache? Vorlage anlegen, in `config.json` unter `languages` eintragen
   und Länder zuordnen.
-
-### 2. Die E-Books (PDF)
-
-Dieses Repository ist **öffentlich** – PDFs hier hochzuladen würde sie für alle
-downloadbar machen. Deshalb:
-
-1. Shopify-Admin → **Inhalte → Dateien** → PDF je Sprache hochladen.
-2. Link kopieren (`https://cdn.shopify.com/s/files/…`).
-3. Als GitHub-Secret speichern: `EBOOK_URL_DE`, `EBOOK_URL_NL`, `EBOOK_URL_FR`, `EBOOK_URL_EN`.
-
-Das Skript lädt das PDF bei jedem Lauf und hängt es an die E-Mail an.
-Dateiname im Anhang: `attachmentName` in `config.json`.
-(Max. ca. 18 MB pro PDF, sonst lehnen viele Postfächer die Mail ab.)
 
 ## Einrichtung (einmalig, ca. 20 Minuten)
 
@@ -97,7 +92,6 @@ GitHub → Repository → **Settings → Secrets and variables → Actions → N
 | `SMTP_USER` | `info@eveom.health` |
 | `SMTP_PASS` | Passwort / App-Passwort |
 | `MAIL_FROM` | `Eveom <info@eveom.health>` |
-| `EBOOK_URL_DE` … `EBOOK_URL_EN` | Links aus „Die E-Books“ |
 | `MAIL_BCC` (optional) | deine Adresse, falls du eine Kopie jeder Mail willst |
 | `MAIL_REPLY_TO` (optional) | Antwortadresse |
 
@@ -131,6 +125,8 @@ Der 10-Minuten-Lauf bleibt als Sicherheitsnetz aktiv.
 
 ## Wichtig zu wissen
 
+- Die Download-Links sind öffentliche Shopify-Links: Wer den Link hat (oder
+  ihn in `config.json` im öffentlichen Repo findet), kann das PDF laden.
 - **Logs sind öffentlich** (öffentliches Repo). Das Skript schreibt deshalb nur
   Bestellnummer, Land und Sprache ins Log – keine Namen oder E-Mail-Adressen.
 - GitHub pausiert geplante Workflows in öffentlichen Repos nach **60 Tagen ohne

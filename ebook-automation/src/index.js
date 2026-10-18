@@ -1,6 +1,6 @@
-// Verschickt für jede neue, bezahlte Shopify-Bestellung mit E-Book das E-Book
-// in der Sprache des Landes der Bestellung. Bereits bediente Bestellungen
-// bekommen einen Tag und werden danach nie wieder angefasst.
+// Verschickt für jede neue, bezahlte Shopify-Bestellung mit E-Book den
+// Download-Link zum E-Book in der Sprache des Landes der Bestellung. Bereits
+// bediente Bestellungen bekommen einen Tag und werden nie wieder angefasst.
 //
 // Aufruf:  node src/index.js            (verschickt wirklich)
 //          DRY_RUN=1 node src/index.js  (zeigt nur an, was passieren würde)
@@ -25,35 +25,21 @@ export function needsEbook(order, config) {
   return order.lineItems.nodes.some((item) => config.triggerProductIds.includes(item.product?.id));
 }
 
-export function templateVars(order, config) {
+export function templateVars(order, config, language) {
   const person = order.billingAddress || order.shippingAddress || order.customer || {};
+  const settings = config.languages[language];
   return {
-    first_name: person.firstName || order.customer?.firstName || '',
-    last_name: person.lastName || order.customer?.lastName || '',
-    order_number: order.name,
-    shop_name: config.shopName,
+    Vorname: person.firstName || order.customer?.firstName || '',
+    Nachname: person.lastName || order.customer?.lastName || '',
+    Bestellnummer: order.name,
+    'Download-Link': settings.downloadUrl,
+    'E-Book-Titel': settings.ebookTitle,
+    Shop: config.shopName,
   };
 }
 
 export function loadConfig() {
   return readFile(path.join(ROOT, 'config.json'), 'utf8').then(JSON.parse);
-}
-
-function createEbookLoader(env) {
-  const cache = new Map();
-  return (language, settings) => {
-    if (!cache.has(language)) {
-      const url = env[`EBOOK_URL_${language.toUpperCase()}`];
-      cache.set(language, url ? download(url) : readFile(path.join(ROOT, settings.ebookFile)));
-    }
-    return cache.get(language);
-  };
-}
-
-async function download(url) {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`E-Book-Download fehlgeschlagen (HTTP ${res.status})`);
-  return Buffer.from(await res.arrayBuffer());
 }
 
 async function main(env = process.env) {
@@ -63,7 +49,6 @@ async function main(env = process.env) {
 
   const graphql = createClient(env.SHOPIFY_STORE, await getAccessToken(env));
   const mailer = dryRun ? null : createMailer(env);
-  const loadEbook = createEbookLoader(env);
 
   const since = new Date(Date.now() - config.lookbackDays * 24 * 60 * 60 * 1000);
   const candidates = await fetchCandidateOrders(graphql, { since, sentTag: config.sentTag });
@@ -76,16 +61,14 @@ async function main(env = process.env) {
     const label = `${order.name} (${country || 'Land unbekannt'} → ${language})`;
     try {
       if (!order.email) throw new Error('Bestellung hat keine E-Mail-Adresse');
-      const settings = config.languages[language];
-      const template = await readFile(path.join(ROOT, settings.template), 'utf8');
-      const mail = renderTemplate(template, templateVars(order, config));
-      const content = await loadEbook(language, settings);
+      const template = await readFile(path.join(ROOT, config.languages[language].template), 'utf8');
+      const mail = renderTemplate(template, templateVars(order, config, language));
 
       if (dryRun) {
-        console.log(`[Test] ${label}: würde "${mail.subject}" mit ${settings.attachmentName} senden`);
+        console.log(`[Test] ${label}: würde "${mail.subject}" senden`);
         continue;
       }
-      await mailer.send({ to: order.email, ...mail, attachment: { name: settings.attachmentName, content } });
+      await mailer.send({ to: order.email, ...mail });
       await tagOrder(graphql, order.id, [config.sentTag, `ebook-${language}`]);
       console.log(`✓ ${label}: E-Book verschickt`);
     } catch (err) {

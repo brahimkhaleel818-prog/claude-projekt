@@ -1,4 +1,0 @@
-# Das Repository ist öffentlich – E-Books hier NICHT hochladen, sonst kann sie
-# jeder herunterladen. Stattdessen die Links als GitHub-Secrets EBOOK_URL_DE,
-# EBOOK_URL_NL, ... hinterlegen (siehe README). Lokal zum Testen ablegen ist ok.
-*.pdf

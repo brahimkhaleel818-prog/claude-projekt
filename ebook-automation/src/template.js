@@ -1,5 +1,5 @@
 // Füllt eine HTML-E-Mail-Vorlage. Der Betreff steht im <title>-Tag der Vorlage,
-// Platzhalter haben die Form {{first_name}}.
+// Platzhalter haben die Form {{Vorname}}.
 
 function escapeHtml(value) {
   return String(value ?? '')
@@ -11,7 +11,7 @@ function escapeHtml(value) {
 }
 
 function fill(text, vars, escape) {
-  return text.replace(/\{\{\s*(\w+)\s*\}\}/g, (match, key) => {
+  return text.replace(/\{\{\s*([\w-]+)\s*\}\}/g, (match, key) => {
     if (!(key in vars)) return match;
     return escape ? escapeHtml(vars[key]) : String(vars[key] ?? '');
   });

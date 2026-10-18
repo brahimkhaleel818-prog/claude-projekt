@@ -47,15 +47,20 @@ test('Nur bezahlte, nicht stornierte, noch nicht bediente Bestellungen mit E-Boo
   assert.equal(needsEbook(order({ lineItems: { nodes: [{ product: { id: 'gid://shopify/Product/9' } }, { product: null }] } }), config), false);
 });
 
-test('Jede Sprache hat eine Vorlage mit Betreff und gefüllten Platzhaltern', async () => {
-  const vars = templateVars(order({ billingAddress: { firstName: 'Zoë <b>', countryCodeV2: 'DE' } }), config);
+test('Jede Sprache hat eine Vorlage mit Betreff, Name und eigenem Download-Link', async () => {
+  const o = order({ billingAddress: { firstName: 'Zoë <b>', countryCodeV2: 'DE' } });
+  const links = new Set();
   for (const [language, settings] of Object.entries(config.languages)) {
-    const mail = renderTemplate(await readFile(new URL(`../${settings.template}`, import.meta.url), 'utf8'), vars);
-    assert.ok(mail.subject.includes('#1001'), language);
+    const mail = renderTemplate(await readFile(new URL(`../${settings.template}`, import.meta.url), 'utf8'), templateVars(o, config, language));
+    assert.ok(mail.subject.includes('📖'), language);
     assert.ok(mail.html.includes('Zoë &lt;b&gt;'), language);
+    assert.ok(mail.html.includes(`href="${settings.downloadUrl}"`), language);
+    assert.ok(mail.html.includes(settings.ebookTitle), language);
     assert.ok(!/\{\{/.test(mail.html), `${language}: nicht ersetzter Platzhalter`);
     assert.ok(mail.text.includes('Zoë <b>'), language);
+    links.add(settings.downloadUrl);
   }
+  assert.equal(links.size, Object.keys(config.languages).length, 'jede Sprache braucht ein eigenes PDF');
   for (const language of Object.values(config.countryToLanguage)) {
     assert.ok(config.languages[language], `Sprache ${language} fehlt in "languages"`);
   }

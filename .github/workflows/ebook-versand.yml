@@ -52,7 +52,3 @@ jobs:
           MAIL_FROM: ${{ secrets.MAIL_FROM }}
           MAIL_REPLY_TO: ${{ secrets.MAIL_REPLY_TO }}
           MAIL_BCC: ${{ secrets.MAIL_BCC }}
-          EBOOK_URL_DE: ${{ secrets.EBOOK_URL_DE }}
-          EBOOK_URL_NL: ${{ secrets.EBOOK_URL_NL }}
-          EBOOK_URL_FR: ${{ secrets.EBOOK_URL_FR }}
-          EBOOK_URL_EN: ${{ secrets.EBOOK_URL_EN }}
