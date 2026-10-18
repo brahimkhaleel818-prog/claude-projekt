@@ -46,6 +46,7 @@ export function loadConfig() {
 export function resolveEnv(env, config) {
   const defaults = {
     SHOPIFY_STORE: config.shopifyStore,
+    SHOPIFY_CLIENT_ID: config.shopifyClientId,
     MAIL_FROM: config.mail?.from,
     SMTP_HOST: config.mail?.smtpHost,
     SMTP_PORT: config.mail?.smtpPort && String(config.mail.smtpPort),

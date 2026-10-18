@@ -67,7 +67,8 @@ test('Jede Sprache hat eine Vorlage mit Betreff, Name und eigenem Download-Link'
 });
 
 test('Einstellungen aus config.json, Secrets überschreiben, fehlende Secrets werden gemeldet', () => {
-  const env = resolveEnv({ SMTP_PASS: '', SHOPIFY_CLIENT_ID: 'id', SMTP_HOST: 'smtp.example.com' }, config);
+  const env = resolveEnv({ SMTP_PASS: '', SMTP_HOST: 'smtp.example.com' }, config);
+  assert.equal(env.SHOPIFY_CLIENT_ID, config.shopifyClientId);
   assert.equal(env.SHOPIFY_STORE, config.shopifyStore);
   assert.equal(env.SMTP_USER, config.mail.smtpUser);
   assert.equal(env.SMTP_HOST, 'smtp.example.com');

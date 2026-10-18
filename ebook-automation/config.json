@@ -1,6 +1,7 @@
 {
   "shopName": "Eveom™",
   "shopifyStore": "cd7d0a-1c.myshopify.com",
+  "shopifyClientId": "2989f2ac42fc81043bc3966a116cb719",
   "mail": {
     "from": "Eveom <info@eveom.health>",
     "smtpHost": "smtp.office365.com",

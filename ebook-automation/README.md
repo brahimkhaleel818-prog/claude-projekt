@@ -57,13 +57,18 @@ Hinweis: Die Sprache aus dem Checkout ist bei deinem Shop fast immer Englisch
 
 ### A. Shopify-Zugang
 
-1. Shopify-Admin → **Einstellungen → Apps → Apps entwickeln** → App im
-   **Dev Dashboard** erstellen (z. B. „E-Book-Versand“).
-2. Neue Version anlegen, API-Berechtigungen (Scopes): `read_orders`, `write_orders`.
-3. Unter „Geschützte Kundendaten“ Zugriff auf **Name, E-Mail, Adresse** aktivieren
-   (sonst sind E-Mail-Adressen leer).
-4. Version veröffentlichen und die App in deinem Shop **installieren**.
-5. In den App-Einstellungen **Client-ID** und **Client-Secret** kopieren.
+Die App **„E-Book-Versand“** (Client-ID `2989f2ac42fc81043bc3966a116cb719`,
+Berechtigungen `read_orders`, `write_orders`) ist schon im Dev Dashboard der
+Organisation Eveom™ angelegt:
+https://dev.shopify.com/dashboard/114010597/apps/436981071873
+
+Noch zu tun:
+
+1. App im Shop installieren:
+   https://admin.shopify.com/store/cd7d0a-1c/oauth/install?client_id=2989f2ac42fc81043bc3966a116cb719
+2. Im Dev Dashboard bei der App den Zugriff auf **geschützte Kundendaten**
+   (Name, E-Mail, Adresse) freigeben – sonst darf die App keine Bestellungen lesen.
+3. In den App-Einstellungen das **Client-Secret** kopieren (für Schritt C).
 
 Hast du schon eine ältere Custom App mit Admin-API-Token (`shpat_…`), reicht
 stattdessen das Secret `SHOPIFY_ACCESS_TOKEN` (gleiche Scopes nötig).
@@ -92,16 +97,15 @@ den GoDaddy oft nicht gibt).
 ### C. GitHub-Secrets eintragen
 
 https://github.com/brahimkhaleel818-prog/claude-projekt/settings/secrets/actions
-→ **New repository secret** – nur diese drei:
+→ **New repository secret** – nur diese zwei:
 
 | Secret | Wert |
 |---|---|
-| `SHOPIFY_CLIENT_ID` | aus Schritt A |
-| `SHOPIFY_CLIENT_SECRET` | aus Schritt A |
+| `SHOPIFY_CLIENT_SECRET` | Client-Secret der App „E-Book-Versand“ (Dev Dashboard → App → Einstellungen) |
 | `SMTP_PASS` | Passwort von `info@eveom.health` |
 
 Optional: `MAIL_BCC` (deine Adresse, wenn du eine Kopie jeder Mail willst),
-`MAIL_REPLY_TO`. Alles andere (Shop, Absender, Server) steht in `config.json`
+`MAIL_REPLY_TO`. Alles andere (Shop, Client-ID der App, Absender, Server) steht in `config.json`
 und kann dort geändert werden.
 
 Solange Secrets fehlen, schreibt der Lauf nur „Noch nicht eingerichtet …“ ins
@@ -153,5 +157,5 @@ Der 10-Minuten-Lauf bleibt als Sicherheitsnetz aktiv.
 cd ebook-automation
 npm ci
 npm test                                   # Tests
-SHOPIFY_CLIENT_ID=… SHOPIFY_CLIENT_SECRET=… npm run dry-run
+SHOPIFY_CLIENT_SECRET=… npm run dry-run
 ```
