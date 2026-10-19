@@ -10,12 +10,12 @@
     "msTenantId": "5d586993-3248-4c0a-9771-9b673d963fc9",
     "msClientId": "48203263-eece-4c74-8134-cfb7829c1ba9"
   },
-  "modus": "test",
+  "modus": "live",
   "testEmpfaenger": "ibokhatari@gmail.com",
   "triggerProductIds": [
     "gid://shopify/Product/16055469310284"
   ],
-  "sendOrdersCreatedAfter": "2026-10-19T00:00:00+02:00",
+  "sendOrdersCreatedAfter": "2026-10-19T02:14:35+02:00",
   "lookbackDays": 3,
   "sentTag": "ebook-versendet",
   "defaultLanguage": "en",

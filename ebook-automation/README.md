@@ -29,8 +29,8 @@ In `config.json` steht `"modus"`:
 | Modus | Was passiert |
 |---|---|
 | `"aus"` | Nichts wird verschickt. |
-| `"test"` (aktuell) | Jede E-Mail geht **nur an `testEmpfaenger`** (z. B. deine Gmail-Adresse) – genau so, wie der Kunde sie bekäme. Kunden bekommen nichts. Die Bestellung bekommt den Tag `ebook-test`, damit jede nur einmal getestet wird. |
-| `"live"` | Die E-Mails gehen an die Kunden. |
+| `"test"` | Jede E-Mail geht **nur an `testEmpfaenger`** (z. B. deine Gmail-Adresse) – genau so, wie der Kunde sie bekäme. Kunden bekommen nichts. Die Bestellung bekommt den Tag `ebook-test`, damit jede nur einmal getestet wird. |
+| `"live"` (aktuell) | Die E-Mails gehen an die Kunden. |
 
 ## Länder → Sprache
 
