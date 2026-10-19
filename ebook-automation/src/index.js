@@ -132,7 +132,8 @@ export async function deliverEbook(order, { config, graphql, mailer, dryRun, tes
     }
     if (testMode) {
       // Jede Bestellung nur einmal als Test – der echte Versand ("live") folgt trotzdem.
-      await mailer.send({ to: config.testEmpfaenger, ...mail, subject: `[TEST ${order.name}] ${mail.subject}` });
+      // Genau die Mail, die der Kunde bekäme – nur an den Testempfänger.
+      await mailer.send({ to: config.testEmpfaenger, ...mail });
       await tagOrder(graphql, order.id, [TEST_TAG]);
       console.log(`✓ ${label}: Test-Mail an Testempfänger verschickt (Kunde bekommt nichts)`);
       return true;
