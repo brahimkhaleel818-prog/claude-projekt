@@ -111,3 +111,46 @@ export async function tagOrder(graphql, orderId, tags) {
   const errors = data.tagsAdd.userErrors;
   if (errors.length) throw new Error(`Tag konnte nicht gesetzt werden: ${errors.map((e) => e.message).join('; ')}`);
 }
+
+const ORDERS_BY_QUERY = `
+  query OrdersByQuery($query: String!, $after: String) {
+    orders(first: 100, after: $after, query: $query, sortKey: CREATED_AT, reverse: true) {
+      pageInfo { hasNextPage endCursor }
+      nodes { ${ORDER_FIELDS} }
+    }
+  }
+`;
+
+async function searchOrders(graphql, query) {
+  const orders = [];
+  let after = null;
+  do {
+    const data = await graphql(ORDERS_BY_QUERY, { query, after });
+    orders.push(...data.orders.nodes);
+    after = data.orders.pageInfo.hasNextPage ? data.orders.pageInfo.endCursor : null;
+  } while (after);
+  return orders;
+}
+
+const orderNumber = (name) => Number(String(name).replace(/\D/g, ''));
+
+// Findet Bestellungen per Nummer (#213699) und Bereich (#213600-#213699).
+// Shopify kann nicht nach Nummernbereichen suchen, daher werden Bereiche über
+// alle lesbaren Bestellungen (die letzten 60 Tage) gefiltert.
+export async function fetchOrdersBySelection(graphql, { numbers, ranges }) {
+  const found = new Map();
+  for (let i = 0; i < numbers.length; i += 25) {
+    const batch = numbers.slice(i, i + 25);
+    const query = batch.map((n) => `name:'#${n}'`).join(' OR ');
+    for (const order of await searchOrders(graphql, query)) {
+      if (batch.includes(orderNumber(order.name))) found.set(order.id, order);
+    }
+  }
+  if (ranges.length) {
+    for (const order of await searchOrders(graphql, '')) {
+      const n = orderNumber(order.name);
+      if (ranges.some(([from, to]) => n >= from && n <= to)) found.set(order.id, order);
+    }
+  }
+  return [...found.values()].sort((a, b) => orderNumber(a.name) - orderNumber(b.name));
+}

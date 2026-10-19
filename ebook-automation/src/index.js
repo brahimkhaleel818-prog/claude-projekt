@@ -77,7 +77,7 @@ export function missingSecrets(env, dryRun) {
 
 // Liest Einstellungen und meldet sich bei Shopify an. Gibt { message } zurück,
 // wenn (noch) nichts verschickt werden soll.
-export async function setup(processEnv, { dryRun = false } = {}) {
+export async function setup(processEnv, { dryRun = false, ignoreModus = false } = {}) {
   const config = await loadConfig();
   const env = resolveEnv(processEnv, config);
 
@@ -87,7 +87,7 @@ export async function setup(processEnv, { dryRun = false } = {}) {
   if (missing.length) return { message: `Noch nicht eingerichtet – bitte diese Secrets anlegen: ${missing.join(', ')}` };
 
   // modus "aus": nichts tun, "test": alles nur an testEmpfaenger, "live": an Kunden
-  if (config.modus === 'aus') return { message: 'Versand ist ausgeschaltet (modus "aus" in config.json).' };
+  if (config.modus === 'aus' && !ignoreModus) return { message: 'Versand ist ausgeschaltet (modus "aus" in config.json).' };
   const testMode = config.modus === 'test';
   if (testMode && !config.testEmpfaenger) throw new Error('modus "test" braucht "testEmpfaenger" in config.json');
 

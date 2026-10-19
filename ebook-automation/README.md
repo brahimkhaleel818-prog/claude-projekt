@@ -156,6 +156,35 @@ Shopify meldet jede bezahlte Bestellung sofort (Webhook `orders/paid` der App
 Der 10-Minuten-Lauf auf GitHub bleibt als Sicherheitsnetz: Fällt Vercel einmal
 aus, holt er die Bestellung nach. Dank der Tags wird nie doppelt verschickt.
 
+## Info-Mails an ausgewählte Bestellungen
+
+Für Infos zur Bestellung (z. B. Versand-Update, Anleitung): Du nennst die
+Bestellnummern, jeder Kunde bekommt die Mail in der Sprache seines Landes –
+im selben Eveom-Design, Unterschrift wie beim E-Book.
+
+**Vorlage anlegen:** Ordner `info-mails/<name>/` mit `de.html`, `nl.html`,
+`fr.html`, `en.html` (Vorbild: `info-mails/beispiel/`). Betreff steht im
+`<title>`, Platzhalter wie beim E-Book (`{{Vorname}}`, `{{Bestellnummer}}`,
+`{{Absenderin}}` …).
+
+**Versand starten (ohne Claude):** GitHub → **Actions → „Info-Mail senden“ →
+Run workflow**:
+
+| Feld | Beispiel |
+|---|---|
+| Vorlage | `beispiel` |
+| Bestellungen | `#213600-#213699, #213705` (einzeln, Bereiche oder gemischt, auch „213600 bis 213650“) |
+| Modus | `vorschau` → nur anzeigen, wer welche Mail bekäme · `test` → je Sprache ein Beispiel an den Testempfänger · `senden` → an die Kunden |
+
+- Immer erst `vorschau`, dann `test`, dann `senden`.
+- Gesendet wird parallel, aber höchstens ~28 Mails pro Minute (Microsoft
+  erlaubt pro Postfach 30/Minute und 10.000 Empfänger/Tag). 100 Mails ≈ 4 Minuten.
+- Jede Bestellung bekommt den Tag `info-<name>` und wird bei derselben Vorlage
+  nie zweimal angeschrieben. Stornierte Bestellungen werden übersprungen.
+- Shopify gibt der App nur Bestellungen der letzten 60 Tage heraus.
+- Nur für Infos zur Bestellung gedacht – Werbung/Newsletter brauchen laut
+  DSGVO die Einwilligung des Kunden.
+
 ## Wichtig zu wissen
 
 - Die PDF-Adressen in `config.json` sind öffentlich (öffentliches Repo) – wer

@@ -1,0 +1,50 @@
+name: Info-Mail senden
+
+# Starten unter "Actions" → "Info-Mail senden" → "Run workflow".
+# Erklärung: ebook-automation/README.md, Abschnitt "Info-Mails".
+on:
+  workflow_dispatch:
+    inputs:
+      vorlage:
+        description: 'Vorlage (Ordner in ebook-automation/info-mails), z. B. beispiel'
+        required: true
+        type: string
+      bestellungen:
+        description: 'Bestellnummern, z. B. #213600-#213699, #213705'
+        required: true
+        type: string
+      modus:
+        description: 'vorschau = nur anzeigen, test = Beispiele an den Testempfänger, senden = an die Kunden'
+        type: choice
+        options: [vorschau, test, senden]
+        default: vorschau
+
+concurrency:
+  group: info-mail
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  senden:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    defaults:
+      run:
+        working-directory: ebook-automation
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ebook-automation/package-lock.json
+      - run: npm ci --omit=dev
+      - run: node src/info.js
+        env:
+          VORLAGE: ${{ inputs.vorlage }}
+          BESTELLUNGEN: ${{ inputs.bestellungen }}
+          MODUS: ${{ inputs.modus }}
+          SHOPIFY_CLIENT_SECRET: ${{ secrets.SHOPIFY_CLIENT_SECRET }}
+          MS_CLIENT_SECRET: ${{ secrets.MS_CLIENT_SECRET }}
