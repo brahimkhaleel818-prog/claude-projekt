@@ -16,11 +16,13 @@ import { createMailer } from './mailer.js';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SENDABLE_STATUSES = new Set(['PAID', 'PARTIALLY_REFUNDED']);
 const TEST_TAG = 'ebook-test';
+// Bestellungen ohne E-Mail-Adresse (z. B. nur mit Telefonnummer bestellt)
+const NO_EMAIL_TAG = 'ebook-keine-email';
 
 export function needsEbook(order, config) {
   if (order.cancelledAt) return false;
   if (!SENDABLE_STATUSES.has(order.displayFinancialStatus)) return false;
-  if (order.tags.includes(config.sentTag)) return false;
+  if (order.tags.includes(config.sentTag) || order.tags.includes(NO_EMAIL_TAG)) return false;
   if (config.modus === 'test' && order.tags.includes(TEST_TAG)) return false;
   if (new Date(order.createdAt) < new Date(config.sendOrdersCreatedAfter)) return false;
   if (!config.triggerProductIds.length) return true;
@@ -120,7 +122,12 @@ export async function deliverEbook(order, { config, graphql, mailer, dryRun, tes
   const { country, language } = pickLanguage(order, config);
   const label = `${order.name} (${country || 'Land unbekannt'} → ${language})`;
   try {
-    if (!order.email) throw new Error('Bestellung hat keine E-Mail-Adresse');
+    if (!order.email) {
+      // Kein Fehler, nur nicht per Mail erreichbar – markieren, damit es nicht bei jedem Lauf erneut versucht wird.
+      if (!dryRun) await tagOrder(graphql, order.id, [NO_EMAIL_TAG]);
+      console.log(`– ${label}: keine E-Mail-Adresse (nur Telefon?) – als ${NO_EMAIL_TAG} markiert`);
+      return true;
+    }
     const settings = config.languages[language];
     const template = await readFile(path.join(ROOT, settings.template), 'utf8');
     const mail = renderTemplate(template, templateVars(order, config, language));

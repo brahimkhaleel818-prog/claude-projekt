@@ -43,6 +43,7 @@ test('Nur bezahlte, nicht stornierte, noch nicht bediente Bestellungen mit E-Boo
   assert.equal(needsEbook(order({ displayFinancialStatus: 'PENDING' }), config), false);
   assert.equal(needsEbook(order({ cancelledAt: '2030-01-02T00:00:00Z' }), config), false);
   assert.equal(needsEbook(order({ tags: [config.sentTag] }), config), false);
+  assert.equal(needsEbook(order({ tags: ['ebook-keine-email'] }), config), false);
   assert.equal(needsEbook(order({ tags: ['ebook-test'] }), { ...config, modus: 'test' }), false);
   assert.equal(needsEbook(order({ tags: ['ebook-test'] }), { ...config, modus: 'live' }), true);
   assert.equal(needsEbook(order({ createdAt: '2020-01-01T00:00:00Z' }), config), false);

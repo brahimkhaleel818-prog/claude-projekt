@@ -194,6 +194,10 @@ Run workflow**:
 - GitHub pausiert geplante Workflows in öffentlichen Repos nach **60 Tagen ohne
   Commit**. Du bekommst vorher eine Mail von GitHub; ein Klick auf „Enable
   workflow“ reicht. Der Sofortversand über Vercel ist davon nicht betroffen.
+- Bestellungen ohne E-Mail-Adresse (Kunde hat nur mit Telefonnummer bestellt)
+  bekommen den Tag `ebook-keine-email` und werden übersprungen. Trägst du
+  später eine E-Mail nach: Tag entfernen, dann geht das E-Book beim nächsten
+  Lauf raus (innerhalb von `lookbackDays`).
 - Bestellung soll ein E-Book nochmal bekommen? Tag `ebook-versendet` in Shopify
   entfernen – beim nächsten Lauf geht es erneut raus (innerhalb von `lookbackDays`).
 
