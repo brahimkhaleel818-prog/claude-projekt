@@ -67,3 +67,13 @@ test('Zahlungserinnerung: Betrag je Sprache formatiert, Button mit Zahlungslink'
   assert.ok(mail.html.includes('>Nu betalen</a>'));
   assert.ok(mail.text.includes('Openstaand: € 89,90') || mail.text.includes('Openstaand: €\u00a089,90'));
 });
+
+test('Anrede, Gruß und Absenderin lassen sich pro Auftrag festlegen', async () => {
+  const config = await loadConfig();
+  const vars = templateVars({ name: '#1', billingAddress: { firstName: 'Valentina', countryCodeV2: 'NL' } }, config, 'nl');
+  const mail = renderTemplate(buildInfoHtml('nl', { betreff: 'x', text: 'y', anrede: 'Beste {{Vorname}},', gruss: 'Met vriendelijke groet,', absenderin: 'Sophie van Dijk' }), vars);
+  assert.ok(mail.text.includes('Beste Valentina,'));
+  assert.ok(mail.text.includes('Met vriendelijke groet,\n\nSophie van Dijk\nTeam Eveom™'));
+  const noName = renderTemplate(buildInfoHtml('nl', { betreff: 'x', text: 'y', anrede: 'Beste {{Vorname}},' }, { withName: false }), vars);
+  assert.ok(noName.text.includes('Beste klant,'));
+});

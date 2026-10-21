@@ -7,7 +7,9 @@
 //     "mails": {
 //       "de": { "betreff": "…", "text": "Absatz 1\n\nAbsatz 2 mit {{Bestellnummer}}",
 //               "button": { "text": "Jetzt bezahlen" },     // optional, Link: {{Zahlungslink}}
-//               "schluss": "Text unter dem Button" },       // optional
+//               "schluss": "Text unter dem Button",         // optional
+//               "anrede": "Beste {{Vorname}},", "gruss": "Met vriendelijke groet,",
+//               "absenderin": "Sophie van Dijk" },           // optional, sonst Standard
 //       "nl": { … }, "fr": { … }, "en": { … }
 //     }
 //   }
@@ -90,8 +92,9 @@ function toParagraphs(text) {
     .join('\n');
 }
 
-export function buildInfoHtml(language, { betreff, text, button, schluss }, { withName = true } = {}) {
-  const [named, unnamed] = GREETING[language] || GREETING.en;
+export function buildInfoHtml(language, { betreff, text, button, schluss, anrede, gruss, absenderin }, { withName = true } = {}) {
+  const [defaultNamed, unnamed] = GREETING[language] || GREETING.en;
+  const named = anrede ? escapeHtml(anrede) : defaultNamed;
   const paragraphs = toParagraphs(text);
   return `<!DOCTYPE html>
 <html lang="${language}">
@@ -116,8 +119,8 @@ ${button ? `            <p style="margin:24px 0;text-align:center;">
               <a href="${escapeHtml(button.link || '{{Zahlungslink}}')}" style="display:inline-block;background:#7D000D;color:#ffffff;text-decoration:none;font-weight:bold;padding:14px 28px;border-radius:8px;">${escapeHtml(button.text)}</a>
             </p>` : ''}
 ${toParagraphs(schluss)}
-            <p>${CLOSING[language] || CLOSING.en}</p>
-            <p>{{Absenderin}}<br>Team Eveom™</p>
+            <p>${gruss ? escapeHtml(gruss) : CLOSING[language] || CLOSING.en}</p>
+            <p>${absenderin ? escapeHtml(absenderin) : '{{Absenderin}}'}<br>Team Eveom™</p>
           </td>
         </tr>
       </table>
