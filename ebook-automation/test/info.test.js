@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { parseSelection, needsInfoMail, runPaced, buildInfoHtml } from '../src/info.js';
+import { parseSelection, needsInfoMail, runPaced, buildInfoHtml, infoVars } from '../src/info.js';
 import { renderTemplate } from '../src/template.js';
 import { loadConfig, templateVars } from '../src/index.js';
 
@@ -54,4 +54,16 @@ test('Freitext wird zur Mail im Eveom-Design mit Anrede und Unterschrift', async
   assert.ok(mail.text.includes(`Herzliche Grüße\n\n${config.languages.de.absenderin}\nTeam Eveom™`));
   const noName = renderTemplate(buildInfoHtml('fr', { betreff: 'x', text: 'y' }, { withName: false }), vars);
   assert.ok(noName.text.startsWith('EVEOM\n\nBonjour,\n'));
+});
+
+test('Zahlungserinnerung: Betrag je Sprache formatiert, Button mit Zahlungslink', async () => {
+  const config = await loadConfig();
+  const order = { name: '#1001', billingAddress: { firstName: 'Sanne', countryCodeV2: 'NL' }, totalOutstandingSet: { shopMoney: { amount: '89.9', currencyCode: 'EUR' } }, paymentCollectionDetails: { additionalPaymentCollectionUrl: 'https://www.eveom.health/pay/1?secret=a&b=c' } };
+  const vars = { ...templateVars(order, config, 'nl'), ...infoVars(order, 'nl') };
+  assert.equal(vars.Betrag.replace(/\s/g, ' '), '€ 89,90');
+  assert.equal(infoVars(order, 'de').Betrag.replace(/\s/g, ' '), '89,90 €');
+  const mail = renderTemplate(buildInfoHtml('nl', { betreff: 'Betaling {{Bestellnummer}}', text: 'Openstaand: {{Betrag}}', button: { text: 'Nu betalen' } }), vars);
+  assert.ok(mail.html.includes('href="https://www.eveom.health/pay/1?secret=a&amp;b=c"'));
+  assert.ok(mail.html.includes('>Nu betalen</a>'));
+  assert.ok(mail.text.includes('Openstaand: € 89,90') || mail.text.includes('Openstaand: €\u00a089,90'));
 });

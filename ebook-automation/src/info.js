@@ -5,11 +5,14 @@
 //     "bestellungen": "#213700-#213720, #213739",
 //     "modus": "senden",                      // vorschau | test | senden
 //     "mails": {
-//       "de": { "betreff": "…", "text": "Absatz 1\n\nAbsatz 2 mit {{Bestellnummer}}" },
+//       "de": { "betreff": "…", "text": "Absatz 1\n\nAbsatz 2 mit {{Bestellnummer}}",
+//               "button": { "text": "Jetzt bezahlen" },     // optional, Link: {{Zahlungslink}}
+//               "schluss": "Text unter dem Button" },       // optional
 //       "nl": { … }, "fr": { … }, "en": { … }
 //     }
 //   }
 //
+// Platzhalter: {{Vorname}}, {{Bestellnummer}}, {{Betrag}} (offen), {{Zahlungslink}}.
 // Jeder Kunde bekommt den Text in der Sprache seines Landes, im Eveom-Design mit
 // Anrede und Unterschrift. Versendet wird parallel, aber nicht schneller als
 // Microsoft erlaubt (30 Mails/Minute). Jede bediente Bestellung bekommt den Tag
@@ -60,6 +63,17 @@ const GREETING = {
   fr: ['Bonjour {{Vorname}},', 'Bonjour,'],
   en: ['Hello {{Vorname}},', 'Hello,'],
 };
+const LOCALE = { de: 'de-DE', nl: 'nl-NL', fr: 'fr-FR', en: 'en-IE' };
+
+// Zusätzliche Platzhalter für Info-Mails: {{Betrag}} (offener Betrag) und {{Zahlungslink}}.
+export function infoVars(order, language) {
+  const money = order.totalOutstandingSet?.shopMoney;
+  const betrag = money
+    ? new Intl.NumberFormat(LOCALE[language] || 'en-IE', { style: 'currency', currency: money.currencyCode }).format(Number(money.amount))
+    : '';
+  return { Betrag: betrag, Zahlungslink: order.paymentCollectionDetails?.additionalPaymentCollectionUrl || '' };
+}
+
 const CLOSING = { de: 'Herzliche Grüße', nl: 'Hartelijke groet,', fr: 'Bien cordialement,', en: 'Warm regards,' };
 
 function escapeHtml(value) {
@@ -67,13 +81,18 @@ function escapeHtml(value) {
 }
 
 // Baut aus Betreff + Freitext eine Mail im Eveom-Design (wie die E-Book-Mail).
-export function buildInfoHtml(language, { betreff, text }, { withName = true } = {}) {
-  const [named, unnamed] = GREETING[language] || GREETING.en;
-  const paragraphs = String(text)
+function toParagraphs(text) {
+  return String(text || '')
     .trim()
     .split(/\n\s*\n/)
+    .filter(Boolean)
     .map((p) => `            <p>${escapeHtml(p.trim()).replace(/\n/g, '<br>')}</p>`)
     .join('\n');
+}
+
+export function buildInfoHtml(language, { betreff, text, button, schluss }, { withName = true } = {}) {
+  const [named, unnamed] = GREETING[language] || GREETING.en;
+  const paragraphs = toParagraphs(text);
   return `<!DOCTYPE html>
 <html lang="${language}">
 <head>
@@ -93,6 +112,10 @@ export function buildInfoHtml(language, { betreff, text }, { withName = true } =
           <td style="padding:8px 32px 28px;font-size:16px;line-height:1.6;">
             <p>${withName ? named : unnamed}</p>
 ${paragraphs}
+${button ? `            <p style="margin:24px 0;text-align:center;">
+              <a href="${escapeHtml(button.link || '{{Zahlungslink}}')}" style="display:inline-block;background:#7D000D;color:#ffffff;text-decoration:none;font-weight:bold;padding:14px 28px;border-radius:8px;">${escapeHtml(button.text)}</a>
+            </p>` : ''}
+${toParagraphs(schluss)}
             <p>${CLOSING[language] || CLOSING.en}</p>
             <p>{{Absenderin}}<br>Team Eveom™</p>
           </td>
@@ -171,7 +194,12 @@ export async function sendInfoMails(file, { modus: modusOverride } = {}, process
       console.log(`  – ${label}: übersprungen, ${check.reason}`);
       continue;
     }
-    const vars = templateVars(order, config, language);
+    const vars = { ...templateVars(order, config, language), ...infoVars(order, language) };
+    const usesLink = JSON.stringify(auftrag.mails[language]).includes('Zahlungslink') || auftrag.mails[language].button;
+    if (usesLink && !vars.Zahlungslink) {
+      console.log(`  – ${label}: übersprungen, kein Zahlungslink (schon bezahlt?)`);
+      continue;
+    }
     const mail = renderTemplate(buildInfoHtml(language, auftrag.mails[language], { withName: Boolean(vars.Vorname) }), vars);
     jobs.push({ order, language, label, mail });
   }

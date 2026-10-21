@@ -112,11 +112,18 @@ export async function tagOrder(graphql, orderId, tags) {
   if (errors.length) throw new Error(`Tag konnte nicht gesetzt werden: ${errors.map((e) => e.message).join('; ')}`);
 }
 
+// Für Info-Mails zusätzlich offener Betrag und Zahlungslink (eigene Domain).
+const INFO_ORDER_FIELDS = `
+  ${ORDER_FIELDS}
+  totalOutstandingSet { shopMoney { amount currencyCode } }
+  paymentCollectionDetails { additionalPaymentCollectionUrl }
+`;
+
 const ORDERS_BY_QUERY = `
   query OrdersByQuery($query: String!, $after: String) {
     orders(first: 100, after: $after, query: $query, sortKey: CREATED_AT, reverse: true) {
       pageInfo { hasNextPage endCursor }
-      nodes { ${ORDER_FIELDS} }
+      nodes { ${INFO_ORDER_FIELDS} }
     }
   }
 `;
