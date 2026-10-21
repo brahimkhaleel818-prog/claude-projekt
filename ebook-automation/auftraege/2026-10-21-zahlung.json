@@ -26,5 +26,6 @@
       "text": "we have already contacted you several times by email about your order {{Bestellnummer}}, but unfortunately we have not heard back from you so far.\n\nYour order is still packed and ready in our warehouse. However, we have not yet received the outstanding amount of {{Betrag}}.\n\nWe therefore kindly but urgently ask you to let us know within 14 days how you would like to proceed:\n\n1. You would like to receive your order\nPlease transfer {{Betrag}} to:\nAccount holder: Ibrahim Khaleel Mirza\nIBAN: DE63 1001 0178 7942 7305 53\nReference: {{Bestellnummer}}\n\n2. You would like to cancel your order\nSimply reply to this email with the word “cancel”.\n\nAn order is a binding contract. If we receive neither payment nor a response within 14 days, we will unfortunately have to send you an official payment reminder, which will include reminder fees.",
       "absenderin": "Sophie van Dijk"
     }
-  }
+  },
+  "versuch": 2
 }
