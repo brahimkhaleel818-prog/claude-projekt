@@ -1,0 +1,10 @@
+{
+  "bestellungen": "#213749, #213759",
+  "modus": "vorschau",
+  "mails": {
+    "de": { "betreff": "Funktionstest {{Bestellnummer}}", "text": "Funktionstest – wird nicht verschickt." },
+    "nl": { "betreff": "Functietest {{Bestellnummer}}", "text": "Functietest – wordt niet verzonden." },
+    "fr": { "betreff": "Test {{Bestellnummer}}", "text": "Test – ne sera pas envoyé." },
+    "en": { "betreff": "Function test {{Bestellnummer}}", "text": "Function test – will not be sent." }
+  }
+}
