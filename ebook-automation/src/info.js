@@ -132,6 +132,11 @@ ${toParagraphs(schluss)}
 `;
 }
 
+// Nur Initialen ("h", "J.H.") ergeben eine komische Anrede – dann "Beste klant," usw.
+export function hasRealName(firstName) {
+  return /\p{L}{2,}/u.test(String(firstName || ''));
+}
+
 export async function loadAuftrag(file, config) {
   const name = path.basename(file).replace(/\.json$/, '');
   if (!/^[a-z0-9-]+$/.test(name)) throw new Error(`Auftragsname "${name}" bitte nur mit a-z, 0-9 und -`);
@@ -203,7 +208,7 @@ export async function sendInfoMails(file, { modus: modusOverride } = {}, process
       console.log(`  – ${label}: übersprungen, kein Zahlungslink (schon bezahlt?)`);
       continue;
     }
-    const mail = renderTemplate(buildInfoHtml(language, auftrag.mails[language], { withName: Boolean(vars.Vorname) }), vars);
+    const mail = renderTemplate(buildInfoHtml(language, auftrag.mails[language], { withName: hasRealName(vars.Vorname) }), vars);
     jobs.push({ order, language, label, mail });
   }
 

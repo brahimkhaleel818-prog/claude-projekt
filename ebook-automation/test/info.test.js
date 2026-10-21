@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { parseSelection, needsInfoMail, runPaced, buildInfoHtml, infoVars } from '../src/info.js';
+import { parseSelection, needsInfoMail, runPaced, buildInfoHtml, infoVars, hasRealName } from '../src/info.js';
 import { renderTemplate } from '../src/template.js';
 import { loadConfig, templateVars } from '../src/index.js';
 
@@ -76,4 +76,9 @@ test('Anrede, Gruß und Absenderin lassen sich pro Auftrag festlegen', async () 
   assert.ok(mail.text.includes('Met vriendelijke groet,\n\nSophie van Dijk\nTeam Eveom™'));
   const noName = renderTemplate(buildInfoHtml('nl', { betreff: 'x', text: 'y', anrede: 'Beste {{Vorname}},' }, { withName: false }), vars);
   assert.ok(noName.text.includes('Beste klant,'));
+});
+
+test('Initialen statt Vorname führen zur allgemeinen Anrede', () => {
+  for (const name of ['Marianne', 'Ans en ad', 'Maria Isabel', 'Joop']) assert.equal(hasRealName(name), true, name);
+  for (const name of ['h', 'J.H.', '', null, 'A. B.']) assert.equal(hasRealName(name), false, String(name));
 });

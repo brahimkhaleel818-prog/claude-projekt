@@ -1,0 +1,30 @@
+{
+  "bestellungen": "#213559, #213529, #213389, #213379, #213249, #213049, #212709, #212309, #212279, #212129, #212059, #212049, #212009, #211879, #211849",
+  "modus": "senden",
+  "mails": {
+    "nl": {
+      "betreff": "Dringend: wij hebben uw reactie nodig over bestelling {{Bestellnummer}}",
+      "anrede": "Beste {{Vorname}},",
+      "text": "Wij hebben u de afgelopen tijd al meerdere keren per e-mail benaderd over uw bestelling {{Bestellnummer}}, maar helaas hebben wij tot nu toe nog niets van u gehoord.\n\nUw bestelling ligt nog steeds ingepakt en wel klaar in ons magazijn. Het openstaande bedrag van {{Betrag}} hebben wij echter nog niet ontvangen.\n\nWij vragen u daarom vriendelijk maar dringend om ons binnen 14 dagen te laten weten wat u wilt:\n\n1. U wilt uw bestelling nog ontvangen\nMaak dan het bedrag van {{Betrag}} over naar:\nRekeninghouder: Ibrahim Khaleel Mirza\nIBAN: DE63 1001 0178 7942 7305 53\nOmschrijving / betalingskenmerk: {{Bestellnummer}}\n\n2. U wilt uw bestelling annuleren\nBeantwoord dan simpelweg deze e-mail met het woord „annuleren“.\n\nLet op: Wij zijn een Duits bedrijf. Daarom begint ons IBAN met „DE“ en is het iets langer dan een Nederlands IBAN — dat klopt dus gewoon. De overschrijving werkt via SEPA precies zoals een gewone Nederlandse overboeking en is kosteloos.\n\nEen bestelling is een bindende overeenkomst. Ontvangen wij binnen 14 dagen geen betaling en geen reactie van u, dan zijn wij helaas genoodzaakt een officiële betalingsherinnering te versturen, waarbij aanmaningskosten in rekening worden gebracht.",
+      "gruss": "Met vriendelijke groet,",
+      "absenderin": "Sophie van Dijk"
+    },
+    "de": {
+      "betreff": "Dringend: Wir benötigen Ihre Rückmeldung zu Ihrer Bestellung {{Bestellnummer}}",
+      "anrede": "Hallo {{Vorname}},",
+      "text": "wir haben Sie in den letzten Wochen bereits mehrfach per E-Mail zu Ihrer Bestellung {{Bestellnummer}} kontaktiert, leider aber bisher keine Antwort von Ihnen erhalten.\n\nIhre Bestellung liegt weiterhin fertig verpackt in unserem Lager. Den offenen Betrag von {{Betrag}} haben wir jedoch noch nicht erhalten.\n\nWir bitten Sie daher freundlich, aber dringend, uns innerhalb von 14 Tagen mitzuteilen, wie Sie fortfahren möchten:\n\n1. Sie möchten Ihre Bestellung erhalten\nÜberweisen Sie bitte {{Betrag}} an:\nKontoinhaber: Ibrahim Khaleel Mirza\nIBAN: DE63 1001 0178 7942 7305 53\nVerwendungszweck: {{Bestellnummer}}\n\n2. Sie möchten Ihre Bestellung stornieren\nAntworten Sie einfach mit dem Wort „stornieren“ auf diese E-Mail.\n\nEine Bestellung ist ein verbindlicher Vertrag. Erhalten wir innerhalb von 14 Tagen weder eine Zahlung noch eine Rückmeldung, müssen wir Ihnen leider eine offizielle Zahlungserinnerung schicken, bei der Mahngebühren anfallen.",
+      "gruss": "Mit freundlichen Grüßen",
+      "absenderin": "Sophie van Dijk"
+    },
+    "fr": {
+      "betreff": "Urgent : nous avons besoin de votre réponse concernant la commande {{Bestellnummer}}",
+      "text": "nous vous avons déjà contacté plusieurs fois par e-mail au sujet de votre commande {{Bestellnummer}}, mais nous n’avons malheureusement reçu aucune réponse à ce jour.\n\nVotre commande est toujours emballée et prête dans notre entrepôt. Nous n’avons toutefois pas encore reçu le montant de {{Betrag}}.\n\nNous vous prions donc de nous indiquer sous 14 jours comment vous souhaitez procéder :\n\n1. Vous souhaitez recevoir votre commande\nVeuillez virer {{Betrag}} à :\nTitulaire du compte : Ibrahim Khaleel Mirza\nIBAN : DE63 1001 0178 7942 7305 53\nRéférence : {{Bestellnummer}}\n\n2. Vous souhaitez annuler votre commande\nRépondez simplement « annuler » à cet e-mail.\n\nUne commande constitue un contrat ferme. Sans paiement ni réponse de votre part sous 14 jours, nous serons malheureusement contraints de vous envoyer un rappel officiel avec des frais de relance.",
+      "absenderin": "Sophie van Dijk"
+    },
+    "en": {
+      "betreff": "Urgent: we need your response regarding order {{Bestellnummer}}",
+      "text": "we have already contacted you several times by email about your order {{Bestellnummer}}, but unfortunately we have not heard back from you so far.\n\nYour order is still packed and ready in our warehouse. However, we have not yet received the outstanding amount of {{Betrag}}.\n\nWe therefore kindly but urgently ask you to let us know within 14 days how you would like to proceed:\n\n1. You would like to receive your order\nPlease transfer {{Betrag}} to:\nAccount holder: Ibrahim Khaleel Mirza\nIBAN: DE63 1001 0178 7942 7305 53\nReference: {{Bestellnummer}}\n\n2. You would like to cancel your order\nSimply reply to this email with the word “cancel”.\n\nAn order is a binding contract. If we receive neither payment nor a response within 14 days, we will unfortunately have to send you an official payment reminder, which will include reminder fees.",
+      "absenderin": "Sophie van Dijk"
+    }
+  }
+}
