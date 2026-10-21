@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { parseSelection, needsInfoMail, runPaced } from '../src/info.js';
+import { parseSelection, needsInfoMail, runPaced, buildInfoHtml } from '../src/info.js';
 import { renderTemplate } from '../src/template.js';
 import { loadConfig, templateVars } from '../src/index.js';
 
@@ -41,14 +41,17 @@ test('Versand läuft parallel, aber gebremst, und Fehler stoppen die anderen nic
   assert.ok(Date.now() - started >= 50, 'Abstand zwischen den Starts');
 });
 
-test('Beispiel-Vorlage gibt es in allen Sprachen mit Betreff und Unterschrift', async () => {
+test('Freitext wird zur Mail im Eveom-Design mit Anrede und Unterschrift', async () => {
   const config = await loadConfig();
-  const order = { name: '#1001', billingAddress: { firstName: 'Anna', countryCodeV2: 'DE' } };
-  for (const language of Object.keys(config.languages)) {
-    const source = await readFile(new URL(`../info-mails/beispiel/${language}.html`, import.meta.url), 'utf8');
-    const mail = renderTemplate(source, templateVars(order, config, language));
-    assert.ok(mail.subject.includes('#1001'), language);
-    assert.ok(!/\{\{/.test(mail.html), `${language}: nicht ersetzter Platzhalter`);
-    assert.ok(mail.text.includes(`${config.languages[language].absenderin}\nTeam Eveom™`), language);
-  }
+  const order = { name: '#1001', billingAddress: { firstName: 'Anna <b>', countryCodeV2: 'DE' } };
+  const vars = templateVars(order, config, 'de');
+  const html = buildInfoHtml('de', { betreff: 'Ihre Bestellung {{Bestellnummer}}', text: 'Erster Absatz.\n\nZweiter <Absatz>\nmit Umbruch.' });
+  const mail = renderTemplate(html, vars);
+  assert.equal(mail.subject, 'Ihre Bestellung #1001');
+  assert.ok(mail.html.includes('Hallo Anna &lt;b&gt;,'));
+  assert.ok(mail.html.includes('<p>Zweiter &lt;Absatz&gt;<br>mit Umbruch.</p>'));
+  assert.ok(mail.html.includes('#7D000D'));
+  assert.ok(mail.text.includes(`Herzliche Grüße\n\n${config.languages.de.absenderin}\nTeam Eveom™`));
+  const noName = renderTemplate(buildInfoHtml('fr', { betreff: 'x', text: 'y' }, { withName: false }), vars);
+  assert.ok(noName.text.startsWith('EVEOM\n\nBonjour,\n'));
 });

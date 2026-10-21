@@ -158,32 +158,42 @@ aus, holt er die Bestellung nach. Dank der Tags wird nie doppelt verschickt.
 
 ## Info-Mails an ausgewählte Bestellungen
 
-Für Infos zur Bestellung (z. B. Versand-Update, Anleitung): Du nennst die
-Bestellnummern, jeder Kunde bekommt die Mail in der Sprache seines Landes –
-im selben Eveom-Design, Unterschrift wie beim E-Book.
+Für einmalige Infos zur Bestellung (z. B. „noch nicht bezahlt“, „Lieferung
+verspätet“) – **ohne feste Vorlage**: Du sagst Claude, was los ist und welche
+Bestellungen es betrifft. Claude formuliert die Mail, übersetzt sie in DE,
+NL, FR und EN und legt einen **Auftrag** in `auftraege/<name>.json` an:
 
-**Vorlage anlegen:** Ordner `info-mails/<name>/` mit `de.html`, `nl.html`,
-`fr.html`, `en.html` (Vorbild: `info-mails/beispiel/`). Betreff steht im
-`<title>`, Platzhalter wie beim E-Book (`{{Vorname}}`, `{{Bestellnummer}}`,
-`{{Absenderin}}` …).
+```json
+{
+  "bestellungen": "#213700-#213720, #213739",
+  "modus": "senden",
+  "mails": {
+    "de": { "betreff": "Ihre Bestellung {{Bestellnummer}}", "text": "Absatz 1\n\nAbsatz 2" },
+    "nl": { "betreff": "…", "text": "…" },
+    "fr": { "betreff": "…", "text": "…" },
+    "en": { "betreff": "…", "text": "…" }
+  }
+}
+```
 
-**Versand starten (ohne Claude):** GitHub → **Actions → „Info-Mail senden“ →
-Run workflow**:
+Sobald die Datei in `main` landet, verschickt GitHub („Info-Mail senden“)
+automatisch – jeder Kunde in der Sprache seines Landes, im Eveom-Design, mit
+Anrede („Hallo {{Vorname}},“) und Unterschrift (Lena / Lotte / Chloé / Emily,
+Team Eveom™). Im Text darf `{{Bestellnummer}}` vorkommen.
 
-| Feld | Beispiel |
-|---|---|
-| Vorlage | `beispiel` |
-| Bestellungen | `#213600-#213699, #213705` (einzeln, Bereiche oder gemischt, auch „213600 bis 213650“) |
-| Modus | `vorschau` → nur anzeigen, wer welche Mail bekäme · `test` → je Sprache ein Beispiel an den Testempfänger · `senden` → an die Kunden |
-
-- Immer erst `vorschau`, dann `test`, dann `senden`.
-- Gesendet wird parallel, aber höchstens ~28 Mails pro Minute (Microsoft
-  erlaubt pro Postfach 30/Minute und 10.000 Empfänger/Tag). 100 Mails ≈ 4 Minuten.
-- Jede Bestellung bekommt den Tag `info-<name>` und wird bei derselben Vorlage
-  nie zweimal angeschrieben. Stornierte Bestellungen werden übersprungen.
-- Shopify gibt der App nur Bestellungen der letzten 60 Tage heraus.
-- Nur für Infos zur Bestellung gedacht – Werbung/Newsletter brauchen laut
-  DSGVO die Einwilligung des Kunden.
+- `modus`: `vorschau` (nur anzeigen) · `test` (je Sprache ein Beispiel an den
+  Testempfänger) · `senden` (an die Kunden). Datei ändern (z. B. von `test`
+  auf `senden`) startet den Versand erneut.
+- Bestellungen: einzeln, Bereiche oder gemischt („#213600-#213699, #213705“,
+  „213600 bis 213650“).
+- Parallel, aber höchstens ~28 Mails/Minute (Microsoft-Grenze 30/Minute,
+  10.000/Tag). 100 Mails ≈ 4 Minuten.
+- Jede Bestellung bekommt den Tag `info-<name>` – pro Auftrag nie doppelt.
+  Stornierte Bestellungen und solche ohne E-Mail werden übersprungen.
+- Nur Bestellungen der letzten 60 Tage. Nur für Infos zur Bestellung –
+  Werbung braucht laut DSGVO eine Einwilligung.
+- Achtung: Das Repository ist öffentlich – Auftragsdateien (Texte und
+  Bestellnummern, keine Kundendaten) sind für jeden lesbar.
 
 ## Wichtig zu wissen
 

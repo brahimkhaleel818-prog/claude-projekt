@@ -1,23 +1,22 @@
 name: Info-Mail senden
 
-# Starten unter "Actions" → "Info-Mail senden" → "Run workflow".
-# Erklärung: ebook-automation/README.md, Abschnitt "Info-Mails".
+# Startet automatisch, sobald eine Auftragsdatei in ebook-automation/auftraege/
+# neu hochgeladen oder geändert wird. Erklärung: ebook-automation/README.md,
+# Abschnitt "Info-Mails".
 on:
+  push:
+    branches: [main]
+    paths: ['ebook-automation/auftraege/*.json']
   workflow_dispatch:
     inputs:
-      vorlage:
-        description: 'Vorlage (Ordner in ebook-automation/info-mails), z. B. beispiel'
-        required: true
-        type: string
-      bestellungen:
-        description: 'Bestellnummern, z. B. #213600-#213699, #213705'
+      auftrag:
+        description: 'Auftragsdatei, z. B. auftraege/2026-10-21-zahlung.json'
         required: true
         type: string
       modus:
-        description: 'vorschau = nur anzeigen, test = Beispiele an den Testempfänger, senden = an die Kunden'
-        type: choice
-        options: [vorschau, test, senden]
-        default: vorschau
+        description: 'Leer = Modus aus der Datei. vorschau / test / senden'
+        type: string
+        default: ''
 
 concurrency:
   group: info-mail
@@ -35,16 +34,31 @@ jobs:
         working-directory: ebook-automation
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
           cache-dependency-path: ebook-automation/package-lock.json
       - run: npm ci --omit=dev
-      - run: node src/info.js
+      - name: Aufträge bestimmen
+        id: auftraege
         env:
-          VORLAGE: ${{ inputs.vorlage }}
-          BESTELLUNGEN: ${{ inputs.bestellungen }}
+          BEFORE: ${{ github.event.before }}
+          MANUELL: ${{ inputs.auftrag }}
+        run: |
+          if [ -n "$MANUELL" ]; then
+            files="$MANUELL"
+          else
+            files=$(git diff --name-only --diff-filter=AM "$BEFORE" "$GITHUB_SHA" -- auftraege/ | grep '\.json$' | sed 's#^ebook-automation/##' | tr '\n' ' ')
+          fi
+          echo "files=$files" >> "$GITHUB_OUTPUT"
+          echo "Aufträge: ${files:-keine}"
+      - if: steps.auftraege.outputs.files != ''
+        run: node src/info.js $FILES ${MODUS:+--modus "$MODUS"}
+        env:
+          FILES: ${{ steps.auftraege.outputs.files }}
           MODUS: ${{ inputs.modus }}
           SHOPIFY_CLIENT_SECRET: ${{ secrets.SHOPIFY_CLIENT_SECRET }}
           MS_CLIENT_SECRET: ${{ secrets.MS_CLIENT_SECRET }}
