@@ -1,0 +1,29 @@
+{
+  "bestellungen": "#213959, #213969",
+  "modus": "senden",
+  "mails": {
+    "nl": {
+      "betreff": "Uw bestelling {{Bestellnummer}} wordt voorbereid – we wachten alleen nog op uw betaling",
+      "anrede": "Beste {{Vorname}},",
+      "text": "Hartelijk dank voor uw bestelling {{Bestellnummer}}! Wij zijn op dit moment bezig met het voorbereiden van uw bestelling. Zodra uw betaling bij ons binnen is, versturen wij uw pakket zo snel mogelijk.\n\nU heeft bij het afrekenen gekozen voor betaling via bankoverschrijving. Wij verzoeken u vriendelijk het openstaande bedrag van {{Betrag}} over te maken naar:\n\nRekeninghouder: Ibrahim Khaleel Mirza\nIBAN: DE63 1001 0178 7942 7305 53\nOmschrijving / betalingskenmerk: {{Bestellnummer}}\n\nLet op: Wij zijn een Duits bedrijf. Daarom begint ons IBAN met „DE“ en is het iets langer dan een Nederlands IBAN — dat klopt dus gewoon. De overschrijving werkt via SEPA precies zoals een gewone Nederlandse overboeking en is kosteloos.\n\nNa verzending ontvangt u van ons direct uw track & trace-code.\n\nHeeft u vragen of lukt het overmaken niet? Antwoord gerust op deze e-mail, we helpen u graag verder.",
+      "gruss": "Met vriendelijke groet,",
+      "absenderin": "Sophie van Dijk"
+    },
+    "de": {
+      "betreff": "Ihre Bestellung {{Bestellnummer}} wird vorbereitet – wir warten nur noch auf Ihre Zahlung",
+      "text": "vielen Dank für Ihre Bestellung {{Bestellnummer}}! Wir bereiten Ihre Bestellung gerade vor. Sobald Ihre Zahlung bei uns eingegangen ist, verschicken wir Ihr Paket so schnell wie möglich.\n\nSie haben beim Bezahlen Banküberweisung gewählt. Bitte überweisen Sie den offenen Betrag von {{Betrag}} an:\n\nKontoinhaber: Ibrahim Khaleel Mirza\nIBAN: DE63 1001 0178 7942 7305 53\nVerwendungszweck: {{Bestellnummer}}\n\nNach dem Versand erhalten Sie von uns sofort Ihre Sendungsnummer.\n\nHaben Sie Fragen oder klappt die Überweisung nicht? Antworten Sie einfach auf diese E-Mail, wir helfen Ihnen gerne weiter.",
+      "gruss": "Mit freundlichen Grüßen",
+      "absenderin": "Sophie van Dijk"
+    },
+    "fr": {
+      "betreff": "Votre commande {{Bestellnummer}} est en préparation – nous attendons votre paiement",
+      "text": "merci beaucoup pour votre commande {{Bestellnummer}} ! Nous sommes en train de la préparer. Dès réception de votre paiement, nous expédions votre colis le plus rapidement possible.\n\nVous avez choisi le paiement par virement bancaire. Merci de virer le montant de {{Betrag}} à :\n\nTitulaire du compte : Ibrahim Khaleel Mirza\nIBAN : DE63 1001 0178 7942 7305 53\nRéférence : {{Bestellnummer}}\n\nRemarque : nous sommes une entreprise allemande, c’est pourquoi notre IBAN commence par « DE ». Le virement SEPA fonctionne comme un virement national et est gratuit.\n\nAprès l’expédition, vous recevrez immédiatement votre numéro de suivi.\n\nDes questions ? Répondez simplement à cet e-mail, nous serons ravis de vous aider.",
+      "absenderin": "Sophie van Dijk"
+    },
+    "en": {
+      "betreff": "Your order {{Bestellnummer}} is being prepared – we are only waiting for your payment",
+      "text": "thank you very much for your order {{Bestellnummer}}! We are currently preparing your order. As soon as your payment arrives, we will ship your parcel as quickly as possible.\n\nYou chose bank transfer at checkout. Please transfer the outstanding amount of {{Betrag}} to:\n\nAccount holder: Ibrahim Khaleel Mirza\nIBAN: DE63 1001 0178 7942 7305 53\nReference: {{Bestellnummer}}\n\nPlease note: we are a German company, which is why our IBAN starts with “DE”. A SEPA transfer works like a domestic transfer and is free of charge.\n\nOnce shipped, you will receive your tracking code right away.\n\nAny questions or trouble with the transfer? Simply reply to this email – we are happy to help.",
+      "absenderin": "Sophie van Dijk"
+    }
+  }
+}
