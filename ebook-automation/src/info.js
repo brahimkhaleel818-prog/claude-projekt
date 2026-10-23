@@ -4,6 +4,7 @@
 //   {
 //     "bestellungen": "#213700-#213720, #213739",
 //     "modus": "senden",                      // vorschau | test | senden
+//     "vorlage": "zahlungsinfo-ueberweisung",   // ODER eigene Texte unter "mails":
 //     "mails": {
 //       "de": { "betreff": "…", "text": "Absatz 1\n\nAbsatz 2 mit {{Bestellnummer}}",
 //               "button": { "text": "Jetzt bezahlen" },     // optional, Link: {{Zahlungslink}}
@@ -142,6 +143,11 @@ export async function loadAuftrag(file, config) {
   if (!/^[a-z0-9-]+$/.test(name)) throw new Error(`Auftragsname "${name}" bitte nur mit a-z, 0-9 und -`);
   if (infoTag(name).length > 40) throw new Error(`Auftragsname "${name}" ist zu lang (Shopify-Tags max. 40 Zeichen)`);
   const auftrag = JSON.parse(await readFile(path.resolve(ROOT, file), 'utf8'));
+  // Gespeicherte Vorlage statt eigener Texte: "vorlage": "zahlungsinfo-ueberweisung"
+  if (auftrag.vorlage && !auftrag.mails) {
+    if (!/^[a-z0-9-]+$/.test(auftrag.vorlage)) throw new Error(`Vorlagenname "${auftrag.vorlage}" ungültig`);
+    auftrag.mails = JSON.parse(await readFile(path.join(ROOT, 'vorlagen', `${auftrag.vorlage}.json`), 'utf8')).mails;
+  }
   const missing = Object.keys(config.languages).filter((l) => !auftrag.mails?.[l]?.betreff || !auftrag.mails?.[l]?.text);
   if (missing.length) throw new Error(`Im Auftrag fehlt Betreff oder Text für: ${missing.join(', ')}`);
   if (!auftrag.bestellungen) throw new Error('Im Auftrag fehlen die Bestellungen');

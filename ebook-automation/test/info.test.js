@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { parseSelection, needsInfoMail, runPaced, buildInfoHtml, infoVars, hasRealName } from '../src/info.js';
+import { parseSelection, needsInfoMail, runPaced, buildInfoHtml, infoVars, hasRealName, loadAuftrag } from '../src/info.js';
 import { renderTemplate } from '../src/template.js';
 import { loadConfig, templateVars } from '../src/index.js';
 
@@ -81,4 +81,19 @@ test('Anrede, Gruß und Absenderin lassen sich pro Auftrag festlegen', async () 
 test('Initialen statt Vorname führen zur allgemeinen Anrede', () => {
   for (const name of ['Marianne', 'Ans en ad', 'Maria Isabel', 'Joop']) assert.equal(hasRealName(name), true, name);
   for (const name of ['h', 'J.H.', '', null, 'A. B.']) assert.equal(hasRealName(name), false, String(name));
+});
+
+test('Auftrag kann eine gespeicherte Vorlage nutzen', async () => {
+  const { writeFile, rm } = await import('node:fs/promises');
+  const config = await loadConfig();
+  const file = new URL('../auftraege/test-vorlage.json', import.meta.url);
+  await writeFile(file, JSON.stringify({ bestellungen: '#1', modus: 'vorschau', vorlage: 'zahlungsinfo-ueberweisung' }));
+  try {
+    const auftrag = await loadAuftrag('auftraege/test-vorlage.json', config);
+    assert.ok(auftrag.mails.nl.text.includes('DE63 1001 0178 7942 7305 53'));
+    assert.equal(auftrag.mails.nl.absenderin, 'Sophie van Dijk');
+    for (const l of Object.keys(config.languages)) assert.ok(auftrag.mails[l].betreff, l);
+  } finally {
+    await rm(file);
+  }
 });

@@ -176,6 +176,19 @@ NL, FR und EN und legt einen **Auftrag** in `auftraege/<name>.json` an:
 }
 ```
 
+Statt eigener Texte kann ein Auftrag eine **gespeicherte Vorlage** aus
+`vorlagen/` nutzen – dann reicht:
+
+```json
+{ "bestellungen": "#214100, #214110", "modus": "senden", "vorlage": "zahlungsinfo-ueberweisung" }
+```
+
+Gespeicherte Vorlagen:
+
+| Vorlage | Wofür |
+|---|---|
+| `zahlungsinfo-ueberweisung` | Bestellung mit Banküberweisung, Zahlung offen: Kontodaten, Betrag, Bestellnummer als Verwendungszweck (NL/DE/FR/EN, Sophie van Dijk) |
+
 Sobald die Datei in `main` landet, verschickt GitHub („Info-Mail senden“)
 automatisch – jeder Kunde in der Sprache seines Landes, im Eveom-Design, mit
 Anrede („Hallo {{Vorname}},“) und Unterschrift (Lena / Lotte / Chloé / Emily,
