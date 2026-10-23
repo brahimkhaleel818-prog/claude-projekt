@@ -4,6 +4,10 @@ on:
   # Sicherheitsnetz zum Sofortversand über Vercel: alle 10 Minuten nachschauen
   schedule:
     - cron: '*/10 * * * *'
+  # Sofort nachholen: Änderung an ebook-automation/jetzt-pruefen.txt hochladen
+  push:
+    branches: [main]
+    paths: ['ebook-automation/jetzt-pruefen.txt']
   # Manuell starten unter "Actions" → "E-Book-Versand" → "Run workflow"
   workflow_dispatch:
     inputs:
