@@ -18,3 +18,11 @@ Gespeicherte Vorlagen in `ebook-automation/vorlagen/`:
 
 ## E-Book-Sicherheitsnetz sofort starten
 `ebook-automation/jetzt-pruefen.txt` ändern und nach `main` pushen.
+
+## Glücks-Pop-up & Klaviyo-Willkommens-Mail
+- Pop-up: `ebook-automation/klaviyo/popup/eveom-gluecks-popup.section.liquid` (Shopify-Section in der
+  Footer-Gruppe). Theme-Änderungen nur in einer Theme-Kopie – Live-Theme/Publish ist für Claude gesperrt.
+- Gewinne → Klaviyo-Profil `gluecks_preis` (10 / 15 / versand), Liste „E-Mail-Liste“ (XDbA9H),
+  Flow „Eveom · Willkommen (Glücks-Pop-up)“ (W5z745), Mail-Vorlagen aus `klaviyo/live_willkommen.py`.
+- Codes: Shopify-Rabatte „Eveom Glücks-Pop-up · 10 % / 15 % / Gratis Versand“ mit Einmal-Codes, dieselben
+  Codes in Klaviyo-Coupons WILLKOMMEN10 / WILLKOMMEN15 / GRATISVERSAND. Bei Bedarf in beiden nachfüllen.
