@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eveom Glücks-Pop-up (Demo)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root { --rot: #7D000D; --rot-dunkel: #5a0009; --creme: #f4f1ec; --text: #2b2b2b; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Montserrat, Helvetica, Arial, sans-serif; color: var(--text); background: #ddd; }
+
+  /* Nur für die Demo: Sprachwahl und Hintergrund-Shop */
+  .demo-leiste { position: fixed; top: 8px; right: 8px; z-index: 30; display: flex; gap: 4px; }
+  .demo-leiste button { border: 0; border-radius: 6px; padding: 6px 10px; cursor: pointer; font-weight: 600; }
+  .demo-leiste button.aktiv { background: var(--rot); color: #fff; }
+
+  .ev-overlay { position: fixed; inset: 0; background: rgba(20, 20, 20, .55); display: flex; align-items: center; justify-content: center; padding: 16px; z-index: 20; }
+  .ev-popup { position: relative; display: flex; width: min(980px, 100%); max-height: calc(100vh - 32px); background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 60px rgba(0, 0, 0, .35); }
+  .ev-links { flex: 1 1 52%; padding: 28px 32px 24px; display: flex; flex-direction: column; align-items: center; text-align: center; overflow-y: auto; }
+  .ev-rechts { flex: 1 1 48%; background: var(--creme); display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding: 14px; }
+  .ev-rechts div { border-radius: 12px; background: #fff center / cover no-repeat; }
+  .ev-zu { position: absolute; top: 10px; left: 14px; border: 0; background: none; font-size: 30px; line-height: 1; cursor: pointer; color: #555; }
+
+  .ev-logo { font-weight: 600; letter-spacing: 4px; font-size: 18px; margin-bottom: 6px; }
+  .ev-titel { font-family: "Playfair Display", Georgia, serif; font-size: clamp(30px, 5vw, 46px); margin: 6px 0 6px; line-height: 1.1; }
+  .ev-unter { margin: 0 0 10px; font-size: 16px; line-height: 1.45; max-width: 380px; }
+
+  .ev-brett { position: relative; width: 100%; max-width: 420px; }
+  .ev-brett canvas { display: block; width: 100%; height: auto; }
+  .ev-faecher { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); width: 100%; max-width: 420px; margin-top: 2px; }
+  .ev-faecher div { border-left: 1px solid #cfc7bd; padding: 6px 2px; font-size: 13px; line-height: 1.25; min-height: 48px; display: flex; align-items: center; justify-content: center; transition: background .3s, color .3s; }
+  .ev-faecher div:last-child { border-right: 1px solid #cfc7bd; }
+  .ev-faecher div.gewonnen { background: var(--rot); color: #fff; font-weight: 600; border-radius: 6px; }
+
+  .ev-knopf { margin-top: 16px; width: 100%; max-width: 420px; border: 0; border-radius: 10px; padding: 16px; font: 600 18px Montserrat, sans-serif; color: #fff; background: linear-gradient(135deg, var(--rot), var(--rot-dunkel)); cursor: pointer; }
+  .ev-knopf:disabled { opacity: .6; cursor: default; }
+
+  .ev-schritt2 { display: none; width: 100%; max-width: 420px; margin-top: 8px; }
+  .ev-preis { margin: 6px 0 14px; padding: 16px; background: var(--creme); border-radius: 10px; font-size: 22px; font-weight: 600; color: var(--rot); }
+  .ev-schritt2 input[type=email] { width: 100%; padding: 14px; border: 1px solid #b9b0a6; border-radius: 8px; font: 16px Montserrat, sans-serif; }
+  .ev-einwilligung { display: flex; gap: 8px; text-align: left; font-size: 12px; line-height: 1.4; margin-top: 10px; color: #555; }
+  .ev-einwilligung a { color: var(--rot); }
+  .ev-fehler { color: var(--rot); font-size: 13px; min-height: 18px; margin-top: 6px; }
+  .ev-danke { display: none; max-width: 420px; }
+
+  @media (max-width: 760px) {
+    .ev-rechts { display: none; }
+    .ev-links { padding: 24px 18px 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="demo-leiste">
+  <button data-lang="de" class="aktiv">DE</button><button data-lang="nl">NL</button><button data-lang="fr">FR</button><button data-lang="en">EN</button>
+</div>
+
+<div class="ev-overlay" id="ev-overlay">
+  <div class="ev-popup" role="dialog" aria-modal="true" aria-labelledby="ev-titel">
+    <button class="ev-zu" id="ev-zu" aria-label="Schließen">×</button>
+    <div class="ev-links">
+      <div class="ev-logo">EVEOM</div>
+      <h2 class="ev-titel" id="ev-titel"></h2>
+
+      <div id="ev-schritt1" style="display:contents">
+        <p class="ev-unter" id="ev-unter"></p>
+        <div class="ev-brett"><canvas id="ev-canvas" width="840" height="620"></canvas></div>
+        <div class="ev-faecher" id="ev-faecher"></div>
+        <button class="ev-knopf" id="ev-fallen"></button>
+      </div>
+
+      <form class="ev-schritt2" id="ev-schritt2" novalidate>
+        <p class="ev-unter" id="ev-gewonnen-text"></p>
+        <div class="ev-preis" id="ev-preis"></div>
+        <input type="email" id="ev-email" autocomplete="email" required>
+        <label class="ev-einwilligung"><input type="checkbox" id="ev-ok"> <span id="ev-ok-text"></span></label>
+        <div class="ev-fehler" id="ev-fehler"></div>
+        <button class="ev-knopf" type="submit" id="ev-sichern"></button>
+      </form>
+
+      <div class="ev-danke" id="ev-danke"><p class="ev-unter" id="ev-danke-text"></p></div>
+    </div>
+    <div class="ev-rechts" aria-hidden="true">
+      <!-- Platzhalter: hier kommen Ibrahims eigene Bilder hinein -->
+      <div style="background-image:url('https://cdn.shopify.com/s/files/1/0814/9155/8732/files/eveom-galerij-6.jpg?width=600&height=700&crop=bottom')"></div>
+      <div style="background-image:url('https://cdn.shopify.com/s/files/1/0814/9155/8732/files/eveom-galerij-3.jpg?crop=region&crop_left=170&crop_top=690&crop_width=370&crop_height=340&width=500')"></div>
+      <div style="background-image:url('https://cdn.shopify.com/s/files/1/0814/9155/8732/files/eveom-galerij-3.jpg?crop=region&crop_left=735&crop_top=690&crop_width=360&crop_height=340&width=500')"></div>
+      <div style="background-image:url('https://cdn.shopify.com/s/files/1/0814/9155/8732/files/eveom-galerij-6.jpg?width=600&height=700&crop=right')"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  // DEMO: true = es wird nichts an Klaviyo geschickt.
+  var DEMO = true;
+  var KLAVIYO = { firma: "XvW5Bs", liste: "XDbA9H" };
+
+  // Fächer von links nach rechts. "chance" = Wahrscheinlichkeit in Prozent (Summe 100).
+  // Jeder angezeigte Preis muss auch wirklich gewonnen werden können.
+  var FAECHER = [
+    { id: "10",       chance: 30 },
+    { id: "versand",  chance: 20 },
+    { id: "15",       chance: 10 },
+    { id: "versand",  chance: 10 },
+    { id: "10",       chance: 30 }
+  ];
+
+  var TEXTE = {
+    de: {
+      titel: "Versuchen Sie Ihr Glück!",
+      unter: "Lassen Sie die Kugel fallen und sehen Sie, welchen Rabatt Sie gewinnen.",
+      fallen: "Kugel fallen lassen",
+      preise: { "10": "10 % Rabatt", "15": "15 % Rabatt", versand: "Gratis Versand" },
+      glueck: "Glückwunsch! Sie haben gewonnen:",
+      email: "Ihre E-Mail-Adresse",
+      ok: 'Ja, ich möchte Neuigkeiten und Angebote von Eveom per E-Mail erhalten. Abmeldung jederzeit möglich. Mehr dazu in der <a href="https://www.eveom.health/policies/privacy-policy" target="_blank">Datenschutzerklärung</a>.',
+      sichern: "Gewinn sichern",
+      fehlerEmail: "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+      fehlerOk: "Bitte bestätigen Sie die Einwilligung.",
+      dankeTitel: "Fast geschafft!",
+      danke: "Wir haben Ihnen gerade eine E-Mail geschickt. Bitte bestätigen Sie Ihre Anmeldung – danach erhalten Sie sofort Ihren persönlichen Code.",
+      zu: "Schließen"
+    },
+    nl: {
+      titel: "Waag uw kans!",
+      unter: "Laat de bal vallen en ontdek welke korting u wint.",
+      fallen: "Laat de bal vallen",
+      preise: { "10": "10% korting", "15": "15% korting", versand: "Gratis verzending" },
+      glueck: "Gefeliciteerd! U heeft gewonnen:",
+      email: "Uw e-mailadres",
+      ok: 'Ja, ik wil nieuws en aanbiedingen van Eveom per e-mail ontvangen. Afmelden kan altijd. Meer in de <a href="https://www.eveom.health/policies/privacy-policy" target="_blank">privacyverklaring</a>.',
+      sichern: "Prijs claimen",
+      fehlerEmail: "Vul een geldig e-mailadres in.",
+      fehlerOk: "Bevestig uw toestemming.",
+      dankeTitel: "Bijna klaar!",
+      danke: "We hebben u zojuist een e-mail gestuurd. Bevestig uw aanmelding – daarna ontvangt u direct uw persoonlijke code.",
+      zu: "Sluiten"
+    },
+    fr: {
+      titel: "Tentez votre chance !",
+      unter: "Lâchez la bille et découvrez la réduction que vous gagnez.",
+      fallen: "Lâcher la bille",
+      preise: { "10": "10 % de réduction", "15": "15 % de réduction", versand: "Livraison offerte" },
+      glueck: "Félicitations ! Vous avez gagné :",
+      email: "Votre adresse e-mail",
+      ok: 'Oui, je souhaite recevoir les actualités et offres d’Eveom par e-mail. Désinscription possible à tout moment. Plus d’infos dans la <a href="https://www.eveom.health/policies/privacy-policy" target="_blank">politique de confidentialité</a>.',
+      sichern: "Récupérer mon gain",
+      fehlerEmail: "Veuillez saisir une adresse e-mail valide.",
+      fehlerOk: "Veuillez confirmer votre consentement.",
+      dankeTitel: "Presque fini !",
+      danke: "Nous venons de vous envoyer un e-mail. Confirmez votre inscription – vous recevrez ensuite immédiatement votre code personnel.",
+      zu: "Fermer"
+    },
+    en: {
+      titel: "Try your luck!",
+      unter: "Drop the ball to see which discount you win.",
+      fallen: "Drop the ball",
+      preise: { "10": "10% off", "15": "15% off", versand: "Free shipping" },
+      glueck: "Congratulations! You won:",
+      email: "Your email address",
+      ok: 'Yes, I’d like to receive news and offers from Eveom by email. Unsubscribe at any time. More in our <a href="https://www.eveom.health/policies/privacy-policy" target="_blank">privacy policy</a>.',
+      sichern: "Claim my prize",
+      fehlerEmail: "Please enter a valid email address.",
+      fehlerOk: "Please confirm your consent.",
+      dankeTitel: "Almost there!",
+      danke: "We just sent you an email. Please confirm your sign-up – then you’ll receive your personal code right away.",
+      zu: "Close"
+    }
+  };
+
+  var $ = function (id) { return document.getElementById(id); };
+  var lang = "de", gewinn = null, laeuft = false;
+
+  // ---------- Brett zeichnen ----------
+  var canvas = $("ev-canvas"), ctx = canvas.getContext("2d");
+  var W = canvas.width, H = canvas.height;
+  var REIHEN = 8, ABSTAND = W / 10, OBEN = 70, ZEILE = (H - OBEN - 30) / REIHEN, PIN = 7, KUGEL = 15;
+
+  function pins() {
+    var p = [];
+    for (var r = 0; r < REIHEN; r++) {
+      var n = r + 2, start = W / 2 - (n - 1) * ABSTAND / 2;
+      for (var i = 0; i < n; i++) p.push([start + i * ABSTAND, OBEN + r * ZEILE]);
+    }
+    return p;
+  }
+  var PINS = pins();
+
+  function zeichne(kugel) {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = "#1f1f1f";
+    PINS.forEach(function (p) { ctx.beginPath(); ctx.arc(p[0], p[1], PIN, 0, Math.PI * 2); ctx.fill(); });
+    if (kugel) {
+      var g = ctx.createRadialGradient(kugel[0] - 5, kugel[1] - 5, 2, kugel[0], kugel[1], KUGEL);
+      g.addColorStop(0, "#d9404f"); g.addColorStop(1, "#7D000D");
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(kugel[0], kugel[1], KUGEL, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+
+  // ---------- Ergebnis festlegen, dann passenden Weg erzeugen ----------
+  // Die Kugel trifft in jeder Reihe oben auf einen Pin und springt einen halben
+  // Pin-Abstand nach links oder rechts: 9 Entscheidungen → 10 Endpositionen
+  // (0 = ganz links … 9 = ganz rechts), je 2 pro Fach.
+  var SPRUENGE = REIHEN + 1;
+  function fachVonPosition(pos) {
+    var x = W / 2 + (pos - SPRUENGE / 2) * ABSTAND;
+    return Math.min(4, Math.max(0, Math.floor(x / (W / 5))));
+  }
+  function ziehePreis() {
+    var z = Math.random() * 100, summe = 0;
+    for (var i = 0; i < FAECHER.length; i++) { summe += FAECHER[i].chance; if (z < summe) return i; }
+    return FAECHER.length - 1;
+  }
+  function wegFuer(fach) {
+    var moegliche = [];
+    for (var pos = 0; pos <= SPRUENGE; pos++) if (fachVonPosition(pos) === fach) moegliche.push(pos);
+    var ziel = moegliche[Math.floor(Math.random() * moegliche.length)];
+    var schritte = [];
+    for (var i = 0; i < SPRUENGE; i++) schritte.push(i < ziel ? 1 : -1);
+    for (var j = schritte.length - 1; j > 0; j--) { var k = Math.floor(Math.random() * (j + 1)); var t = schritte[j]; schritte[j] = schritte[k]; schritte[k] = t; }
+    return schritte;
+  }
+
+  function fallen() {
+    if (laeuft) return;
+    laeuft = true; $("ev-fallen").disabled = true;
+    var fach = ziehePreis(), schritte = wegFuer(fach);
+    // Punkte der Flugbahn: Start über der Mitte, dann je Reihe oben auf einem Pin.
+    var punkte = [[W / 2, 10]], x = W / 2;
+    for (var r = 0; r < REIHEN; r++) {
+      x += schritte[r] * ABSTAND / 2;
+      punkte.push([x, OBEN + r * ZEILE - PIN - KUGEL]);
+    }
+    x += schritte[REIHEN] * ABSTAND / 2;
+    punkte.push([x, H - KUGEL]);
+
+    var seg = 0, t0 = null, DAUER = 230;
+    function frame(ts) {
+      if (t0 === null) t0 = ts;
+      var t = Math.min(1, (ts - t0) / DAUER), a = punkte[seg], b = punkte[seg + 1];
+      var px = a[0] + (b[0] - a[0]) * t;
+      var py = a[1] + (b[1] - a[1]) * t * t - Math.sin(Math.PI * t) * 18 * (seg > 0 ? 1 : 0); // kleiner Hüpfer
+      zeichne([px, py]);
+      if (t < 1) return requestAnimationFrame(frame);
+      seg++; t0 = null;
+      if (seg < punkte.length - 1) return requestAnimationFrame(frame);
+      gewonnen(fach);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function gewonnen(fach) {
+    gewinn = FAECHER[fach].id;
+    $("ev-faecher").children[fach].classList.add("gewonnen");
+    setTimeout(function () {
+      $("ev-schritt1").style.display = "none";
+      $("ev-schritt2").style.display = "block";
+      texte();
+      $("ev-email").focus();
+    }, 900);
+  }
+
+  // ---------- Anmeldung an Klaviyo ----------
+  function absenden(e) {
+    e.preventDefault();
+    var T = TEXTE[lang], email = $("ev-email").value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return ($("ev-fehler").textContent = T.fehlerEmail);
+    if (!$("ev-ok").checked) return ($("ev-fehler").textContent = T.fehlerOk);
+    $("ev-fehler").textContent = ""; $("ev-sichern").disabled = true;
+
+    var fertig = function () { $("ev-schritt2").style.display = "none"; $("ev-danke").style.display = "block"; $("ev-titel").textContent = T.dankeTitel; };
+    if (DEMO) return fertig();
+
+    fetch("https://a.klaviyo.com/client/subscriptions?company_id=" + KLAVIYO.firma, {
+      method: "POST",
+      headers: { "Content-Type": "application/vnd.api+json", revision: "2024-10-15" },
+      body: JSON.stringify({ data: { type: "subscription", attributes: {
+        custom_source: "Eveom Glücks-Pop-up",
+        profile: { data: { type: "profile", attributes: { email: email, properties: { gluecks_preis: gewinn, popup_sprache: lang } } } }
+      }, relationships: { list: { data: { type: "list", id: KLAVIYO.liste } } } } })
+    }).then(fertig, fertig);
+  }
+
+  // ---------- Texte ----------
+  function texte() {
+    var T = TEXTE[lang];
+    document.documentElement.lang = lang;
+    $("ev-titel").textContent = T.titel;
+    $("ev-unter").textContent = T.unter;
+    $("ev-fallen").textContent = T.fallen;
+    $("ev-zu").setAttribute("aria-label", T.zu);
+    $("ev-faecher").innerHTML = FAECHER.map(function (f) { return "<div>" + T.preise[f.id] + "</div>"; }).join("");
+    $("ev-gewonnen-text").textContent = T.glueck;
+    $("ev-preis").textContent = gewinn ? T.preise[gewinn] : "";
+    $("ev-email").placeholder = T.email;
+    $("ev-ok-text").innerHTML = T.ok;
+    $("ev-sichern").textContent = T.sichern;
+    $("ev-danke-text").textContent = T.danke;
+  }
+
+  $("ev-fallen").addEventListener("click", fallen);
+  $("ev-schritt2").addEventListener("submit", absenden);
+  $("ev-zu").addEventListener("click", function () { $("ev-overlay").style.display = "none"; });
+  document.querySelectorAll(".demo-leiste button").forEach(function (b) {
+    b.addEventListener("click", function () {
+      document.querySelectorAll(".demo-leiste button").forEach(function (x) { x.classList.remove("aktiv"); });
+      b.classList.add("aktiv"); lang = b.dataset.lang; texte();
+      if (!laeuft) zeichne();
+    });
+  });
+
+  texte();
+  zeichne();
+})();
+</script>
+</body>
+</html>
