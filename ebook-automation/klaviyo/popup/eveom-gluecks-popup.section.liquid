@@ -79,6 +79,14 @@
     { id: "10", chance: 30 }, { id: "versand", chance: 20 }, { id: "15", chance: 10 },
     { id: "versand", chance: 10 }, { id: "10", chance: 30 }
   ];
+  // Sprache der Produktseite (Handle in der Adresse) – hat Vorrang vor dem Land.
+  var SPRACHE_JE_SEITE = {
+    "eveom-astaxanthin-de": "de",
+    "eveom-astaxanthine": "nl", "eveom-astaxanthine-nieren": "nl", "eveom-astaxanthine-ogen": "nl", "eveom-astaxanthine-diabetes": "nl",
+    "het-astaxanthine-voordeel-e-book": "nl",
+    "eveom-astaxanthine-fr": "fr",
+    "eveom-astaxanthine-us": "en"
+  };
   var SPRACHE_JE_LAND = { DE: "de", AT: "de", CH: "de", LI: "de", LU: "de", NL: "nl", BE: "nl", FR: "fr", MC: "fr" };
   var DATENSCHUTZ = "https://www.eveom.health/policies/privacy-policy";
 
@@ -123,7 +131,15 @@
     if (/^\/(cart|checkout|account)/.test(location.pathname)) return;
   }
 
-  var lang = params.get("lang") || SPRACHE_JE_LAND[root.getAttribute("data-land")] || "en";
+  // Reihenfolge: ?lang=… → aktuelle Produktseite → zuletzt besuchte Produktseite → Land → Englisch
+  var sitzung = {
+    get: function (k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } },
+    set: function (k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} }
+  };
+  var handle = (location.pathname.match(/\/products\/([^\/?#]+)/) || [])[1];
+  var seitenSprache = handle && SPRACHE_JE_SEITE[decodeURIComponent(handle)];
+  if (seitenSprache) sitzung.set("eveom_gp_sprache", seitenSprache);
+  var lang = params.get("lang") || seitenSprache || sitzung.get("eveom_gp_sprache") || SPRACHE_JE_LAND[root.getAttribute("data-land")] || "en";
   if (!TEXTE[lang]) lang = "en";
   var T = TEXTE[lang], gewinn = null, laeuft = false;
   var q = function (s) { return root.querySelector(s); };
