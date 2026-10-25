@@ -37,7 +37,7 @@
   #eveom-gp[hidden] { display: none !important; }
   #eveom-gp, #eveom-gp * { box-sizing: border-box; }
   #eveom-gp .gp-overlay { position: fixed; inset: 0; z-index: 2147483000; background: rgba(20, 20, 20, .55); display: flex; align-items: center; justify-content: center; padding: 16px; }
-  #eveom-gp .gp-popup { position: relative; display: flex; width: min(980px, 100%); max-height: calc(100vh - 32px); background: #fff; color: #2b2b2b; min-height: min(640px, calc(100vh - 32px)); border-radius: 16px; overflow: hidden; box-shadow: 0 20px 60px rgba(0, 0, 0, .35); font-size: 16px; line-height: 1.45; letter-spacing: 0; text-transform: none; }
+  #eveom-gp .gp-popup { position: relative; display: flex; width: min(980px, 100%); max-height: calc(100vh - 32px); background: #fff; color: #2b2b2b; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 60px rgba(0, 0, 0, .35); font-size: 16px; line-height: 1.45; letter-spacing: 0; text-transform: none; }
   #eveom-gp .gp-links { flex: 1 1 52%; padding: 28px 32px 24px; display: flex; flex-direction: column; align-items: center; text-align: center; overflow-y: auto; }
   #eveom-gp .gp-rechts { display: block !important; flex: 1 1 48%; min-height: 480px; background: var(--gp-creme) 85% center / cover no-repeat; }
   #eveom-gp button { all: unset; box-sizing: border-box; cursor: pointer; }
@@ -51,7 +51,7 @@
   #eveom-gp .gp-faecher div { border-left: 1px solid #cfc7bd; padding: 6px 2px; font-size: 13px; line-height: 1.25; min-height: 48px; display: flex; align-items: center; justify-content: center; transition: background .3s, color .3s; }
   #eveom-gp .gp-faecher div:last-child { border-right: 1px solid #cfc7bd; }
   #eveom-gp .gp-faecher div.gp-gewonnen { background: var(--gp-rot); color: #fff; font-weight: 600; border-radius: 6px; }
-  #eveom-gp .gp-knopf { display: block; margin-top: 16px; width: 100%; max-width: 420px; border-radius: 10px; padding: 16px; font-size: 18px; font-weight: 600; text-align: center; color: #fff; background: linear-gradient(135deg, var(--gp-rot), var(--gp-rot-dunkel)); }
+  #eveom-gp .gp-knopf { display: block; margin-top: 16px; width: 100%; max-width: 420px; border-radius: 10px; padding: 16px; font-size: 18px; font-weight: 600; text-align: center; color: #fff !important; background: linear-gradient(135deg, var(--gp-rot), var(--gp-rot-dunkel)) !important; border: 0 !important; box-shadow: none !important; }
   #eveom-gp .gp-knopf[disabled] { opacity: .6; cursor: default; }
   #eveom-gp .gp-schritt2, #eveom-gp .gp-danke { display: none; width: 100%; max-width: 420px; margin-top: 8px; }
   #eveom-gp .gp-preis { margin: 6px 0 14px; padding: 16px; background: var(--gp-creme); border-radius: 10px; font-size: 22px; font-weight: 600; color: var(--gp-rot); }
@@ -60,6 +60,9 @@
   #eveom-gp .gp-ok input { margin-top: 2px; flex: 0 0 auto; }
   #eveom-gp .gp-ok a { color: var(--gp-rot); text-decoration: underline; }
   #eveom-gp .gp-fehler { color: var(--gp-rot); font-size: 13px; min-height: 18px; margin-top: 6px; }
+  @media (min-width: 761px) {
+    #eveom-gp .gp-popup { min-height: min(640px, calc(100vh - 32px)); }
+  }
   @media (max-width: 760px) {
     #eveom-gp .gp-rechts { display: none !important; }
     #eveom-gp .gp-links { padding: 24px 18px 18px; }
