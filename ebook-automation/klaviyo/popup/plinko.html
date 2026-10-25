@@ -19,8 +19,7 @@
   .ev-overlay { position: fixed; inset: 0; background: rgba(20, 20, 20, .55); display: flex; align-items: center; justify-content: center; padding: 16px; z-index: 20; }
   .ev-popup { position: relative; display: flex; width: min(980px, 100%); max-height: calc(100vh - 32px); background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 60px rgba(0, 0, 0, .35); }
   .ev-links { flex: 1 1 52%; padding: 28px 32px 24px; display: flex; flex-direction: column; align-items: center; text-align: center; overflow-y: auto; }
-  .ev-rechts { flex: 1 1 48%; background: var(--creme); display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding: 14px; }
-  .ev-rechts div { border-radius: 12px; background: #fff center / cover no-repeat; }
+  .ev-rechts { flex: 1 1 48%; background: var(--creme) 85% center / cover no-repeat; min-height: 480px; }
   .ev-zu { position: absolute; top: 10px; left: 14px; border: 0; background: none; font-size: 30px; line-height: 1; cursor: pointer; color: #555; }
 
   .ev-logo { font-weight: 600; letter-spacing: 4px; font-size: 18px; margin-bottom: 6px; }
@@ -82,13 +81,7 @@
 
       <div class="ev-danke" id="ev-danke"><p class="ev-unter" id="ev-danke-text"></p></div>
     </div>
-    <div class="ev-rechts" aria-hidden="true">
-      <!-- Platzhalter: hier kommen Ibrahims eigene Bilder hinein -->
-      <div style="background-image:url('https://cdn.shopify.com/s/files/1/0814/9155/8732/files/eveom-galerij-6.jpg?width=600&height=700&crop=bottom')"></div>
-      <div style="background-image:url('https://cdn.shopify.com/s/files/1/0814/9155/8732/files/eveom-galerij-3.jpg?crop=region&crop_left=170&crop_top=690&crop_width=370&crop_height=340&width=500')"></div>
-      <div style="background-image:url('https://cdn.shopify.com/s/files/1/0814/9155/8732/files/eveom-galerij-3.jpg?crop=region&crop_left=735&crop_top=690&crop_width=360&crop_height=340&width=500')"></div>
-      <div style="background-image:url('https://cdn.shopify.com/s/files/1/0814/9155/8732/files/eveom-galerij-6.jpg?width=600&height=700&crop=right')"></div>
-    </div>
+    <div class="ev-rechts" aria-hidden="true" style="background-image:url('https://cdn.shopify.com/s/files/1/0814/9155/8732/files/2f33e870-f124-42ef-93a2-53aa874573a4.png?v=1792963515&width=1000')"></div>
   </div>
 </div>
 
