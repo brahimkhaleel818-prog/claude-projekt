@@ -1,0 +1,261 @@
+{%- comment -%}
+  Eveom Glücks-Pop-up (Kugel-Spiel) – Anmeldung zur Klaviyo-Liste mit Gewinn.
+  Shopify-Section in der Footer-Gruppe (im Theme-Editor als „Eveom Glücks-Pop-up“ sichtbar).
+  Quelle: github.com/brahimkhaleel818-prog/claude-projekt → ebook-automation/klaviyo/popup/eveom-gluecks-popup.section.liquid
+  LIVE = false: nur sichtbar mit ?eveom_popup=test in der Adresse (optional &lang=de|nl|fr|en).
+{%- endcomment -%}
+<div id="eveom-gp" hidden data-land="{{ localization.country.iso_code }}">
+  <div class="gp-overlay">
+    <div class="gp-popup" role="dialog" aria-modal="true" aria-labelledby="gp-titel">
+      <button type="button" class="gp-zu" aria-label="×">×</button>
+      <div class="gp-links">
+        <div class="gp-logo">EVEOM</div>
+        <div class="gp-titel" id="gp-titel"></div>
+        <div class="gp-schritt1">
+          <p class="gp-unter" data-t="unter"></p>
+          <canvas class="gp-canvas" width="840" height="620"></canvas>
+          <div class="gp-faecher"></div>
+          <button type="button" class="gp-knopf gp-fallen" data-t="fallen"></button>
+        </div>
+        <form class="gp-schritt2" novalidate>
+          <p class="gp-unter" data-t="glueck"></p>
+          <div class="gp-preis"></div>
+          <input type="email" class="gp-email" autocomplete="email" required>
+          <label class="gp-ok"><input type="checkbox" class="gp-ok-box"> <span data-t="ok"></span></label>
+          <div class="gp-fehler" aria-live="polite"></div>
+          <button type="submit" class="gp-knopf gp-sichern" data-t="sichern"></button>
+        </form>
+        <div class="gp-danke"><p class="gp-unter" data-t="danke"></p></div>
+      </div>
+      <div class="gp-rechts" aria-hidden="true"></div>
+    </div>
+  </div>
+</div>
+
+<style>
+  #eveom-gp { --gp-rot: #7D000D; --gp-rot-dunkel: #5a0009; --gp-creme: #f4f1ec; }
+  #eveom-gp[hidden] { display: none !important; }
+  #eveom-gp, #eveom-gp * { box-sizing: border-box; }
+  #eveom-gp .gp-overlay { position: fixed; inset: 0; z-index: 2147483000; background: rgba(20, 20, 20, .55); display: flex; align-items: center; justify-content: center; padding: 16px; }
+  #eveom-gp .gp-popup { position: relative; display: flex; width: min(980px, 100%); max-height: calc(100vh - 32px); background: #fff; color: #2b2b2b; min-height: min(640px, calc(100vh - 32px)); border-radius: 16px; overflow: hidden; box-shadow: 0 20px 60px rgba(0, 0, 0, .35); font-size: 16px; line-height: 1.45; letter-spacing: 0; text-transform: none; }
+  #eveom-gp .gp-links { flex: 1 1 52%; padding: 28px 32px 24px; display: flex; flex-direction: column; align-items: center; text-align: center; overflow-y: auto; }
+  #eveom-gp .gp-rechts { flex: 1 1 48%; min-height: 480px; background: var(--gp-creme) 85% center / cover no-repeat; }
+  #eveom-gp button { all: unset; box-sizing: border-box; cursor: pointer; }
+  #eveom-gp .gp-zu { position: absolute; top: 8px; left: 14px; font-size: 32px; line-height: 1; color: #555; padding: 4px; }
+  #eveom-gp .gp-logo { font-weight: 600; letter-spacing: 4px; font-size: 18px; margin-bottom: 6px; }
+  #eveom-gp .gp-titel { font-family: Georgia, "Times New Roman", serif; font-weight: 600; font-size: clamp(30px, 5vw, 46px); line-height: 1.1; margin: 6px 0; color: #2b2b2b; }
+  #eveom-gp .gp-unter { margin: 0 0 10px; font-size: 16px; max-width: 380px; }
+  #eveom-gp .gp-schritt1 { display: contents; }
+  #eveom-gp .gp-canvas { display: block; width: 100%; max-width: 420px; height: auto; }
+  #eveom-gp .gp-faecher { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); width: 100%; max-width: 420px; margin-top: 2px; }
+  #eveom-gp .gp-faecher div { border-left: 1px solid #cfc7bd; padding: 6px 2px; font-size: 13px; line-height: 1.25; min-height: 48px; display: flex; align-items: center; justify-content: center; transition: background .3s, color .3s; }
+  #eveom-gp .gp-faecher div:last-child { border-right: 1px solid #cfc7bd; }
+  #eveom-gp .gp-faecher div.gp-gewonnen { background: var(--gp-rot); color: #fff; font-weight: 600; border-radius: 6px; }
+  #eveom-gp .gp-knopf { display: block; margin-top: 16px; width: 100%; max-width: 420px; border-radius: 10px; padding: 16px; font-size: 18px; font-weight: 600; text-align: center; color: #fff; background: linear-gradient(135deg, var(--gp-rot), var(--gp-rot-dunkel)); }
+  #eveom-gp .gp-knopf[disabled] { opacity: .6; cursor: default; }
+  #eveom-gp .gp-schritt2, #eveom-gp .gp-danke { display: none; width: 100%; max-width: 420px; margin-top: 8px; }
+  #eveom-gp .gp-preis { margin: 6px 0 14px; padding: 16px; background: var(--gp-creme); border-radius: 10px; font-size: 22px; font-weight: 600; color: var(--gp-rot); }
+  #eveom-gp .gp-email { display: block; width: 100%; margin: 0; padding: 14px; border: 1px solid #b9b0a6; border-radius: 8px; font-size: 16px; background: #fff; color: #2b2b2b; }
+  #eveom-gp .gp-ok { display: flex; gap: 8px; align-items: flex-start; text-align: left; font-size: 12px; line-height: 1.4; margin-top: 10px; color: #555; }
+  #eveom-gp .gp-ok input { margin-top: 2px; flex: 0 0 auto; }
+  #eveom-gp .gp-ok a { color: var(--gp-rot); text-decoration: underline; }
+  #eveom-gp .gp-fehler { color: var(--gp-rot); font-size: 13px; min-height: 18px; margin-top: 6px; }
+  @media (max-width: 760px) {
+    #eveom-gp .gp-rechts { display: none; }
+    #eveom-gp .gp-links { padding: 24px 18px 18px; }
+  }
+</style>
+
+<script>
+(function () {
+  // Für Kunden einschalten: LIVE auf true setzen.
+  var LIVE = false;
+  var KLAVIYO = { firma: "XvW5Bs", liste: "XDbA9H", revision: "2024-10-15" };
+  var BILD = "https://cdn.shopify.com/s/files/1/0814/9155/8732/files/2f33e870-f124-42ef-93a2-53aa874573a4.png?v=1792963515&width=1000";
+  var VERZOEGERUNG = 8000;            // ms bis das Pop-up erscheint
+  var PAUSE_NACH_SCHLIESSEN = 14;     // Tage
+  // Fächer von links nach rechts, "chance" in Prozent (Summe 100). Jeder Gewinn muss erreichbar sein.
+  var FAECHER = [
+    { id: "10", chance: 30 }, { id: "versand", chance: 20 }, { id: "15", chance: 10 },
+    { id: "versand", chance: 10 }, { id: "10", chance: 30 }
+  ];
+  var SPRACHE_JE_LAND = { DE: "de", AT: "de", CH: "de", LI: "de", LU: "de", NL: "nl", BE: "nl", FR: "fr", MC: "fr" };
+  var DATENSCHUTZ = "https://www.eveom.health/policies/privacy-policy";
+
+  var TEXTE = {
+    de: { titel: "Versuchen Sie Ihr Glück!", unter: "Lassen Sie die Kugel fallen und sehen Sie, welchen Rabatt Sie gewinnen.", fallen: "Kugel fallen lassen",
+          preise: { "10": "10 % Rabatt", "15": "15 % Rabatt", versand: "Gratis Versand" }, glueck: "Glückwunsch! Sie haben gewonnen:", email: "Ihre E-Mail-Adresse",
+          ok: 'Ja, ich möchte Neuigkeiten und Angebote von Eveom per E-Mail erhalten. Abmeldung jederzeit möglich. Mehr dazu in der <a href="' + DATENSCHUTZ + '" target="_blank" rel="noopener">Datenschutzerklärung</a>.',
+          sichern: "Gewinn sichern", fehlerEmail: "Bitte geben Sie eine gültige E-Mail-Adresse ein.", fehlerOk: "Bitte bestätigen Sie die Einwilligung.",
+          dankeTitel: "Fast geschafft!", danke: "Wir haben Ihnen gerade eine E-Mail geschickt. Bitte bestätigen Sie Ihre Anmeldung – danach erhalten Sie sofort Ihren persönlichen Code.", zu: "Schließen" },
+    nl: { titel: "Waag uw kans!", unter: "Laat de bal vallen en ontdek welke korting u wint.", fallen: "Laat de bal vallen",
+          preise: { "10": "10% korting", "15": "15% korting", versand: "Gratis verzending" }, glueck: "Gefeliciteerd! U heeft gewonnen:", email: "Uw e-mailadres",
+          ok: 'Ja, ik wil nieuws en aanbiedingen van Eveom per e-mail ontvangen. Afmelden kan altijd. Meer in de <a href="' + DATENSCHUTZ + '" target="_blank" rel="noopener">privacyverklaring</a>.',
+          sichern: "Prijs claimen", fehlerEmail: "Vul een geldig e-mailadres in.", fehlerOk: "Bevestig uw toestemming.",
+          dankeTitel: "Bijna klaar!", danke: "We hebben u zojuist een e-mail gestuurd. Bevestig uw aanmelding – daarna ontvangt u direct uw persoonlijke code.", zu: "Sluiten" },
+    fr: { titel: "Tentez votre chance !", unter: "Lâchez la bille et découvrez la réduction que vous gagnez.", fallen: "Lâcher la bille",
+          preise: { "10": "10 % de réduction", "15": "15 % de réduction", versand: "Livraison offerte" }, glueck: "Félicitations ! Vous avez gagné :", email: "Votre adresse e-mail",
+          ok: 'Oui, je souhaite recevoir les actualités et offres d’Eveom par e-mail. Désinscription possible à tout moment. Plus d’infos dans la <a href="' + DATENSCHUTZ + '" target="_blank" rel="noopener">politique de confidentialité</a>.',
+          sichern: "Récupérer mon gain", fehlerEmail: "Veuillez saisir une adresse e-mail valide.", fehlerOk: "Veuillez confirmer votre consentement.",
+          dankeTitel: "Presque fini !", danke: "Nous venons de vous envoyer un e-mail. Confirmez votre inscription – vous recevrez ensuite immédiatement votre code personnel.", zu: "Fermer" },
+    en: { titel: "Try your luck!", unter: "Drop the ball to see which discount you win.", fallen: "Drop the ball",
+          preise: { "10": "10% off", "15": "15% off", versand: "Free shipping" }, glueck: "Congratulations! You won:", email: "Your email address",
+          ok: 'Yes, I’d like to receive news and offers from Eveom by email. Unsubscribe at any time. More in our <a href="' + DATENSCHUTZ + '" target="_blank" rel="noopener">privacy policy</a>.',
+          sichern: "Claim my prize", fehlerEmail: "Please enter a valid email address.", fehlerOk: "Please confirm your consent.",
+          dankeTitel: "Almost there!", danke: "We just sent you an email. Please confirm your sign-up – then you’ll receive your personal code right away.", zu: "Close" }
+  };
+
+  var root = document.getElementById("eveom-gp");
+  if (!root || window.Shopify && Shopify.designMode) return;
+
+  var params = new URLSearchParams(location.search);
+  var test = params.get("eveom_popup") === "test";
+  if (!LIVE && !test) return;
+
+  var speicher = {
+    get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  };
+  if (!test) {
+    if (speicher.get("eveom_gp_angemeldet")) return;
+    var zu = Number(speicher.get("eveom_gp_geschlossen") || 0);
+    if (zu && Date.now() - zu < PAUSE_NACH_SCHLIESSEN * 864e5) return;
+    if (/^\/(cart|checkout|account)/.test(location.pathname)) return;
+  }
+
+  var lang = params.get("lang") || SPRACHE_JE_LAND[root.getAttribute("data-land")] || "en";
+  if (!TEXTE[lang]) lang = "en";
+  var T = TEXTE[lang], gewinn = null, laeuft = false;
+  var q = function (s) { return root.querySelector(s); };
+
+  // ---------- Texte ----------
+  root.querySelectorAll("[data-t]").forEach(function (el) {
+    var k = el.getAttribute("data-t");
+    if (k === "ok") el.innerHTML = T.ok; else el.textContent = T[k];
+  });
+  q("#gp-titel").textContent = T.titel;
+  q(".gp-zu").setAttribute("aria-label", T.zu);
+  q(".gp-email").placeholder = T.email;
+  q(".gp-faecher").innerHTML = FAECHER.map(function (f) { return "<div>" + T.preise[f.id] + "</div>"; }).join("");
+
+  // ---------- Brett ----------
+  var canvas = q(".gp-canvas"), ctx = canvas.getContext("2d");
+  var W = canvas.width, H = canvas.height;
+  var REIHEN = 8, SPRUENGE = REIHEN + 1, ABSTAND = W / 10, OBEN = 70, ZEILE = (H - OBEN - 30) / REIHEN, PIN = 7, KUGEL = 15;
+  var PINS = [];
+  for (var r = 0; r < REIHEN; r++) {
+    for (var i = 0, n = r + 2; i < n; i++) PINS.push([W / 2 - (n - 1) * ABSTAND / 2 + i * ABSTAND, OBEN + r * ZEILE]);
+  }
+  function zeichne(kugel) {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = "#1f1f1f";
+    PINS.forEach(function (p) { ctx.beginPath(); ctx.arc(p[0], p[1], PIN, 0, Math.PI * 2); ctx.fill(); });
+    if (!kugel) return;
+    var g = ctx.createRadialGradient(kugel[0] - 5, kugel[1] - 5, 2, kugel[0], kugel[1], KUGEL);
+    g.addColorStop(0, "#d9404f"); g.addColorStop(1, "#7D000D");
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(kugel[0], kugel[1], KUGEL, 0, Math.PI * 2); ctx.fill();
+  }
+
+  // Ergebnis wird zuerst gezogen, dann ein passender Weg erzeugt:
+  // 9 Sprünge (je einen halben Pin-Abstand links/rechts) → 10 Endpositionen, je 2 pro Fach.
+  function fachVonPosition(pos) {
+    return Math.min(4, Math.max(0, Math.floor((W / 2 + (pos - SPRUENGE / 2) * ABSTAND) / (W / 5))));
+  }
+  function ziehePreis() {
+    var z = Math.random() * 100, summe = 0;
+    for (var i = 0; i < FAECHER.length; i++) { summe += FAECHER[i].chance; if (z < summe) return i; }
+    return FAECHER.length - 1;
+  }
+  function wegFuer(fach) {
+    var moegliche = [];
+    for (var pos = 0; pos <= SPRUENGE; pos++) if (fachVonPosition(pos) === fach) moegliche.push(pos);
+    var ziel = moegliche[Math.floor(Math.random() * moegliche.length)], schritte = [];
+    for (var i = 0; i < SPRUENGE; i++) schritte.push(i < ziel ? 1 : -1);
+    for (var j = schritte.length - 1; j > 0; j--) { var k = Math.floor(Math.random() * (j + 1)), t = schritte[j]; schritte[j] = schritte[k]; schritte[k] = t; }
+    return schritte;
+  }
+
+  function fallen() {
+    if (laeuft) return;
+    laeuft = true; q(".gp-fallen").setAttribute("disabled", "");
+    var fach = ziehePreis(), schritte = wegFuer(fach), punkte = [[W / 2, 10]], x = W / 2;
+    for (var r = 0; r < REIHEN; r++) { x += schritte[r] * ABSTAND / 2; punkte.push([x, OBEN + r * ZEILE - PIN - KUGEL]); }
+    x += schritte[REIHEN] * ABSTAND / 2; punkte.push([x, H - KUGEL]);
+    var seg = 0, t0 = null, DAUER = 230;
+    function frame(ts) {
+      if (t0 === null) t0 = ts;
+      var t = Math.min(1, (ts - t0) / DAUER), a = punkte[seg], b = punkte[seg + 1];
+      zeichne([a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t * t - (seg > 0 ? Math.sin(Math.PI * t) * 18 : 0)]);
+      if (t < 1) return requestAnimationFrame(frame);
+      seg++; t0 = null;
+      if (seg < punkte.length - 1) return requestAnimationFrame(frame);
+      gewinn = FAECHER[fach].id;
+      q(".gp-faecher").children[fach].classList.add("gp-gewonnen");
+      setTimeout(function () {
+        q(".gp-schritt1").style.display = "none";
+        q(".gp-schritt2").style.display = "block";
+        q(".gp-preis").textContent = T.preise[gewinn];
+        q(".gp-email").focus();
+      }, 900);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  // ---------- Anmeldung an Klaviyo ----------
+  function klaviyo(pfad, daten) {
+    return fetch("https://a.klaviyo.com/client/" + pfad + "?company_id=" + KLAVIYO.firma, {
+      method: "POST",
+      headers: { "Content-Type": "application/vnd.api+json", revision: KLAVIYO.revision },
+      body: JSON.stringify({ data: daten })
+    });
+  }
+  function absenden(e) {
+    e.preventDefault();
+    var email = q(".gp-email").value.trim(), fehler = q(".gp-fehler");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { fehler.textContent = T.fehlerEmail; return; }
+    if (!q(".gp-ok-box").checked) { fehler.textContent = T.fehlerOk; return; }
+    fehler.textContent = ""; q(".gp-sichern").setAttribute("disabled", "");
+    var eigenschaften = { gluecks_preis: gewinn, popup_sprache: lang };
+    var fertig = function () {
+      speicher.set("eveom_gp_angemeldet", "1");
+      q(".gp-schritt2").style.display = "none";
+      q(".gp-danke").style.display = "block";
+      q("#gp-titel").textContent = T.dankeTitel;
+    };
+    klaviyo("profiles", { type: "profile", attributes: { email: email, properties: eigenschaften } })
+      .catch(function () {})
+      .then(function () {
+        return klaviyo("subscriptions", { type: "subscription", attributes: {
+          custom_source: "Eveom Glücks-Pop-up",
+          profile: { data: { type: "profile", attributes: { email: email, properties: eigenschaften } } }
+        }, relationships: { list: { data: { type: "list", id: KLAVIYO.liste } } } });
+      })
+      .then(fertig, fertig);
+  }
+
+  function schliessen() {
+    root.hidden = true;
+    if (!test) speicher.set("eveom_gp_geschlossen", String(Date.now()));
+  }
+
+  q(".gp-fallen").addEventListener("click", fallen);
+  q(".gp-schritt2").addEventListener("submit", absenden);
+  q(".gp-zu").addEventListener("click", schliessen);
+  q(".gp-overlay").addEventListener("click", function (e) { if (e.target === e.currentTarget && !laeuft) schliessen(); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !root.hidden) schliessen(); });
+
+  zeichne();
+  setTimeout(function () {
+    q(".gp-rechts").style.backgroundImage = "url('" + BILD + "')";
+    root.hidden = false;
+  }, test ? 500 : VERZOEGERUNG);
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Eveom Glücks-Pop-up",
+  "tag": "div",
+  "enabled_on": { "groups": ["footer"] }
+}
+{% endschema %}
