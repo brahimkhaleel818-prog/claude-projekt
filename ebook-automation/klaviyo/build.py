@@ -11,7 +11,8 @@ import re
 from pathlib import Path
 
 HERE = Path(__file__).parent
-COUPON = "WILLKOMMEN10"
+# Code-Vorlagen in Klaviyo (Shopify-Codes, je Kunde eindeutig, 14 Tage gültig) – je Gewinn im Glücks-Pop-up
+COUPONS = {"standard": "WILLKOMMEN10", "10": "WILLKOMMEN10", "15": "WILLKOMMEN15", "versand": "GRATISVERSAND"}
 SHOP = "https://www.eveom.health"
 PRODUCT = {
     "de": f"{SHOP}/products/eveom-astaxanthin-de",
@@ -42,7 +43,7 @@ CODE_BOX = (
     '<p style="margin:24px 0;padding:18px;background:#f4f1ec;border-radius:8px;text-align:center;">'
     '<span style="font-size:14px;">{label}</span><br>'
     '<span style="font-size:24px;font-weight:bold;letter-spacing:2px;color:#7D000D;">'
-    "{% coupon_code '" + COUPON + "' %}</span></p>"
+    "{% coupon_code '{coupon}' %}</span></p>"
 )
 ITEMS_BOX = (
     '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" '
@@ -86,13 +87,14 @@ L = {
 
 # Jede Mail: betreff, vorschau (Preheader), absaetze (HTML erlaubt), button (Text, Link), grund
 MAILS = {
-    "willkommen-1": {
+    # Ohne Gewinn (z. B. Anmeldung über die Kasse oder den Footer)
+    "willkommen-1-standard": {
         "de": dict(
             betreff="Willkommen bei Eveom – hier ist Ihr 10 %-Code 🎁",
             vorschau="Ihr persönlicher Code für Ihre erste Bestellung",
             absaetze=[
                 "schön, dass Sie da sind! Als Dankeschön für Ihre Anmeldung schenken wir Ihnen <b>10 % Rabatt auf Ihre erste Bestellung</b>.",
-                CODE_BOX.replace("{label}", "Ihr persönlicher Code"),
+                CODE_BOX.replace("{coupon}", COUPONS["standard"]).replace("{label}", "Ihr persönlicher Code"),
                 "Geben Sie den Code einfach beim Bezahlen ein. Er ist <b>14 Tage gültig</b> und einmal einlösbar.",
                 "Ab 69,90 € Bestellwert ist der Versand außerdem kostenlos.",
             ],
@@ -103,7 +105,7 @@ MAILS = {
             vorschau="Uw persoonlijke code voor uw eerste bestelling",
             absaetze=[
                 "fijn dat u er bent! Als bedankje voor uw aanmelding krijgt u <b>10% korting op uw eerste bestelling</b>.",
-                CODE_BOX.replace("{label}", "Uw persoonlijke code"),
+                CODE_BOX.replace("{coupon}", COUPONS["standard"]).replace("{label}", "Uw persoonlijke code"),
                 "Vul de code gewoon in bij het afrekenen. De code is <b>14 dagen geldig</b> en eenmalig te gebruiken.",
                 "Vanaf € 69,90 is de verzending bovendien gratis.",
             ],
@@ -114,7 +116,7 @@ MAILS = {
             vorschau="Votre code personnel pour votre première commande",
             absaetze=[
                 "nous sommes ravis de vous compter parmi nous ! Pour vous remercier de votre inscription, nous vous offrons <b>10 % de réduction sur votre première commande</b>.",
-                CODE_BOX.replace("{label}", "Votre code personnel"),
+                CODE_BOX.replace("{coupon}", COUPONS["standard"]).replace("{label}", "Votre code personnel"),
                 "Il vous suffit de saisir ce code lors du paiement. Il est <b>valable 14 jours</b> et utilisable une seule fois.",
                 "La livraison est offerte dès 69,90 € d’achat.",
             ],
@@ -125,7 +127,7 @@ MAILS = {
             vorschau="Your personal code for your first order",
             absaetze=[
                 "great to have you here! As a thank-you for signing up, enjoy <b>10% off your first order</b>.",
-                CODE_BOX.replace("{label}", "Your personal code"),
+                CODE_BOX.replace("{coupon}", COUPONS["standard"]).replace("{label}", "Your personal code"),
                 "Simply enter the code at checkout. It is <b>valid for 14 days</b> and can be used once.",
                 "Shipping is free on orders from €69.90.",
             ],
@@ -141,7 +143,7 @@ MAILS = {
                 "Astaxanthin ist ein natürlicher roter Farbstoff aus der Gruppe der Carotinoide. Er sorgt zum Beispiel für die rosa Farbe von Lachs und Flamingos. In der Natur stammt er vor allem aus Mikroalgen.",
                 DUO,
                 "<b>Unser Tipp:</b> Astaxanthin ist fettlöslich und wird deshalb gern zu einer Mahlzeit eingenommen. Bitte beachten Sie die Verzehrempfehlung auf der Verpackung.",
-                "Ihr 10 %-Code aus unserer Willkommens-Mail ist übrigens noch 12 Tage gültig.",
+                "Ihr persönlicher Code aus unserer Willkommens-Mail ist übrigens noch 12 Tage gültig.",
             ],
             button=("Zu Eveom Astaxanthin", PRODUCT["de"]),
         ),
@@ -153,7 +155,7 @@ MAILS = {
                 "Astaxanthine is een natuurlijke rode kleurstof uit de groep van de carotenoïden. Het geeft bijvoorbeeld zalm en flamingo’s hun roze kleur. In de natuur komt het vooral uit microalgen.",
                 DUO,
                 "<b>Onze tip:</b> astaxanthine is vetoplosbaar en wordt daarom vaak bij een maaltijd ingenomen. Volg de gebruiksaanwijzing op de verpakking.",
-                "Uw kortingscode van 10% uit onze welkomstmail is trouwens nog 12 dagen geldig.",
+                "Uw persoonlijke code uit onze welkomstmail is trouwens nog 12 dagen geldig.",
             ],
             button=("Naar Eveom Astaxanthine", PRODUCT["nl"]),
         ),
@@ -165,7 +167,7 @@ MAILS = {
                 "L’astaxanthine est un pigment rouge naturel de la famille des caroténoïdes. C’est par exemple elle qui donne au saumon et aux flamants roses leur couleur. Dans la nature, elle provient surtout de micro-algues.",
                 DUO,
                 "<b>Notre conseil :</b> l’astaxanthine est liposoluble, c’est pourquoi on la prend volontiers au cours d’un repas. Veuillez respecter la dose journalière indiquée sur l’emballage.",
-                "Votre code de 10 % reçu dans notre e-mail de bienvenue est d’ailleurs encore valable 12 jours.",
+                "Votre code personnel reçu dans notre e-mail de bienvenue est d’ailleurs encore valable 12 jours.",
             ],
             button=("Découvrir Eveom Astaxanthine", PRODUCT["fr"]),
         ),
@@ -177,47 +179,47 @@ MAILS = {
                 "Astaxanthin is a natural red pigment from the carotenoid family. It is what gives salmon and flamingos their pink colour. In nature, it comes mainly from microalgae.",
                 DUO,
                 "<b>Our tip:</b> astaxanthin is fat-soluble, which is why many people take it with a meal. Please follow the directions on the package.",
-                "By the way, the 10% code from our welcome email is still valid for 12 more days.",
+                "By the way, the personal code from our welcome email is still valid for 12 more days.",
             ],
             button=("Discover Eveom Astaxanthin", PRODUCT["en"]),
         ),
     },
     "willkommen-3": {
         "de": dict(
-            betreff="Ihr 10 %-Code läuft in 3 Tagen ab ⏳",
-            vorschau="Jetzt noch 10 % auf Ihre erste Bestellung sichern",
+            betreff="Ihr persönlicher Code läuft in 3 Tagen ab ⏳",
+            vorschau="Jetzt noch Ihren Vorteil für die erste Bestellung sichern",
             absaetze=[
-                "nur noch 3 Tage: Mit Ihrem persönlichen Code sparen Sie <b>10 % auf Ihre erste Bestellung</b>.",
+                "nur noch 3 Tage: Dann läuft <b>Ihr persönlicher Code für Ihre erste Bestellung</b> ab.",
                 "Sie finden den Code in unserer E-Mail „Willkommen bei Eveom“. Einfach beim Bezahlen eingeben – ab 69,90 € ist der Versand kostenlos.",
                 "Haben Sie Fragen? Antworten Sie einfach auf diese E-Mail, wir helfen Ihnen gern.",
             ],
             button=("Code jetzt einlösen", PRODUCT["de"]),
         ),
         "nl": dict(
-            betreff="Uw kortingscode van 10% verloopt over 3 dagen ⏳",
-            vorschau="Profiteer nu nog van 10% korting op uw eerste bestelling",
+            betreff="Uw persoonlijke code verloopt over 3 dagen ⏳",
+            vorschau="Profiteer nu nog van uw voordeel op uw eerste bestelling",
             absaetze=[
-                "nog maar 3 dagen: met uw persoonlijke code krijgt u <b>10% korting op uw eerste bestelling</b>.",
+                "nog maar 3 dagen: dan verloopt <b>uw persoonlijke code voor uw eerste bestelling</b>.",
                 "U vindt de code in onze e-mail „Welkom bij Eveom“. Vul hem gewoon in bij het afrekenen – vanaf € 69,90 is de verzending gratis.",
                 "Heeft u vragen? Beantwoord gerust deze e-mail, we helpen u graag.",
             ],
             button=("Code nu gebruiken", PRODUCT["nl"]),
         ),
         "fr": dict(
-            betreff="Votre code de 10 % expire dans 3 jours ⏳",
-            vorschau="Profitez encore de 10 % sur votre première commande",
+            betreff="Votre code personnel expire dans 3 jours ⏳",
+            vorschau="Profitez encore de votre avantage sur votre première commande",
             absaetze=[
-                "plus que 3 jours : avec votre code personnel, vous économisez <b>10 % sur votre première commande</b>.",
+                "plus que 3 jours : ensuite, <b>votre code personnel pour votre première commande</b> expire.",
                 "Vous trouverez le code dans notre e-mail « Bienvenue chez Eveom ». Saisissez-le simplement lors du paiement – la livraison est offerte dès 69,90 €.",
                 "Une question ? Répondez simplement à cet e-mail, nous vous aiderons avec plaisir.",
             ],
             button=("Utiliser mon code", PRODUCT["fr"]),
         ),
         "en": dict(
-            betreff="Your 10% code expires in 3 days ⏳",
-            vorschau="Still time to save 10% on your first order",
+            betreff="Your personal code expires in 3 days ⏳",
+            vorschau="Still time to use your perk on your first order",
             absaetze=[
-                "only 3 days left: with your personal code you save <b>10% on your first order</b>.",
+                "only 3 days left: then <b>your personal code for your first order</b> expires.",
                 "You’ll find the code in our email “Welcome to Eveom”. Just enter it at checkout – shipping is free on orders from €69.90.",
                 "Any questions? Simply reply to this email, we’re happy to help.",
             ],
@@ -386,6 +388,46 @@ MAILS = {
     },
 }
 
+# Willkommens-Mail 1 je Gewinn aus dem Glücks-Pop-up (Profil-Eigenschaft "gluecks_preis")
+GEWINN = {
+    "de": dict(
+        intro="herzlichen Glückwunsch zu Ihrem Gewinn – und schön, dass Sie da sind! Sie haben <b>{x}</b> gewonnen.",
+        x={"10": "10 % Rabatt auf Ihre erste Bestellung", "15": "15 % Rabatt auf Ihre erste Bestellung", "versand": "gratis Versand für Ihre erste Bestellung"},
+        betreff={"10": "Willkommen bei Eveom – hier ist Ihr 10 %-Code 🎁", "15": "Willkommen bei Eveom – hier ist Ihr 15 %-Code 🎁", "versand": "Willkommen bei Eveom – hier ist Ihr Gratis-Versand-Code 🎁"},
+    ),
+    "nl": dict(
+        intro="gefeliciteerd met uw prijs – en fijn dat u er bent! U heeft <b>{x}</b> gewonnen.",
+        x={"10": "10% korting op uw eerste bestelling", "15": "15% korting op uw eerste bestelling", "versand": "gratis verzending voor uw eerste bestelling"},
+        betreff={"10": "Welkom bij Eveom – hier is uw kortingscode van 10% 🎁", "15": "Welkom bij Eveom – hier is uw kortingscode van 15% 🎁", "versand": "Welkom bij Eveom – hier is uw code voor gratis verzending 🎁"},
+    ),
+    "fr": dict(
+        intro="félicitations pour votre gain – et bienvenue chez Eveom ! Vous avez gagné <b>{x}</b>.",
+        x={"10": "10 % de réduction sur votre première commande", "15": "15 % de réduction sur votre première commande", "versand": "la livraison offerte sur votre première commande"},
+        betreff={"10": "Bienvenue chez Eveom – voici votre code de 10 % 🎁", "15": "Bienvenue chez Eveom – voici votre code de 15 % 🎁", "versand": "Bienvenue chez Eveom – voici votre code livraison offerte 🎁"},
+    ),
+    "en": dict(
+        intro="congratulations on your prize – and great to have you here! You’ve won <b>{x}</b>.",
+        x={"10": "10% off your first order", "15": "15% off your first order", "versand": "free shipping on your first order"},
+        betreff={"10": "Welcome to Eveom – here’s your 10% code 🎁", "15": "Welcome to Eveom – here’s your 15% code 🎁", "versand": "Welcome to Eveom – here’s your free shipping code 🎁"},
+    ),
+}
+
+
+def gewinn_mail(preis, lang):
+    basis, g = MAILS["willkommen-1-standard"][lang], GEWINN[lang]
+    absaetze = [g["intro"].replace("{x}", g["x"][preis]),
+                basis["absaetze"][1].replace(COUPONS["standard"], COUPONS[preis]),
+                basis["absaetze"][2]]
+    if preis != "versand":
+        absaetze.append(basis["absaetze"][3])
+    return dict(basis, betreff=g["betreff"][preis], absaetze=absaetze)
+
+
+MAILS = {
+    **{f"willkommen-1-{p}": {lang: gewinn_mail(p, lang) for lang in GEWINN} for p in ("10", "15", "versand")},
+    **MAILS,
+}
+
 GRUND = {"willkommen": "grund_liste", "checkout": "grund_kauf", "nachkauf": "grund_kauf"}
 
 
@@ -465,7 +507,10 @@ def sample(s):
 
 
 TITEL = {
-    "willkommen-1": "Willkommens-Serie · Mail 1 · sofort nach Anmeldung",
+    "willkommen-1-10": "Willkommens-Serie · Mail 1 · Gewinn 10 % Rabatt",
+    "willkommen-1-15": "Willkommens-Serie · Mail 1 · Gewinn 15 % Rabatt",
+    "willkommen-1-versand": "Willkommens-Serie · Mail 1 · Gewinn Gratis Versand",
+    "willkommen-1-standard": "Willkommens-Serie · Mail 1 · Anmeldung ohne Glücks-Pop-up (10 %)",
     "willkommen-2": "Willkommens-Serie · Mail 2 · nach 2 Tagen (nur wenn noch nicht bestellt)",
     "willkommen-3": "Willkommens-Serie · Mail 3 · nach 11 Tagen (nur wenn noch nicht bestellt)",
     "checkout-1": "Abgebrochener Checkout · Mail 1 · nach 1 Stunde",
