@@ -1,0 +1,18 @@
+{
+ "de": {
+  "betreff": "{% if person|lookup:'gluecks_preis' == '15' %}Willkommen bei Eveom – hier ist Ihr 15 %-Code 🎁{% elif person|lookup:'gluecks_preis' == 'versand' %}Willkommen bei Eveom – hier ist Ihr Gratis-Versand-Code 🎁{% else %}Willkommen bei Eveom – hier ist Ihr 10 %-Code 🎁{% endif %}",
+  "vorschau": "Ihr persönlicher Code für Ihre erste Bestellung"
+ },
+ "nl": {
+  "betreff": "{% if person|lookup:'gluecks_preis' == '15' %}Welkom bij Eveom – hier is uw kortingscode van 15% 🎁{% elif person|lookup:'gluecks_preis' == 'versand' %}Welkom bij Eveom – hier is uw code voor gratis verzending 🎁{% else %}Welkom bij Eveom – hier is uw kortingscode van 10% 🎁{% endif %}",
+  "vorschau": "Uw persoonlijke code voor uw eerste bestelling"
+ },
+ "fr": {
+  "betreff": "{% if person|lookup:'gluecks_preis' == '15' %}Bienvenue chez Eveom – voici votre code de 15 % 🎁{% elif person|lookup:'gluecks_preis' == 'versand' %}Bienvenue chez Eveom – voici votre code livraison offerte 🎁{% else %}Bienvenue chez Eveom – voici votre code de 10 % 🎁{% endif %}",
+  "vorschau": "Votre code personnel pour votre première commande"
+ },
+ "en": {
+  "betreff": "{% if person|lookup:'gluecks_preis' == '15' %}Welcome to Eveom – here’s your 15% code 🎁{% elif person|lookup:'gluecks_preis' == 'versand' %}Welcome to Eveom – here’s your free shipping code 🎁{% else %}Welcome to Eveom – here’s your 10% code 🎁{% endif %}",
+  "vorschau": "Your personal code for your first order"
+ }
+}

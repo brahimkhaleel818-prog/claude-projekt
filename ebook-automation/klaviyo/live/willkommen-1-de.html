@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Willkommen bei Eveom – hier ist Ihr 10 %-Code 🎁</title>
+</head>
+<body style="margin:0;padding:0;background:#7D000D;">
+<div style="display:none;max-height:0;overflow:hidden;">Ihr persönlicher Code für Ihre erste Bestellung</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#7D000D" style="background:#7D000D;padding:24px 12px;">
+  <tr>
+    <td align="center">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:12px;font-family:Helvetica,Arial,sans-serif;color:#2b2b2b;">
+        <tr>
+          <td style="padding:28px 32px 4px;font-size:22px;font-weight:bold;letter-spacing:3px;">EVEOM</td>
+        </tr>
+        <tr>
+          <td style="padding:12px 0 8px;"><a href="https://www.eveom.health/products/eveom-astaxanthin-de"><img src="https://cdn.shopify.com/s/files/1/0814/9155/8732/files/2f33e870-f124-42ef-93a2-53aa874573a4.png?v=1792963515&width=1120&height=900&crop=center" width="560" alt="Eveom Astaxanthin" style="display:block;width:100%;height:auto;border:0;"></a></td>
+        </tr>
+        <tr>
+          <td style="padding:8px 32px 28px;font-size:16px;line-height:1.6;">
+            <p>Hallo{% if person.first_name %} {{ person.first_name }}{% endif %},</p>
+            <div>{% if person|lookup:'gluecks_preis' == '15' %}<p>herzlichen Glückwunsch zu Ihrem Gewinn – und schön, dass Sie da sind! Sie haben <b>15 % Rabatt auf Ihre erste Bestellung</b> gewonnen.</p><p style="margin:24px 0;padding:18px;background:#f4f1ec;border-radius:8px;text-align:center;"><span style="font-size:14px;">Ihr persönlicher Code</span><br><span style="font-size:24px;font-weight:bold;letter-spacing:2px;color:#7D000D;">{% coupon_code 'WILLKOMMEN15' %}</span></p><p>Geben Sie den Code einfach beim Bezahlen ein. Er ist einmal einlösbar.</p><p>Ab 69,90 € Bestellwert ist der Versand außerdem kostenlos.</p>{% elif person|lookup:'gluecks_preis' == 'versand' %}<p>herzlichen Glückwunsch zu Ihrem Gewinn – und schön, dass Sie da sind! Sie haben <b>gratis Versand für Ihre erste Bestellung</b> gewonnen.</p><p style="margin:24px 0;padding:18px;background:#f4f1ec;border-radius:8px;text-align:center;"><span style="font-size:14px;">Ihr persönlicher Code</span><br><span style="font-size:24px;font-weight:bold;letter-spacing:2px;color:#7D000D;">{% coupon_code 'GRATISVERSAND' %}</span></p><p>Geben Sie den Code einfach beim Bezahlen ein. Er ist einmal einlösbar.</p>{% elif person|lookup:'gluecks_preis' == '10' %}<p>herzlichen Glückwunsch zu Ihrem Gewinn – und schön, dass Sie da sind! Sie haben <b>10 % Rabatt auf Ihre erste Bestellung</b> gewonnen.</p><p style="margin:24px 0;padding:18px;background:#f4f1ec;border-radius:8px;text-align:center;"><span style="font-size:14px;">Ihr persönlicher Code</span><br><span style="font-size:24px;font-weight:bold;letter-spacing:2px;color:#7D000D;">{% coupon_code 'WILLKOMMEN10' %}</span></p><p>Geben Sie den Code einfach beim Bezahlen ein. Er ist einmal einlösbar.</p><p>Ab 69,90 € Bestellwert ist der Versand außerdem kostenlos.</p>{% else %}<p>schön, dass Sie da sind! Als Dankeschön für Ihre Anmeldung schenken wir Ihnen <b>10 % Rabatt auf Ihre erste Bestellung</b>.</p><p style="margin:24px 0;padding:18px;background:#f4f1ec;border-radius:8px;text-align:center;"><span style="font-size:14px;">Ihr persönlicher Code</span><br><span style="font-size:24px;font-weight:bold;letter-spacing:2px;color:#7D000D;">{% coupon_code 'WILLKOMMEN10' %}</span></p><p>Geben Sie den Code einfach beim Bezahlen ein. Er ist einmal einlösbar.</p><p>Ab 69,90 € Bestellwert ist der Versand außerdem kostenlos.</p>{% endif %}</div>
+            <p style="margin:28px 0;text-align:center;"><a href="https://www.eveom.health/products/eveom-astaxanthin-de" style="display:inline-block;background:#7D000D;color:#ffffff;text-decoration:none;font-weight:bold;padding:14px 28px;border-radius:8px;">Jetzt entdecken</a></p>
+            <p>Herzliche Grüße,<br>Lena Hoffmann<br>Team Eveom™</p>
+          </td>
+        </tr>
+      </table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;font-family:Helvetica,Arial,sans-serif;">
+        <tr>
+          <td style="padding:16px 32px;font-size:12px;line-height:1.5;color:#f1d9dc;text-align:center;">
+            Sie erhalten diese E-Mail, weil Sie sich für den Eveom-Newsletter angemeldet haben.<br>{% unsubscribe 'Abmelden' %}<br>{{ organization.name }} · {{ organization.full_address }}
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

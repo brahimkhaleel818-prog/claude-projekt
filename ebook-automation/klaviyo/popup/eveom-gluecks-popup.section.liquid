@@ -2,7 +2,7 @@
   Eveom Glücks-Pop-up (Kugel-Spiel) – Anmeldung zur Klaviyo-Liste mit Gewinn.
   Shopify-Section in der Footer-Gruppe (im Theme-Editor als „Eveom Glücks-Pop-up“ sichtbar).
   Quelle: github.com/brahimkhaleel818-prog/claude-projekt → ebook-automation/klaviyo/popup/eveom-gluecks-popup.section.liquid
-  LIVE = false: nur sichtbar mit ?eveom_popup=test in der Adresse (optional &lang=de|nl|fr|en).
+  LIVE = true: für alle Besucher aktiv. Testen ohne Wartezeit: ?eveom_popup=test (optional &lang=de|nl|fr|en).
 {%- endcomment -%}
 <div id="eveom-gp" hidden data-land="{{ localization.country.iso_code }}">
   <div class="gp-overlay">
@@ -72,7 +72,7 @@
 <script>
 (function () {
   // Für Kunden einschalten: LIVE auf true setzen.
-  var LIVE = false;
+  var LIVE = true;
   var KLAVIYO = { firma: "XvW5Bs", liste: "XDbA9H", revision: "2024-10-15" };
   var BILD = "https://cdn.shopify.com/s/files/1/0814/9155/8732/files/2f33e870-f124-42ef-93a2-53aa874573a4.png?v=1792963515&width=1000";
   var VERZOEGERUNG = 8000;            // ms bis das Pop-up erscheint

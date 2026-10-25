@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Welkom bij Eveom – hier is uw kortingscode van 10% 🎁</title>
+</head>
+<body style="margin:0;padding:0;background:#7D000D;">
+<div style="display:none;max-height:0;overflow:hidden;">Uw persoonlijke code voor uw eerste bestelling</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#7D000D" style="background:#7D000D;padding:24px 12px;">
+  <tr>
+    <td align="center">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:12px;font-family:Helvetica,Arial,sans-serif;color:#2b2b2b;">
+        <tr>
+          <td style="padding:28px 32px 4px;font-size:22px;font-weight:bold;letter-spacing:3px;">EVEOM</td>
+        </tr>
+        <tr>
+          <td style="padding:12px 0 8px;"><a href="https://www.eveom.health/products/eveom-astaxanthine"><img src="https://cdn.shopify.com/s/files/1/0814/9155/8732/files/2f33e870-f124-42ef-93a2-53aa874573a4.png?v=1792963515&width=1120&height=900&crop=center" width="560" alt="Eveom Astaxanthin" style="display:block;width:100%;height:auto;border:0;"></a></td>
+        </tr>
+        <tr>
+          <td style="padding:8px 32px 28px;font-size:16px;line-height:1.6;">
+            <p>Beste{% if person.first_name %} {{ person.first_name }}{% else %} klant{% endif %},</p>
+            <div>{% if person|lookup:'gluecks_preis' == '15' %}<p>gefeliciteerd met uw prijs – en fijn dat u er bent! U heeft <b>15% korting op uw eerste bestelling</b> gewonnen.</p><p style="margin:24px 0;padding:18px;background:#f4f1ec;border-radius:8px;text-align:center;"><span style="font-size:14px;">Uw persoonlijke code</span><br><span style="font-size:24px;font-weight:bold;letter-spacing:2px;color:#7D000D;">{% coupon_code 'WILLKOMMEN15' %}</span></p><p>Vul de code gewoon in bij het afrekenen. De code is eenmalig te gebruiken.</p><p>Vanaf € 69,90 is de verzending bovendien gratis.</p>{% elif person|lookup:'gluecks_preis' == 'versand' %}<p>gefeliciteerd met uw prijs – en fijn dat u er bent! U heeft <b>gratis verzending voor uw eerste bestelling</b> gewonnen.</p><p style="margin:24px 0;padding:18px;background:#f4f1ec;border-radius:8px;text-align:center;"><span style="font-size:14px;">Uw persoonlijke code</span><br><span style="font-size:24px;font-weight:bold;letter-spacing:2px;color:#7D000D;">{% coupon_code 'GRATISVERSAND' %}</span></p><p>Vul de code gewoon in bij het afrekenen. De code is eenmalig te gebruiken.</p>{% elif person|lookup:'gluecks_preis' == '10' %}<p>gefeliciteerd met uw prijs – en fijn dat u er bent! U heeft <b>10% korting op uw eerste bestelling</b> gewonnen.</p><p style="margin:24px 0;padding:18px;background:#f4f1ec;border-radius:8px;text-align:center;"><span style="font-size:14px;">Uw persoonlijke code</span><br><span style="font-size:24px;font-weight:bold;letter-spacing:2px;color:#7D000D;">{% coupon_code 'WILLKOMMEN10' %}</span></p><p>Vul de code gewoon in bij het afrekenen. De code is eenmalig te gebruiken.</p><p>Vanaf € 69,90 is de verzending bovendien gratis.</p>{% else %}<p>fijn dat u er bent! Als bedankje voor uw aanmelding krijgt u <b>10% korting op uw eerste bestelling</b>.</p><p style="margin:24px 0;padding:18px;background:#f4f1ec;border-radius:8px;text-align:center;"><span style="font-size:14px;">Uw persoonlijke code</span><br><span style="font-size:24px;font-weight:bold;letter-spacing:2px;color:#7D000D;">{% coupon_code 'WILLKOMMEN10' %}</span></p><p>Vul de code gewoon in bij het afrekenen. De code is eenmalig te gebruiken.</p><p>Vanaf € 69,90 is de verzending bovendien gratis.</p>{% endif %}</div>
+            <p style="margin:28px 0;text-align:center;"><a href="https://www.eveom.health/products/eveom-astaxanthine" style="display:inline-block;background:#7D000D;color:#ffffff;text-decoration:none;font-weight:bold;padding:14px 28px;border-radius:8px;">Nu ontdekken</a></p>
+            <p>Met vriendelijke groet,<br>Lotte de Vries<br>Team Eveom™</p>
+          </td>
+        </tr>
+      </table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;font-family:Helvetica,Arial,sans-serif;">
+        <tr>
+          <td style="padding:16px 32px;font-size:12px;line-height:1.5;color:#f1d9dc;text-align:center;">
+            U ontvangt deze e-mail omdat u zich heeft aangemeld voor de nieuwsbrief van Eveom.<br>{% unsubscribe 'Afmelden' %}<br>{{ organization.name }} · {{ organization.full_address }}
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+</body>
+</html>
