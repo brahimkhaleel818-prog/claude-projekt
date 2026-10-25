@@ -470,8 +470,8 @@ def render(key, lang):
       </table>
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;font-family:Helvetica,Arial,sans-serif;">
         <tr>
-          <td style="padding:16px 32px;font-size:12px;line-height:1.5;color:#f1d9dc;text-align:center;">
-            {grund}<br>{{% unsubscribe '{t['abmelden']}' %}} · <a href="{SHOP}/policies/legal-notice" style="color:#f1d9dc;">{t['impressum']}</a>
+          <td style="padding:16px 32px;font-size:11px;line-height:1.5;color:#c98a91;text-align:center;">
+            {grund}<br><a href="{{% unsubscribe_url %}}" style="color:#c98a91;text-decoration:none;">{t['abmelden']}</a> · <a href="{SHOP}/policies/legal-notice" style="color:#c98a91;text-decoration:none;">{t['impressum']}</a>
           </td>
         </tr>
       </table>
@@ -498,7 +498,7 @@ SAMPLE = [
     (r"\{% for item in event.extra.line_items %\}(.*?)\{% endfor %\}",
      lambda m: m.group(1).replace("{{ item.product.title }}", "Eveom Astaxanthin 12 MG").replace("{{ item.quantity|floatformat:0 }}", "1")),
     (r"\{\{ event.extra.checkout_url[^}]*\}\}", lambda m: SHOP + "/cart"),
-    (r"\{% unsubscribe '([^']+)' %\}", lambda m: f'<a href="#" style="color:#f1d9dc;">{m.group(1)}</a>'),
+    (r"\{% unsubscribe_url %\}", lambda m: "#"),
 ]
 
 
