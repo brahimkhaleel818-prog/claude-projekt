@@ -56,6 +56,7 @@ L = {
         gruss="Herzliche Grüße,",
         absenderin="Lena Hoffmann",
         abmelden="Abmelden",
+        impressum="Impressum",
         grund_liste="Sie erhalten diese E-Mail, weil Sie sich für den Eveom-Newsletter angemeldet haben.",
         grund_kauf="Sie erhalten diese E-Mail, weil Sie dem Erhalt von E-Mails von Eveom zugestimmt haben.",
     ),
@@ -64,6 +65,7 @@ L = {
         gruss="Met vriendelijke groet,",
         absenderin="Lotte de Vries",
         abmelden="Afmelden",
+        impressum="Juridische informatie",
         grund_liste="U ontvangt deze e-mail omdat u zich heeft aangemeld voor de nieuwsbrief van Eveom.",
         grund_kauf="U ontvangt deze e-mail omdat u heeft ingestemd met het ontvangen van e-mails van Eveom.",
     ),
@@ -72,6 +74,7 @@ L = {
         gruss="Bien cordialement,",
         absenderin="Chloé Martin",
         abmelden="Se désinscrire",
+        impressum="Mentions légales",
         grund_liste="Vous recevez cet e-mail car vous vous êtes inscrit(e) à la newsletter Eveom.",
         grund_kauf="Vous recevez cet e-mail car vous avez accepté de recevoir des e-mails d’Eveom.",
     ),
@@ -80,6 +83,7 @@ L = {
         gruss="Warm regards,",
         absenderin="Emily Carter",
         abmelden="Unsubscribe",
+        impressum="Legal notice",
         grund_liste="You are receiving this email because you signed up for the Eveom newsletter.",
         grund_kauf="You are receiving this email because you agreed to receive emails from Eveom.",
     ),
@@ -467,7 +471,7 @@ def render(key, lang):
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;font-family:Helvetica,Arial,sans-serif;">
         <tr>
           <td style="padding:16px 32px;font-size:12px;line-height:1.5;color:#f1d9dc;text-align:center;">
-            {grund}<br>{{% unsubscribe '{t['abmelden']}' %}}<br>{{{{ organization.name }}}} · {{{{ organization.full_address }}}}
+            {grund}<br>{{% unsubscribe '{t['abmelden']}' %}} · <a href="{SHOP}/policies/legal-notice" style="color:#f1d9dc;">{t['impressum']}</a>
           </td>
         </tr>
       </table>
@@ -495,8 +499,6 @@ SAMPLE = [
      lambda m: m.group(1).replace("{{ item.product.title }}", "Eveom Astaxanthin 12 MG").replace("{{ item.quantity|floatformat:0 }}", "1")),
     (r"\{\{ event.extra.checkout_url[^}]*\}\}", lambda m: SHOP + "/cart"),
     (r"\{% unsubscribe '([^']+)' %\}", lambda m: f'<a href="#" style="color:#f1d9dc;">{m.group(1)}</a>'),
-    (r"\{\{ organization.name \}\}", lambda m: "Eveom™"),
-    (r"\{\{ organization.full_address \}\}", lambda m: "Lerchenfeldstraße 56, 47877 Willich, Germany"),
 ]
 
 
