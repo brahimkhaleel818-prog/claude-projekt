@@ -49,4 +49,8 @@
     .eveom-g-wrap .eveom-g__text { font-size: 13px; text-wrap: balance; }
     .eveom-g-wrap .eveom-g__text br { display: none; }
   }
+
+  /* CrispCheckout: Fußzeile „Secure checkout by CrispCheckout · Payments by Whop“ ausblenden */
+  main footer.border-t > p.text-xs { display: none !important; }
+  main footer.border-t:not(:has(a)) { display: none !important; }
 </style>
