@@ -11,7 +11,7 @@
   var EINZELPREIS = 39.90; // Normalpreis einer Dose in EUR
   var PRODUKT = /astaxanth/i;
   var T = {
-    de: { free: 'GRATIS', save: 'GESAMTERSPARNIS', b3: '2 + 1 GRATIS', b5: '3 + 2 GRATIS' },
+    de: { free: 'KOSTENLOS', save: 'GESAMTERSPARNIS', b3: '2 + 1 GRATIS', b5: '3 + 2 GRATIS' },
     nl: { free: 'GRATIS', save: 'TOTALE BESPARING', b3: 'BESTEL 2 + 1 GRATIS', b5: 'BESTEL 3 + 2 GRATIS' },
     en: { free: 'FREE', save: 'TOTAL SAVINGS', b3: 'BUY 2 + GET 1 FREE', b5: 'BUY 3 + GET 2 FREE' },
     fr: { free: 'GRATUIT', save: 'ÉCONOMIES TOTALES', b3: '2 ACHETÉS + 1 OFFERT', b5: '3 ACHETÉS + 2 OFFERTS' }
