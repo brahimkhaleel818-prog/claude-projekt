@@ -18,6 +18,109 @@
     </p>
   </div>
   <img class="eveom-g__lang" alt="" width="1" height="1" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" onload="var w=this.parentNode,l=navigator.languages,c='en';if(!l||!l.length)l=[navigator.language||''];for(var i=0;i<l.length;i++){var x=String(l[i]).slice(0,2).toLowerCase();if(x=='de'||x=='nl'||x=='en'){c=x;break}}w.querySelector('.eveom-g').setAttribute('lang',c);">
+  <!--EV-SUM--><img class="eveom-g__lang" alt="" width="1" height="1" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" onload="(function () {
+if (window.__eveomSum) return;
+window.__eveomSum = 1;
+var EINZELPREIS = 39.90; // Normalpreis einer Dose in EUR
+var PRODUKT = /astaxanth/i;
+var T = {
+de: { free: &#x27;GRATIS&#x27;, save: &#x27;GESAMTERSPARNIS&#x27;, b3: &#x27;2 + 1 GRATIS&#x27;, b5: &#x27;3 + 2 GRATIS&#x27; },
+nl: { free: &#x27;GRATIS&#x27;, save: &#x27;TOTALE BESPARING&#x27;, b3: &#x27;BESTEL 2 + 1 GRATIS&#x27;, b5: &#x27;BESTEL 3 + 2 GRATIS&#x27; },
+en: { free: &#x27;FREE&#x27;, save: &#x27;TOTAL SAVINGS&#x27;, b3: &#x27;BUY 2 + GET 1 FREE&#x27;, b5: &#x27;BUY 3 + GET 2 FREE&#x27; },
+fr: { free: &#x27;GRATUIT&#x27;, save: &#x27;ÉCONOMIES TOTALES&#x27;, b3: &#x27;2 ACHETÉS + 1 OFFERT&#x27;, b5: &#x27;3 ACHETÉS + 2 OFFERTS&#x27; }
+};
+var lang = &#x27;en&#x27;;
+var liste = navigator.languages;
+if (!liste || !liste.length) liste = [navigator.language || &#x27;&#x27;];
+for (var i = 0; i &lt; liste.length; i++) {
+var code = String(liste[i] || &#x27;&#x27;).slice(0, 2).toLowerCase();
+if (T[code]) { lang = code; break; }
+}
+var t = T[lang];
+var TAG = &#x27;&lt;svg viewBox=&quot;0 0 20 20&quot; width=&quot;14&quot; height=&quot;14&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.7&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&#x27; +
+&#x27;&lt;path d=&quot;M10.6 2.5H16a1.5 1.5 0 0 1 1.5 1.5v5.4a1.5 1.5 0 0 1-.44 1.06l-6.6 6.6a1.5 1.5 0 0 1-2.12 0L3 11.7a1.5 1.5 0 0 1 0-2.12l6.6-6.6a1.5 1.5 0 0 1 1-.48Z&quot;/&gt;&#x27; +
+&#x27;&lt;circle cx=&quot;13.6&quot; cy=&quot;6.4&quot; r=&quot;1.2&quot;/&gt;&lt;/svg&gt;&#x27;;
+function zahl(s) {
+var n = String(s).replace(/[^0-9.,]/g, &#x27;&#x27;);
+if (/,\d{2}$/.test(n)) n = n.replace(/\./g, &#x27;&#x27;).replace(&#x27;,&#x27;, &#x27;.&#x27;);
+else n = n.replace(/,/g, &#x27;&#x27;);
+return parseFloat(n);
+}
+function euro(n) { return &#x27;€&#x27; + n.toFixed(2); }
+function neu(tag, cls, html) {
+var el = document.createElement(tag);
+el.className = &#x27;ev-x &#x27; + cls;
+el.innerHTML = html;
+return el;
+}
+function anwenden() {
+var alt = document.querySelectorAll(&#x27;.ev-x&#x27;);
+for (var a = 0; a &lt; alt.length; a++) alt[a].remove();
+var versteckt = document.querySelectorAll(&#x27;[data-ev-hide]&#x27;);
+for (var b = 0; b &lt; versteckt.length; b++) versteckt[b].removeAttribute(&#x27;data-ev-hide&#x27;);
+var listen = document.querySelectorAll(&#x27;section ul&#x27;);
+for (var u = 0; u &lt; listen.length; u++) {
+var ul = listen[u];
+var zeilen = ul.querySelectorAll(&#x27;:scope &gt; li&#x27;);
+var menge = 0, ersparnis = 0, daten = [];
+for (var z = 0; z &lt; zeilen.length; z++) {
+var li = zeilen[z];
+var preisBox = li.querySelector(&#x27;span.flex-col&#x27;);
+var preis = preisBox &amp;&amp; preisBox.querySelector(&#x27;span&#x27;);
+var titel = li.querySelector(&#x27;.min-w-0 p&#x27;);
+var anzahl = li.querySelector(&#x27;.relative &gt; span&#x27;);
+if (!preis || !titel) continue;
+var d = { li: li, box: preisBox, preis: preis, titel: titel, wert: zahl(preis.textContent),
+eur: preis.textContent.indexOf(&#x27;€&#x27;) &gt; -1, n: anzahl ? parseInt(anzahl.textContent, 10) || 1 : 1 };
+d.produkt = PRODUKT.test(titel.textContent);
+if (d.produkt) menge += d.n;
+daten.push(d);
+}
+if (!daten.length) continue;
+var stufe = menge &gt;= 5 ? t.b5 : menge &gt;= 3 ? t.b3 : &#x27;&#x27;;
+for (var k = 0; k &lt; daten.length; k++) {
+var e = daten[k];
+if (e.wert === 0) {
+e.preis.setAttribute(&#x27;data-ev-hide&#x27;, &#x27;&#x27;);
+e.box.appendChild(neu(&#x27;span&#x27;, &#x27;ev-free &#x27; + e.preis.className, t.free));
+} else if (e.produkt &amp;&amp; e.eur) {
+var normal = Math.round(e.n * EINZELPREIS * 100) / 100;
+var rabatt = Math.round((normal - e.wert) * 100) / 100;
+if (rabatt &gt; 0.009) {
+ersparnis += rabatt;
+e.box.insertBefore(neu(&#x27;span&#x27;, &#x27;ev-strike&#x27;, euro(normal)), e.preis);
+e.titel.parentNode.appendChild(neu(&#x27;p&#x27;, &#x27;ev-tag&#x27;, TAG + &#x27;&lt;span&gt;&#x27; + (stufe ? stufe + &#x27; &#x27; : &#x27;&#x27;) + &#x27;(−&#x27; + euro(rabatt) + &#x27;)&lt;/span&gt;&#x27;));
+}
+}
+}
+if (ersparnis &gt; 0.009) {
+var bereich = ul.parentNode;
+var gesamt = bereich.querySelector(&#x27;.pt-2&#x27;);
+if (gesamt) gesamt.parentNode.appendChild(neu(&#x27;div&#x27;, &#x27;ev-save&#x27;, TAG + &#x27;&lt;span&gt;&#x27; + t.save + &#x27; &#x27; + euro(ersparnis) + &#x27;&lt;/span&gt;&#x27;));
+var knopf = ul.closest(&#x27;section&#x27;) &amp;&amp; ul.closest(&#x27;section&#x27;).querySelector(&#x27;button[aria-expanded]&#x27;);
+var kopfPreis = knopf &amp;&amp; knopf.lastElementChild;
+if (kopfPreis &amp;&amp; kopfPreis.textContent.indexOf(&#x27;€&#x27;) &gt; -1) {
+kopfPreis.insertBefore(neu(&#x27;span&#x27;, &#x27;ev-strike ev-strike-kopf&#x27;, euro(zahl(kopfPreis.textContent) + ersparnis)), kopfPreis.firstChild);
+}
+}
+}
+}
+var beschaeftigt = false, geplant = false;
+var beobachter = new MutationObserver(function () {
+if (beschaeftigt || geplant) return;
+geplant = true;
+requestAnimationFrame(lauf);
+});
+function lauf() {
+geplant = false;
+beschaeftigt = true;
+try { anwenden(); } catch (err) {}
+beobachter.takeRecords();
+beschaeftigt = false;
+}
+beobachter.observe(document.body, { childList: true, subtree: true, characterData: true });
+lauf();
+})();"><!--/EV-SUM-->
 </div>
 
 <style>
@@ -53,4 +156,12 @@
   /* CrispCheckout: Fußzeile „Secure checkout by CrispCheckout · Payments by Whop“ ausblenden */
   main footer.border-t > p.text-xs { display: none !important; }
   main footer.border-t:not(:has(a)) { display: none !important; }
+
+  /* CrispCheckout: Bestellübersicht wie im Shopify-Checkout (siehe crisp-bestelluebersicht.js) */
+  [data-ev-hide] { display: none !important; }
+  .ev-strike { display: block; font-size: 12.5px; font-weight: 400; color: #8a8a8a; text-decoration: line-through; line-height: 1.3; }
+  .ev-strike-kopf { text-align: right; }
+  .ev-tag { display: flex; align-items: center; gap: 5px; margin: 3px 0 0; font-size: 12px; line-height: 1.3; letter-spacing: .3px; color: #707070; }
+  .ev-save { display: flex; align-items: center; gap: 7px; padding-top: 4px; font-size: 15px; font-weight: 700; letter-spacing: .3px; color: #1a1a1a; }
+  .ev-save svg { width: 17px; height: 17px; }
 </style>
