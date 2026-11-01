@@ -1,0 +1,125 @@
+{%- comment -%}
+  Eveom Garantie-Hinweis – „Weniger als 1 % der Kunden nutzen die Eveom™ Geld-zurück-Garantie“.
+  Shopify-Section (im Theme-Editor als „Eveom Garantie-Hinweis“ hinzufügbar, z. B. auf der Produktseite).
+  Quelle: github.com/brahimkhaleel818-prog/claude-projekt → shopify-sections/eveom-garantie.section.liquid
+  Sprache richtet sich nach der Browser-Sprache des Kunden:
+    de (Deutschland, Österreich, Schweiz …) → Deutsch · nl (Niederlande, Belgien …) → Niederländisch · sonst Englisch.
+  Testen: ?eveom_lang=de|nl|en an die Adresse hängen.
+{%- endcomment -%}
+{%- liquid
+  assign start_sprache = request.locale.iso_code | slice: 0, 2 | downcase
+  unless start_sprache == 'de' or start_sprache == 'nl'
+    assign start_sprache = 'en'
+  endunless
+-%}
+<div class="eveom-garantie-wrap eveom-garantie-wrap-{{ section.id }}">
+  <div class="eveom-garantie" id="eveom-garantie-{{ section.id }}" data-start="{{ start_sprache }}" lang="{{ start_sprache }}">
+    <svg class="eveom-garantie__icon" viewBox="0 0 64 72" fill="none" aria-hidden="true" focusable="false">
+      <g class="eveom-garantie__band" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round">
+        <path d="M22.5 43.5 13 63.5l7.4-1.6 3.6 6.6 8.2-18.6"/>
+        <path d="M41.5 43.5 51 63.5l-7.4-1.6-3.6 6.6-8.2-18.6"/>
+      </g>
+      <g stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">
+        <path class="eveom-garantie__kreis" d="M46.6 18.2A19 19 0 1 1 40 9.4"/>
+        <path d="m23.5 27.5 6.5 6.5 12.5-13"/>
+      </g>
+    </svg>
+    <p class="eveom-garantie__text">
+      <span data-lang="en"{% if start_sprache != 'en' %} hidden{% endif %}><strong>Less than 1%</strong> of customers use <br>Eveom™ Money Back Guarantee</span>
+      <span data-lang="de"{% if start_sprache != 'de' %} hidden{% endif %}><strong>Weniger als 1&nbsp;%</strong> der Kunden nutzen die <br>Eveom™ Geld-zurück-Garantie</span>
+      <span data-lang="nl"{% if start_sprache != 'nl' %} hidden{% endif %}><strong>Minder dan 1%</strong> van de klanten gebruikt de <br>Eveom™ Geld-terug-garantie</span>
+    </p>
+  </div>
+</div>
+
+<style>
+  .eveom-garantie-wrap-{{ section.id }} {
+    --eg-farbe: {{ section.settings.farbe | default: '#7d000d' }};
+    --eg-hintergrund: {{ section.settings.hintergrund | default: '#ffffff' }};
+    padding: {{ section.settings.abstand_oben }}px 16px {{ section.settings.abstand_unten }}px;
+  }
+  .eveom-garantie-wrap-{{ section.id }} .eveom-garantie {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 22px;
+    width: 100%;
+    max-width: {{ section.settings.max_breite }}px;
+    margin: 0 auto;
+    padding: 22px 24px;
+    background: var(--eg-hintergrund);
+    border: 1.5px solid var(--eg-farbe);
+    border-radius: 14px;
+    color: var(--eg-farbe);
+  }
+  .eveom-garantie-wrap-{{ section.id }} .eveom-garantie__icon {
+    flex: 0 0 auto;
+    width: 78px;
+    height: 88px;
+    margin: -6px 0;
+    stroke: var(--eg-farbe);
+  }
+  .eveom-garantie-wrap-{{ section.id }} .eveom-garantie__band {
+    fill: var(--eg-hintergrund);
+    stroke-opacity: .45;
+  }
+  .eveom-garantie-wrap-{{ section.id }} .eveom-garantie__kreis { fill: var(--eg-hintergrund); }
+  .eveom-garantie-wrap-{{ section.id }} .eveom-garantie__text {
+    margin: 0;
+    font-family: inherit;
+    font-size: 26px;
+    font-weight: 400;
+    line-height: 1.32;
+    letter-spacing: 0;
+    text-transform: none;
+    text-align: left;
+    color: var(--eg-farbe);
+  }
+  .eveom-garantie-wrap-{{ section.id }} .eveom-garantie__text strong { font-weight: 700; color: inherit; }
+  .eveom-garantie-wrap-{{ section.id }} .eveom-garantie__text [hidden] { display: none !important; }
+  @media (max-width: 749px) {
+    .eveom-garantie-wrap-{{ section.id }} .eveom-garantie { gap: 14px; padding: 16px 14px; border-radius: 12px; }
+    .eveom-garantie-wrap-{{ section.id }} .eveom-garantie__icon { width: 52px; height: 59px; margin: -4px 0; }
+    .eveom-garantie-wrap-{{ section.id }} .eveom-garantie__text { font-size: 16px; text-wrap: balance; }
+    .eveom-garantie-wrap-{{ section.id }} .eveom-garantie__text br { display: none; }
+  }
+  @media (max-width: 380px) {
+    .eveom-garantie-wrap-{{ section.id }} .eveom-garantie__text { font-size: 14.5px; }
+  }
+</style>
+
+<script>
+(function () {
+  var box = document.getElementById("eveom-garantie-{{ section.id }}");
+  if (!box) return;
+  // Reihenfolge: ?eveom_lang=… → Browser-Sprachen (de-AT, de-CH, nl-BE … zählen mit) → Shop-Sprache
+  var test = new URLSearchParams(location.search).get("eveom_lang");
+  var liste = test ? [test] : (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ""]);
+  var lang = box.getAttribute("data-start");
+  for (var i = 0; i < liste.length; i++) {
+    var code = String(liste[i] || "").slice(0, 2).toLowerCase();
+    if (code === "de" || code === "nl" || code === "en") { lang = code; break; }
+  }
+  box.setAttribute("lang", lang);
+  box.querySelectorAll("[data-lang]").forEach(function (el) {
+    el.hidden = el.getAttribute("data-lang") !== lang;
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Eveom Garantie-Hinweis",
+  "tag": "section",
+  "class": "eveom-garantie-section",
+  "settings": [
+    { "type": "color", "id": "farbe", "label": "Farbe (Rahmen, Text, Icon)", "default": "#7d000d" },
+    { "type": "color", "id": "hintergrund", "label": "Hintergrund innen", "default": "#ffffff" },
+    { "type": "range", "id": "max_breite", "label": "Maximale Breite", "min": 400, "max": 1400, "step": 20, "unit": "px", "default": 980 },
+    { "type": "range", "id": "abstand_oben", "label": "Abstand oben", "min": 0, "max": 80, "step": 4, "unit": "px", "default": 16 },
+    { "type": "range", "id": "abstand_unten", "label": "Abstand unten", "min": 0, "max": 80, "step": 4, "unit": "px", "default": 16 }
+  ],
+  "presets": [{ "name": "Eveom Garantie-Hinweis" }]
+}
+{% endschema %}
