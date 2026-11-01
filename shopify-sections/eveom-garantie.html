@@ -1,4 +1,4 @@
-<!-- Eveom Garantie-Hinweis · eigenständiger HTML-Code (z. B. CrispCheckout „Custom HTML“) · Sprache nach Browser: de / nl / sonst en -->
+<!-- Eveom Garantie-Hinweis · eigenständiger HTML-Code (z. B. CrispCheckout „Custom HTML“) · Sprache wie der Checkout (de / nl / sonst en) -->
 <div class="eveom-g-wrap">
   <div class="eveom-g">
     <svg class="eveom-g__icon" viewBox="0 0 64 72" fill="none" aria-hidden="true" focusable="false">
@@ -51,7 +51,9 @@
 
 <script>
 (function () {
-  var liste = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ""];
+  // 1. Sprache, die CrispCheckout für die Seite setzt (de / nl) → 2. sonst Browser-Sprache → 3. Englisch
+  var liste = [document.documentElement.lang || ""];
+  if (!/^(de|nl)/i.test(liste[0])) liste = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ""];
   var lang = "en";
   for (var i = 0; i < liste.length; i++) {
     var code = String(liste[i] || "").slice(0, 2).toLowerCase();
