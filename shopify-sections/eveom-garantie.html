@@ -1,4 +1,4 @@
-<!-- Eveom Garantie-Hinweis · eigenständiger HTML-Code (z. B. CrispCheckout „Custom HTML“) · Sprache wie der Checkout (de / nl / sonst en) -->
+<!-- Eveom Garantie-Hinweis · eigenständiger HTML-Code (z. B. CrispCheckout „Custom HTML“) · Sprache nach Browser (de / nl / sonst en) – ohne <script>, funktioniert auch in CrispCheckout -->
 <div class="eveom-g-wrap">
   <div class="eveom-g">
     <svg class="eveom-g__icon" viewBox="0 0 64 72" fill="none" aria-hidden="true" focusable="false">
@@ -17,14 +17,16 @@
       <span class="eveom-g__nl"><strong>Minder dan 1%</strong> van de klanten gebruikt de <br>Eveom™ Geld-terug-garantie</span>
     </p>
   </div>
+  <img class="eveom-g__lang" alt="" width="1" height="1" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" onload="var w=this.parentNode,l=navigator.languages,c='en';if(!l||!l.length)l=[navigator.language||''];for(var i=0;i<l.length;i++){var x=String(l[i]).slice(0,2).toLowerCase();if(x=='de'||x=='nl'||x=='en'){c=x;break}}w.querySelector('.eveom-g').setAttribute('lang',c);">
 </div>
 
 <style>
-  .eveom-g-wrap { container-type: inline-size; width: 100%; margin: 12px 0; }
+  .eveom-g-wrap { position: relative; container-type: inline-size; width: 100%; margin: 12px 0; }
   .eveom-g-wrap .eveom-g { box-sizing: border-box; display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; margin: 0; padding: 12px 16px; background: #ffffff; border: 1.5px solid #7d000d; border-radius: 10px; color: #7d000d; }
   .eveom-g-wrap .eveom-g__icon { flex: 0 0 auto; display: block; width: 36px; height: 41px; margin: 0; stroke: #7d000d; }
   .eveom-g-wrap .eveom-g__band { fill: #ffffff; stroke-opacity: .45; }
   .eveom-g-wrap .eveom-g__kreis { fill: #ffffff; }
+  .eveom-g-wrap .eveom-g__lang { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
   .eveom-g-wrap .eveom-g__text { flex: 0 1 auto; min-width: 0; margin: 0; padding: 0; font-family: inherit; font-size: 14.5px; font-weight: 400; line-height: 1.35; letter-spacing: 0; text-transform: none; text-align: left; color: #7d000d; }
   .eveom-g-wrap .eveom-g__text strong { font-weight: 700; color: inherit; }
 
@@ -48,18 +50,3 @@
     .eveom-g-wrap .eveom-g__text br { display: none; }
   }
 </style>
-
-<script>
-(function () {
-  // 1. Sprache, die CrispCheckout für die Seite setzt (de / nl) → 2. sonst Browser-Sprache → 3. Englisch
-  var liste = [document.documentElement.lang || ""];
-  if (!/^(de|nl)/i.test(liste[0])) liste = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ""];
-  var lang = "en";
-  for (var i = 0; i < liste.length; i++) {
-    var code = String(liste[i] || "").slice(0, 2).toLowerCase();
-    if (code === "de" || code === "nl" || code === "en") { lang = code; break; }
-  }
-  var boxen = document.querySelectorAll(".eveom-g");
-  for (var j = 0; j < boxen.length; j++) boxen[j].setAttribute("lang", lang);
-})();
-</script>
