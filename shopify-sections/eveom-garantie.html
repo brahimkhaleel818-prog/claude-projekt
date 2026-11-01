@@ -1,37 +1,52 @@
-<!-- Eveom Garantie-Hinweis · eigenständiger HTML-Code (ohne Liquid) · Sprache nach Browser: de / nl / sonst en -->
-<div class="eveom-garantie" lang="en">
-  <svg class="eveom-garantie__icon" viewBox="0 0 64 72" fill="none" aria-hidden="true" focusable="false">
-    <g class="eveom-garantie__band" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round">
-      <path d="M22.5 43.5 13 63.5l7.4-1.6 3.6 6.6 8.2-18.6"/>
-      <path d="M41.5 43.5 51 63.5l-7.4-1.6-3.6 6.6-8.2-18.6"/>
-    </g>
-    <g stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">
-      <path class="eveom-garantie__kreis" d="M46.6 18.2A19 19 0 1 1 40 9.4"/>
-      <path d="m23.5 27.5 6.5 6.5 12.5-13"/>
-    </g>
-  </svg>
-  <p class="eveom-garantie__text">
-    <span data-lang="en"><strong>Less than 1%</strong> of customers use <br>Eveom™ Money Back Guarantee</span>
-    <span data-lang="de" hidden><strong>Weniger als 1&nbsp;%</strong> der Kunden nutzen die <br>Eveom™ Geld-zurück-Garantie</span>
-    <span data-lang="nl" hidden><strong>Minder dan 1%</strong> van de klanten gebruikt de <br>Eveom™ Geld-terug-garantie</span>
-  </p>
+<!-- Eveom Garantie-Hinweis · eigenständiger HTML-Code (z. B. CrispCheckout „Custom HTML“) · Sprache nach Browser: de / nl / sonst en -->
+<div class="eveom-g-wrap">
+  <div class="eveom-g">
+    <svg class="eveom-g__icon" viewBox="0 0 64 72" fill="none" aria-hidden="true" focusable="false">
+      <g class="eveom-g__band" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round">
+        <path d="M22.5 43.5 13 63.5l7.4-1.6 3.6 6.6 8.2-18.6"/>
+        <path d="M41.5 43.5 51 63.5l-7.4-1.6-3.6 6.6-8.2-18.6"/>
+      </g>
+      <g stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round">
+        <path class="eveom-g__kreis" d="M46.6 18.2A19 19 0 1 1 40 9.4"/>
+        <path d="m23.5 27.5 6.5 6.5 12.5-13"/>
+      </g>
+    </svg>
+    <p class="eveom-g__text">
+      <span class="eveom-g__en"><strong>Less than 1%</strong> of customers use <br>Eveom™ Money Back Guarantee</span>
+      <span class="eveom-g__de"><strong>Weniger als 1&nbsp;%</strong> der Kunden nutzen die <br>Eveom™ Geld-zurück-Garantie</span>
+      <span class="eveom-g__nl"><strong>Minder dan 1%</strong> van de klanten gebruikt de <br>Eveom™ Geld-terug-garantie</span>
+    </p>
+  </div>
 </div>
 
 <style>
-  .eveom-garantie { box-sizing: border-box; display: flex; align-items: center; justify-content: center; gap: 22px; width: 100%; max-width: 980px; margin: 16px auto; padding: 22px 24px; background: #ffffff; border: 1.5px solid #7d000d; border-radius: 14px; color: #7d000d; }
-  .eveom-garantie__icon { flex: 0 0 auto; width: 78px; height: 88px; margin: -6px 0; stroke: #7d000d; }
-  .eveom-garantie__band { fill: #ffffff; stroke-opacity: .45; }
-  .eveom-garantie__kreis { fill: #ffffff; }
-  .eveom-garantie__text { margin: 0; font-family: inherit; font-size: 26px; font-weight: 400; line-height: 1.32; letter-spacing: 0; text-transform: none; text-align: left; color: #7d000d; }
-  .eveom-garantie__text strong { font-weight: 700; color: inherit; }
-  .eveom-garantie__text [hidden] { display: none !important; }
-  @media (max-width: 749px) {
-    .eveom-garantie { gap: 14px; padding: 16px 14px; border-radius: 12px; }
-    .eveom-garantie__icon { width: 52px; height: 59px; margin: -4px 0; }
-    .eveom-garantie__text { font-size: 16px; text-wrap: balance; }
-    .eveom-garantie__text br { display: none; }
+  .eveom-g-wrap { container-type: inline-size; width: 100%; margin: 12px 0; }
+  .eveom-g-wrap .eveom-g { box-sizing: border-box; display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; margin: 0; padding: 12px 16px; background: #ffffff; border: 1.5px solid #7d000d; border-radius: 10px; color: #7d000d; }
+  .eveom-g-wrap .eveom-g__icon { flex: 0 0 auto; display: block; width: 36px; height: 41px; margin: 0; stroke: #7d000d; }
+  .eveom-g-wrap .eveom-g__band { fill: #ffffff; stroke-opacity: .45; }
+  .eveom-g-wrap .eveom-g__kreis { fill: #ffffff; }
+  .eveom-g-wrap .eveom-g__text { flex: 0 1 auto; min-width: 0; margin: 0; padding: 0; font-family: inherit; font-size: 14.5px; font-weight: 400; line-height: 1.35; letter-spacing: 0; text-transform: none; text-align: left; color: #7d000d; }
+  .eveom-g-wrap .eveom-g__text strong { font-weight: 700; color: inherit; }
+
+  /* Sprache: nur der passende Text ist sichtbar (Standard Englisch) */
+  .eveom-g-wrap .eveom-g__text span { display: none; }
+  .eveom-g-wrap .eveom-g:not(:lang(de)):not(:lang(nl)) .eveom-g__en,
+  .eveom-g-wrap .eveom-g:lang(de) .eveom-g__de,
+  .eveom-g-wrap .eveom-g:lang(nl) .eveom-g__nl { display: inline; }
+
+  /* Breiter Platz (z. B. Shopseite): etwas größer */
+  @container (min-width: 640px) {
+    .eveom-g-wrap .eveom-g { gap: 16px; padding: 16px 20px; border-radius: 12px; }
+    .eveom-g-wrap .eveom-g__icon { width: 46px; height: 52px; }
+    .eveom-g-wrap .eveom-g__text { font-size: 18px; }
   }
-  @media (max-width: 380px) { .eveom-garantie__text { font-size: 14.5px; } }
+  /* Schmaler Platz (Handy): Text frei umbrechen */
+  @container (max-width: 400px) {
+    .eveom-g-wrap .eveom-g { gap: 10px; padding: 10px 12px; }
+    .eveom-g-wrap .eveom-g__icon { width: 30px; height: 34px; }
+    .eveom-g-wrap .eveom-g__text { font-size: 13px; text-wrap: balance; }
+    .eveom-g-wrap .eveom-g__text br { display: none; }
+  }
 </style>
 
 <script>
@@ -42,9 +57,7 @@
     var code = String(liste[i] || "").slice(0, 2).toLowerCase();
     if (code === "de" || code === "nl" || code === "en") { lang = code; break; }
   }
-  document.querySelectorAll(".eveom-garantie").forEach(function (box) {
-    box.setAttribute("lang", lang);
-    box.querySelectorAll("[data-lang]").forEach(function (el) { el.hidden = el.getAttribute("data-lang") !== lang; });
-  });
+  var boxen = document.querySelectorAll(".eveom-g");
+  for (var j = 0; j < boxen.length; j++) boxen[j].setAttribute("lang", lang);
 })();
 </script>
