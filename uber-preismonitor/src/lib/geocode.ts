@@ -44,7 +44,7 @@ export async function geocode(q: string): Promise<GeoResult[]> {
     // Düsseldorf & Umgebung bevorzugen
     viewbox: "6.55,51.40,7.05,51.10",
   });
-  if (env.nominatimContact) params.set("email", env.nominatimContact);
+  if (env.nominatimContact.includes("@")) params.set("email", env.nominatimContact);
   const res = await throttle(() =>
     fetch(`${env.nominatimUrl}/search?${params}`, {
       headers: { "user-agent": "UberPreismonitor-Duesseldorf/1.0 (self-hosted)", accept: "application/json" },
