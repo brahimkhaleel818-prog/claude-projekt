@@ -1,0 +1,200 @@
+// Uber Live Price Monitor – Datenbankschema (PostgreSQL)
+// Alle Zeitstempel werden als UTC (timestamptz) gespeichert. Zusätzlich werden
+// Datum/Uhrzeit/Stunde/Wochentag in Europe/Berlin beim Speichern berechnet,
+// damit Auswertungen und Exporte ohne Zeitzonenfehler funktionieren.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RunStatus {
+  SUCCESS        // Preise erhalten
+  NO_DATA        // Anfrage ok, aber Quelle lieferte keine Preise (fares_unavailable)
+  FAILED         // Fehler nach allen Wiederholungsversuchen
+  NOT_CONFIGURED // Keine Datenquelle konfiguriert
+}
+
+enum AlertType {
+  PCT_INCREASE // Preis steigt um mehr als X % ggü. letzter Messung
+  PCT_DECREASE // Preis sinkt um mehr als X % ggü. letzter Messung
+  ABOVE_AMOUNT // Preis überschreitet X €
+  BELOW_AMOUNT // Preis unterschreitet X €
+  DAILY_HIGH   // Neue Tageshöchstmarke
+  DAILY_LOW    // Neuer Tagestiefstwert
+}
+
+model Route {
+  id               String    @id @default(cuid())
+  name             String
+  originAddress    String
+  originLat        Float
+  originLng        Float
+  destAddress      String
+  destLat          Float
+  destLng          Float
+  active           Boolean   @default(true)
+  intervalMinutes  Int       @default(5)
+  // Optional: nur diese Kategorien speichern (leer = alle gelieferten)
+  categories       String[]  @default([])
+  // Verknüpfung zur Gegenrichtung (eigene Route mit eigenem Verlauf)
+  reverseRouteId   String?   @unique
+  reverseRoute     Route?    @relation("ReverseRoute", fields: [reverseRouteId], references: [id], onDelete: SetNull)
+  reverseOf        Route?    @relation("ReverseRoute")
+  sortOrder        Int       @default(0)
+
+  // Scheduler-Zustand
+  nextRunAt        DateTime  @default(now()) @db.Timestamptz(3)
+  lastRunAt        DateTime? @db.Timestamptz(3)
+  lastSuccessAt    DateTime? @db.Timestamptz(3)
+  lastStatus       RunStatus?
+  lastError        String?
+  consecutiveFails Int       @default(0)
+
+  createdAt        DateTime  @default(now()) @db.Timestamptz(3)
+  updatedAt        DateTime  @updatedAt @db.Timestamptz(3)
+
+  measurements     PriceMeasurement[]
+  runs             FetchRun[]
+  alertRules       AlertRule[]
+  notifications    Notification[]
+
+  @@index([active, nextRunAt])
+}
+
+model FetchRun {
+  id           String     @id @default(cuid())
+  routeId      String
+  route        Route      @relation(fields: [routeId], references: [id], onDelete: Cascade)
+  provider     String
+  isDemo       Boolean    @default(false)
+  status       RunStatus
+  attempts     Int        @default(1)
+  httpStatus   Int?
+  errorMessage String?
+  productCount Int        @default(0)
+  durationMs   Int?
+  startedAt    DateTime   @default(now()) @db.Timestamptz(3)
+  finishedAt   DateTime?  @db.Timestamptz(3)
+
+  measurements PriceMeasurement[]
+
+  @@index([routeId, startedAt])
+  @@index([startedAt])
+}
+
+model PriceMeasurement {
+  id             String   @id @default(cuid())
+  routeId        String
+  route          Route    @relation(fields: [routeId], references: [id], onDelete: Cascade)
+  runId          String?
+  run            FetchRun? @relation(fields: [runId], references: [id], onDelete: SetNull)
+
+  // Datenquelle
+  provider       String   // z. B. uber-guest-rides, uber-riders-v12, manual, demo
+  isDemo         Boolean  @default(false)
+
+  // Kategorie
+  productId      String?
+  category       String   // Anzeigename laut Quelle, z. B. "UberX"
+  categoryKey    String   // normalisiert, z. B. "uberx", "comfort", "uberxl"
+
+  // Preistyp: UPFRONT = buchbarer Festpreis (Uber Guest Rides fare.value)
+  //           RANGE   = Preisspanne/Schätzung (low–high, value = Mittelwert)
+  //           MANUAL  = manuell aus der Uber-App übernommen
+  //           DEMO    = simuliert
+  priceType      String   @default("UPFRONT")
+  // Preis (Festpreis -> low = high = value; Spanne -> value = Mittelwert)
+  priceValue     Decimal  @db.Decimal(10, 2)
+  priceLow       Decimal? @db.Decimal(10, 2)
+  priceHigh      Decimal? @db.Decimal(10, 2)
+  displayText    String?  // Originaltext der Quelle, z. B. "€23-28"
+  currency       String   @default("EUR")
+  surgeMultiplier Float?
+  distanceKm     Float?
+  durationSec    Int?
+  pickupEtaMin   Int?
+
+  // Momentaufnahme der Strecke
+  originAddress  String
+  destAddress    String
+  direction      String   // "Start → Ziel"
+
+  // Zeitpunkt
+  fetchedAt      DateTime @db.Timestamptz(3)
+  localDate      String   // YYYY-MM-DD (Europe/Berlin)
+  localTime      String   // HH:mm:ss  (Europe/Berlin)
+  localHour      Int      // 0-23      (Europe/Berlin)
+  weekday        Int      // 0 = Montag … 6 = Sonntag (Europe/Berlin)
+  status         String   @default("OK")
+  note           String?
+
+  createdAt      DateTime @default(now()) @db.Timestamptz(3)
+
+  @@index([routeId, categoryKey, fetchedAt])
+  @@index([routeId, fetchedAt])
+  @@index([isDemo])
+}
+
+model AlertRule {
+  id              String     @id @default(cuid())
+  name            String
+  routeId         String?    // null = alle Strecken
+  route           Route?     @relation(fields: [routeId], references: [id], onDelete: Cascade)
+  categoryKey     String?    // null = alle Kategorien
+  type            AlertType
+  threshold       Float      // Prozent oder Euro (bei DAILY_* ignoriert)
+  channels        String[]   @default(["dashboard"]) // dashboard, push, telegram, email
+  active          Boolean    @default(true)
+  cooldownMinutes Int        @default(30)
+  lastTriggeredAt DateTime?  @db.Timestamptz(3)
+  createdAt       DateTime   @default(now()) @db.Timestamptz(3)
+  updatedAt       DateTime   @updatedAt @db.Timestamptz(3)
+
+  notifications   Notification[]
+}
+
+model Notification {
+  id          String     @id @default(cuid())
+  alertRuleId String?
+  alertRule   AlertRule? @relation(fields: [alertRuleId], references: [id], onDelete: SetNull)
+  routeId     String?
+  route       Route?     @relation(fields: [routeId], references: [id], onDelete: Cascade)
+  categoryKey String?
+  level       String     @default("info") // info, warning, error
+  title       String
+  message     String
+  isDemo      Boolean    @default(false)
+  deliveries  Json?      // { push: "ok", telegram: "error: …" }
+  readAt      DateTime?  @db.Timestamptz(3)
+  createdAt   DateTime   @default(now()) @db.Timestamptz(3)
+
+  @@index([createdAt])
+}
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  userAgent String?
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+}
+
+model WorkerHeartbeat {
+  id        String   @id // "worker"
+  beatAt    DateTime @db.Timestamptz(3)
+  startedAt DateTime @db.Timestamptz(3)
+  provider  String
+  info      Json?
+}
+
+model GeocodeCache {
+  query     String   @id
+  result    Json
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+}

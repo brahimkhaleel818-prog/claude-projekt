@@ -1,0 +1,16 @@
+[Unit]
+Description=Uber Alkhaled – Web-Dashboard
+After=network-online.target postgresql.service
+
+[Service]
+Type=simple
+User=uberpreis
+WorkingDirectory=/opt/uber-alkhaled
+EnvironmentFile=/opt/uber-alkhaled/.env
+Environment=NODE_ENV=production PORT=3000
+ExecStart=/usr/bin/npm start
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

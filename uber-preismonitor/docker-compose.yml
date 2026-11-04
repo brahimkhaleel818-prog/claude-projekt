@@ -1,0 +1,84 @@
+# Start:   docker compose up -d --build
+# Logs:    docker compose logs -f worker
+name: uber-alkhaled
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: monitor
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-bitte-aendern}
+      POSTGRES_DB: uber_monitor
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U monitor -d uber_monitor"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  # Einmalig bei jedem Start: Datenbank-Migrationen + Startstrecken
+  migrate:
+    build: .
+    image: uber-alkhaled:latest
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://monitor:${POSTGRES_PASSWORD:-bitte-aendern}@db:5432/uber_monitor?schema=public
+    command: ["sh", "-c", "npx prisma migrate deploy && npx tsx prisma/seed.ts"]
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  web:
+    image: uber-alkhaled:latest
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://monitor:${POSTGRES_PASSWORD:-bitte-aendern}@db:5432/uber_monitor?schema=public
+    ports:
+      # Ohne Domain/Reverse-Proxy: WEB_BIND=0.0.0.0 setzen → erreichbar unter http://SERVER-IP:3000
+      - "${WEB_BIND:-127.0.0.1}:3000:3000"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # Background-Worker: fragt Preise rund um die Uhr ab (unabhängig vom Browser)
+  worker:
+    image: uber-alkhaled:latest
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://monitor:${POSTGRES_PASSWORD:-bitte-aendern}@db:5432/uber_monitor?schema=public
+    command: ["node", "--import", "tsx", "src/worker/index.ts"]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    stop_grace_period: 40s
+
+  # Optional: HTTPS mit automatischem Let's-Encrypt-Zertifikat
+  #   DOMAIN=preise.example.de docker compose --profile https up -d
+  caddy:
+    image: caddy:2-alpine
+    profiles: ["https"]
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN: ${DOMAIN:-localhost}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+    depends_on:
+      - web
+
+volumes:
+  pgdata:
+  caddy_data:

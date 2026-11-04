@@ -1,0 +1,32 @@
+{
+  "_comment": "Struktur nach dem Beispiel in der Uber-Doku (guest-trips-estimates-post), Werte unverändert aus der Doku – NUR Testdaten",
+  "etas_unavailable": false,
+  "fares_unavailable": false,
+  "product_estimates": [
+    {
+      "estimate_info": {
+        "fare": { "currency_code": "USD", "display": "$11.96", "expires_at": 1558147984, "fare_breakdown": [{ "name": "Base Fare", "type": "base_fare", "value": 11.96 }], "fare_id": "6e642142-27b8-49df-82e0-3d4a8633e79d", "value": 11.96 },
+        "fare_id": "6e642142-27b8-49df-82e0-3d4a8633e79d",
+        "pickup_estimate": 4,
+        "trip": { "distance_estimate": 0.44, "distance_unit": "mile", "duration_estimate": 927, "travel_distance_estimate": 0.45 }
+      },
+      "product": { "display_name": "UberX", "product_id": "b8e5c464-5de2-4539-a35a-986d6e58f186", "product_group": "uberx" },
+      "fulfillment_indicator": "GREEN"
+    },
+    {
+      "estimate_info": {
+        "fare_id": "f9f5d23e-3148-4632-8f61-727f654a265e",
+        "fare": { "fare_id": "f9f5d23e-3148-4632-8f61-727f654a265e", "value": 135.32, "currency_code": "USD", "display": "$135.32", "hourly": { "tiers": [] } },
+        "trip": { "distance_unit": "mile", "distance_estimate": 2.71, "duration_estimate": 0 }
+      },
+      "product": { "product_id": "aad1febe-9780-4b91-a92f-8f7c58d5cf54", "display_name": "Black Hourly" }
+    },
+    {
+      "estimate_info": {
+        "estimate": { "display": "$13-16", "low_estimate": 13, "high_estimate": 16, "currency_code": "USD" },
+        "pickup_estimate": 3
+      },
+      "product": { "product_id": "a1111c8c-c720-46c3-8534-2fcdd730040d", "display_name": "Comfort" }
+    }
+  ]
+}
