@@ -69,3 +69,19 @@ Falls du den Branch nicht nach `main` übernimmst: **Settings → Git → Produc
 - Jeder Cron-Aufruf fragt alle fälligen Strecken ab, höchstens 10 pro Aufruf, und hält die Rate-Limits über die Datenbank ein. Doppelte Aufrufe sind unschädlich, weil Strecken atomar reserviert werden.
 - Logs: Vercel → Projekt → **Logs**.
 - Funktionen laufen in der Region Frankfurt (`fra1`, siehe `vercel.json`).
+
+## Aktuelle Einrichtung (04.11.2026)
+
+| Teil | Einstellung |
+|---|---|
+| Vercel-Projekt | `uber-alkhaled` → <https://uber-alkhaled.vercel.app> (Region `fra1`, Node 22, Vercel-Login-Sperre aus, die App hat ein eigenes Login) |
+| Code-Quelle | öffentliches GitHub-Repository `brahimkhaleel818-prog/claude-projekt`, Ordner `uber-preismonitor`. Das Projekt ist **nicht** mit Git verknüpft (anderes GitHub-Konto), Deployments werden gezielt pro Commit ausgelöst. |
+| Datenbank | Supabase-Projekt `uber-alkhaled` (Frankfurt, Free). Eigener DB-Benutzer `uber_app` im Schema `uber`, das über die Supabase-Daten-API nicht erreichbar ist. |
+| Minutentakt | Supabase `pg_cron` + `pg_net`: Job `uber-alkhaled-preisabfrage` ruft jede Minute `/api/cron/collect` mit dem `CRON_SECRET` auf. Job `uber-alkhaled-cron-log-aufraeumen` löscht täglich alte Cron-Protokolle. |
+| Datenquelle | `PRICE_PROVIDER=demo` (simuliert), bis Uber die API freigibt |
+
+Den Takt ändern oder pausieren (Supabase → SQL Editor):
+
+```sql
+SELECT cron.alter_job(job_id := (SELECT jobid FROM cron.job WHERE jobname = 'uber-alkhaled-preisabfrage'), active := false);
+```
