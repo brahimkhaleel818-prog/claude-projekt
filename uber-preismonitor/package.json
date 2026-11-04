@@ -15,7 +15,8 @@
     "hash-password": "tsx scripts/hash-password.ts",
     "vapid": "tsx scripts/generate-vapid.ts",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "vercel-build": "prisma generate && sh scripts/migrate-deploy.sh && tsx prisma/seed.ts && next build"
   },
   "dependencies": {
     "@prisma/client": "6.19.3",
@@ -49,5 +50,8 @@
     "tsx": "4.20.5",
     "typescript": "5.9.2",
     "vitest": "4.1.12"
+  },
+  "engines": {
+    "node": "22.x"
   }
 }

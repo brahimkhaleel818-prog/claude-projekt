@@ -75,9 +75,13 @@ npm run worker     # zweites Terminal: Preisabfragen
 
 Zum Ausprobieren ohne Uber-Zugang: `PRICE_PROVIDER="demo"`. Dann ist alles als DEMO markiert.
 
-## Produktion
+## Produktion / Hosting
 
-Siehe [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md). Kurzfassung: `.env` füllen und `docker compose up -d --build` ausführen, für HTTPS zusätzlich `--profile https`.
+| Weg | Anleitung |
+|---|---|
+| Eigener Server mit Docker (Worker läuft 24/7) | [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) |
+| Kostenlos: Oracle Cloud Always Free oder eigener PC | [`docs/KOSTENLOS.md`](docs/KOSTENLOS.md) |
+| GitHub + Vercel (Cron-Endpunkt `/api/cron/collect`) | [`docs/VERCEL.md`](docs/VERCEL.md) |
 
 ## API (Auszug)
 
@@ -97,11 +101,12 @@ Alle Endpunkte erfordern ein Session-Cookie oder `Authorization: Bearer $API_TOK
 | POST | `/api/measurements/manual` | App-Preis manuell erfassen |
 | GET/POST/PATCH/DELETE | `/api/alerts[/:id]` | Alarmregeln |
 | GET | `/api/status` | Quelle, Limits, Worker, letzte Abfragen |
+| GET/POST | `/api/cron/collect` | eine Scheduler-Runde (für Vercel/Cron, Header `Authorization: Bearer $CRON_SECRET`) |
 
 ## Tests
 
 ```bash
-npm test          # 39 Unit-Tests: Uber-Parser (Doku-Beispiele), OAuth-/401-/403-/429-Verhalten,
+npm test          # 40 Unit-Tests: Uber-Parser (Doku-Beispiele), OAuth-/401-/403-/429-Verhalten,
                   # Zeitzone inkl. Sommer-/Winterzeit, Alarme, Statistik, Retry, Rate-Limit, CSV
 npm run typecheck
 npm run probe:uber  # echte Testabfrage gegen die konfigurierte Uber-API (speichert nichts)

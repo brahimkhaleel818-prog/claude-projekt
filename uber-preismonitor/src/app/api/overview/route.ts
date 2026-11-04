@@ -1,3 +1,4 @@
+import { isAlive } from "@/lib/scheduler";
 import { handler, json } from "@/lib/api";
 import { prisma } from "@/lib/db";
 import { describeActiveProvider } from "@/lib/providers";
@@ -13,7 +14,7 @@ export const GET = handler(async () => {
   ]);
   return json({
     provider: describeActiveProvider(),
-    worker: hb ? { beatAt: hb.beatAt, startedAt: hb.startedAt, alive: Date.now() - hb.beatAt.getTime() < 120_000, provider: hb.provider } : null,
+    worker: hb ? { beatAt: hb.beatAt, startedAt: hb.startedAt, alive: isAlive(hb.beatAt), provider: hb.provider } : null,
     unreadNotifications: unread,
     routes,
     serverTime: new Date(),

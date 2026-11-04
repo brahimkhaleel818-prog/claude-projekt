@@ -10,9 +10,12 @@ const schema = z.object({ username: z.string().min(1).max(100), password: z.stri
 export const POST = handler(async (req: Request) => {
   rateLimit(`login:${clientIp(req)}`, 8, 10 * 60_000);
   const { username, password } = await parseBody(req, schema);
-  if (!env.adminPasswordHash) throw new HttpError(503, "ADMIN_PASSWORD_HASH ist nicht gesetzt (siehe README)");
+  if (!env.adminPasswordHash && !env.adminPassword)
+    throw new HttpError(503, "ADMIN_PASSWORD_HASH oder ADMIN_PASSWORD ist nicht gesetzt (siehe README)");
   const okUser = safeEqual(username, env.adminUsername);
-  const okPass = await bcrypt.compare(password, env.adminPasswordHash);
+  const okPass = env.adminPasswordHash
+    ? await bcrypt.compare(password, env.adminPasswordHash)
+    : safeEqual(password, env.adminPassword);
   if (!okUser || !okPass) {
     logger.warn({ ip: clientIp(req) }, "Fehlgeschlagener Login");
     throw new HttpError(401, "Benutzername oder Passwort falsch");

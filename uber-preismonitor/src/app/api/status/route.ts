@@ -1,3 +1,4 @@
+import { isAlive } from "@/lib/scheduler";
 import { handler, json } from "@/lib/api";
 import { prisma } from "@/lib/db";
 import { env } from "@/lib/env";
@@ -22,7 +23,7 @@ export const GET = handler(async () => {
       onlyUpfrontFares: env.onlyUpfrontFares,
       maxRetries: env.workerMaxRetries,
     },
-    worker: hb ? { ...hb, alive: Date.now() - hb.beatAt.getTime() < 120_000 } : null,
+    worker: hb ? { ...hb, alive: isAlive(hb.beatAt) } : null,
     channels: channelStatus(),
     runs,
     counts,

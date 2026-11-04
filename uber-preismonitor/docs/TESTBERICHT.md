@@ -1,6 +1,6 @@
 # Testbericht – 04.11.2026
 
-## Automatisierte Tests (`npm test`): 39/39 bestanden
+## Automatisierte Tests (`npm test`): 40/40 bestanden
 - **Uber Guest Rides Parser:** Antwortstruktur aus der Uber-Doku. Upfront-Festpreis (`fare.value`), Preisspanne (`estimate.low/high`), Stundenpakete ausgefiltert, `fares_unavailable` ergibt keine Werte.
 - **Uber Guest Rides HTTP (gemockt):** Token per `client_credentials` mit Scope `guests.trips`, Token wird wiederverwendet, korrekter Request-Body und Header (`x-uber-organizationuuid`), einmalige Token-Erneuerung bei 401, 403 wird nicht wiederholt und mit verständlicher Meldung ausgegeben, 429 wird wiederholt und `Retry-After` beachtet.
 - **Uber Riders v1.2:** Preisspanne und Surge-Faktor, Taxameter ohne Preis bleibt leer, Server-Token-Header.
@@ -26,6 +26,11 @@
 - Adresssuche (Nominatim): „Königsallee 60 Düsseldorf“ liefert Treffer mit Koordinaten.
 - Charts: Fehlgeschlagene Abfragen erscheinen als Lücke im Verlauf; es wird kein Wert eingesetzt.
 - Oberfläche per Playwright auf Desktop (1440 px) und iPhone 13 geprüft, keine Konsolenfehler.
+
+## Vercel-/Cron-Modus (lokal mit `next build` + `next start` geprüft)
+- `/api/cron/collect` ohne oder mit falschem Secret liefert 401. Mit korrektem Secret werden alle 4 fälligen Strecken abgefragt (12 Messwerte, 162 ms); ein sofortiger zweiter Aufruf findet nichts Fälliges.
+- `scripts/migrate-deploy.sh` (Teil von `vercel-build`) wendet Migrationen an; ohne `DATABASE_URL` bricht es mit verständlicher Meldung ab.
+- Ein echtes Deployment auf Vercel war aus dieser Umgebung nicht möglich, weil es dein Vercel-Konto erfordert.
 
 ## Docker
 - `docker build` erfolgreich. Container gegen PostgreSQL getestet: Migration, Seed, Web (`/api/health` ok, `/login` 200) und Worker inkl. sauberem Beenden bei `docker stop`.

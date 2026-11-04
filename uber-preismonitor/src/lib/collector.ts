@@ -25,6 +25,7 @@ export async function collectRoute(
   route: Route,
   provider: PriceProvider | null,
   limiter: SlidingWindowLimiter,
+  opts: { retries?: number; maxDelayMs?: number; limiterWaitMs?: number } = {},
 ): Promise<RunOutcome> {
   const started = new Date();
   const interval = effectiveInterval(route.intervalMinutes, env.providerMinIntervalMinutes);
@@ -54,7 +55,7 @@ export async function collectRoute(
   try {
     const { value: result, attempts: a } = await withRetry(
       async () => {
-        const ok = await limiter.acquire(90_000);
+        const ok = await limiter.acquire(opts.limiterWaitMs ?? 90_000);
         if (!ok) throw new ProviderError("Rate-Limit der Datenquelle ausgeschöpft – Abfrage übersprungen", { retryable: false });
         try {
           return await provider.fetchPrices(
@@ -67,9 +68,9 @@ export async function collectRoute(
         }
       },
       {
-        retries: env.workerMaxRetries,
+        retries: opts.retries ?? env.workerMaxRetries,
         baseDelayMs: 2000,
-        maxDelayMs: 30_000,
+        maxDelayMs: opts.maxDelayMs ?? 30_000,
         onRetry: (n, err, d) => log.warn({ attempt: n, delayMs: d, err: (err as Error).message }, "Wiederhole Preisabfrage"),
       },
     );

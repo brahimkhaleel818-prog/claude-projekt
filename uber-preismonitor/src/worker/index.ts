@@ -5,13 +5,13 @@
  * - Rate-Limiting pro Datenquelle, Retry mit exponentiellem Backoff
  * - Heartbeat für die Statusanzeige im Dashboard
  */
-import type { Route } from "@prisma/client";
 import { collectRoute } from "../lib/collector";
 import { prisma } from "../lib/db";
 import { env } from "../lib/env";
 import { logger } from "../lib/logger";
 import { describeActiveProvider, getActiveProvider } from "../lib/providers";
 import { SlidingWindowLimiter } from "../lib/rate-limiter";
+import { claimDueRoutes, writeHeartbeat } from "../lib/scheduler";
 
 const LEASE_SECONDS = 600;
 const limiter = new SlidingWindowLimiter(env.providerMaxPerMinute, env.providerMaxPerHour);
@@ -27,35 +27,16 @@ function sleepUnlessStopping(ms: number) {
 let running = 0;
 const stats = { runs: 0, success: 0, failed: 0, noData: 0, lastLoopAt: null as string | null, lastError: null as string | null };
 
-/** Fällige Strecken atomar "leasen", damit kein anderer Worker sie parallel abfragt. */
-async function claimDueRoutes(limit: number): Promise<Route[]> {
-  return prisma.$queryRaw<Route[]>`
-    UPDATE "Route" SET "nextRunAt" = now() + make_interval(secs => ${LEASE_SECONDS}::float8)
-    WHERE id IN (
-      SELECT id FROM "Route"
-      WHERE active = true AND "nextRunAt" <= now()
-      ORDER BY "nextRunAt" ASC
-      LIMIT ${limit}
-      FOR UPDATE SKIP LOCKED
-    )
-    RETURNING *`;
-}
-
 async function heartbeat() {
   const p = describeActiveProvider();
-  const info = JSON.parse(JSON.stringify({ ...stats, running, limiter: limiter.stats(), provider: p, pid: process.pid }));
-  await prisma.workerHeartbeat.upsert({
-    where: { id: "worker" },
-    create: { id: "worker", beatAt: new Date(), startedAt, provider: p.id, info },
-    update: { beatAt: new Date(), startedAt, provider: p.id, info },
-  });
+  await writeHeartbeat(startedAt, p.id, { mode: "worker", ...stats, running, limiter: limiter.stats(), provider: p, pid: process.pid });
 }
 
 async function loop() {
   const provider = getActiveProvider();
   const free = env.workerConcurrency - running;
   if (free <= 0) return;
-  const routes = await claimDueRoutes(free);
+  const routes = await claimDueRoutes(free, LEASE_SECONDS);
   for (const route of routes) {
     running++;
     collectRoute(route, provider, limiter)

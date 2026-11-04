@@ -19,9 +19,13 @@ export const env = {
     const v = str("ADMIN_PASSWORD_HASH");
     return v.startsWith("b64:") ? Buffer.from(v.slice(4), "base64").toString("utf8") : v;
   },
+  /** Alternative zum Hash (z. B. bei Vercel direkt als Umgebungsvariable gesetzt) */
+  get adminPassword() { return str("ADMIN_PASSWORD"); },
   get authSecret() { return str("AUTH_SECRET"); },
   get cookieSecure() { return str("COOKIE_SECURE", "true") !== "false"; },
   get apiToken() { return str("API_TOKEN"); },
+  /** Geheimnis für den Cron-Endpunkt /api/cron/collect (Vercel/externer Cron) */
+  get cronSecret() { return str("CRON_SECRET"); },
 
   get priceProvider() { return str("PRICE_PROVIDER", "none"); },
   get uberClientId() { return str("UBER_CLIENT_ID"); },

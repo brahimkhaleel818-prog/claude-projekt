@@ -125,3 +125,14 @@ describe("CSV-Export", () => {
     expect(line).toContain("23,5");
   });
 });
+
+import { normalizeDatabaseUrl } from "@/lib/db";
+
+describe("Datenbank-URL (Vercel/Neon/Supabase)", () => {
+  it("ergänzt pgbouncer=true bei Poolern, lässt direkte Verbindungen unverändert", () => {
+    expect(normalizeDatabaseUrl("postgresql://u:p@ep-x-pooler.eu-central-1.aws.neon.tech/db?sslmode=require")).toContain("pgbouncer=true");
+    expect(normalizeDatabaseUrl("postgresql://u:p@aws-0-eu-central-1.pooler.supabase.com:6543/postgres")).toContain("pgbouncer=true");
+    expect(normalizeDatabaseUrl("postgresql://u:p@localhost:5432/db")).toBe("postgresql://u:p@localhost:5432/db");
+    expect(normalizeDatabaseUrl('"postgresql://u:p@localhost:5432/db"')).toBe("postgresql://u:p@localhost:5432/db");
+  });
+});

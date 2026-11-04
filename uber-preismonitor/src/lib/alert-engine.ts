@@ -21,6 +21,7 @@ export async function processAlerts(routeName: string, measurements: SavedMeasur
   const rules = await prisma.alertRule.findMany({ where: { active: true } });
   if (rules.length === 0) return 0;
   let fired = 0;
+  const deliveries: Promise<unknown>[] = [];
 
   for (const m of measurements) {
     const matching = rules.filter((r) => ruleMatches(r, m.routeId, m.categoryKey));
@@ -70,10 +71,14 @@ export async function processAlerts(routeName: string, measurements: SavedMeasur
       });
       await prisma.alertRule.update({ where: { id: rule.id }, data: { lastTriggeredAt: new Date() } });
       fired++;
-      deliver(n.id, rule.channels, hit.title, hit.message).catch((err) =>
-        logger.warn({ err: (err as Error).message }, "Zustellung fehlgeschlagen"),
+      deliveries.push(
+        deliver(n.id, rule.channels, hit.title, hit.message).catch((err) =>
+          logger.warn({ err: (err as Error).message }, "Zustellung fehlgeschlagen"),
+        ),
       );
     }
   }
+  // Zustellung abwarten – in Serverless-Umgebungen würde sie sonst abgebrochen
+  await Promise.allSettled(deliveries);
   return fired;
 }

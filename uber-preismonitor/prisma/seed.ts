@@ -1,7 +1,5 @@
 /** Legt die beiden Startstrecken an (Hbf ⇄ Flughafen DUS) – ohne Preise. */
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { prisma } from "../src/lib/db";
 
 const HBF = { address: "Düsseldorf Hauptbahnhof, Konrad-Adenauer-Platz 14, 40210 Düsseldorf", lat: 51.21992, lng: 6.79430 };
 const DUS = { address: "Flughafen Düsseldorf (DUS), Terminal, Flughafenstraße 105, 40474 Düsseldorf", lat: 51.27850, lng: 6.76480 };
